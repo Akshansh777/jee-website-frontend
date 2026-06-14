@@ -415,7 +415,7 @@ ${attemptType === "2028" ? `
 </html>
   `;
 
-  await page.setContent(html, { waitUntil: "networkidle0" });
+  await page.setContent(html, { waitUntil: "load", timeout: 60000 });
   const pdf = await page.pdf({ format: "A4", printBackground: true });
   await browser.close();
   return pdf;

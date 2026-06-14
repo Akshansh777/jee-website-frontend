@@ -454,62 +454,22 @@ export default function StudentSwotForm() {
   const [answers, setAnswers] = useState({});
   const [showSWOT, setShowSWOT] = useState(false);
   const [finalSWOT, setFinalSWOT] = useState({ S: "", W: "", O: "", T: "" });
-
-// --- NEW STORY STYLES ---
-  const storyTextStyle = {
-    fontFamily: "'Pinyon Script', cursive", // The new calligraphy font
-    fontSize: "18px", // Large and elegant
-    color: "#000000", // Pure black
-    textAlign: "center",
-    maxWidth: "700px", // Prevents text from getting too wide on large screens
-    margin: "5px auto", // Generous spacing top/bottom, centered horizontally
-    lineHeight: "1.5",
-    padding: "0 20px", // Padding for mobile screens
-    textShadow: "0px 1px 1px rgba(0,0,0,0.1)" // Subtle shadow for depth
-  };
-
-  const bigButStyle = {
-    ...storyTextStyle, // Inherit base styles
-    fontSize: "25px", // Much bigger
-    fontWeight: "bold",
-    marginTop: "30px",
-    marginBottom: "10px", // Closer to the text below it
-  };
-
-  // -- ESCAPING BUTTON STATES --
-  const [showFinalButtons, setShowFinalButtons] = useState(false);
-  const [noCount, setNoCount] = useState(0);
-  const [noPos, setNoPos] = useState({ x: 0, y: 0 });
-
-  // Now, these texts will appear in the original spot!
-  const placeholderTexts = [
-    "Are you really sure?",
-    "So you're okay with your Expected Percentile?",
-    "Ignoring your weaknesses won't fix them...",
-    "Your competitors are downloading this right now.",
-    "Wait, are you seriously giving up?",
-    "Think about your dream IIT/NIT!",
-    "Don't let your Potential Percentile go to waste!",
-    "Last chance to find out your root causes...",
-    "I'm not letting you click me. Just click 'Yes'! 😤"
-  ];
-
-  // ONLY moves on click now
-  const moveNoButton = () => {
-    if (noCount < placeholderTexts.length) {
-      setNoCount(noCount + 1);
-    }
-    const isRight = noPos.x > 0;
-    const isDown = noPos.y > 60; 
-    const newX = (Math.random() * 80 + 60) * (isRight ? -1 : 1);
-    let newY = isDown ? (Math.random() * 70) - 30 : (Math.random() * 90) + 90; 
-    setNoPos({ x: newX, y: newY });
-  };
   
-  // -- MODAL STATES --
-  const [showEmailModal, setShowEmailModal] = useState(false);
-  const [email, setEmail] = useState("");
-  const [isSending, setIsSending] = useState(false);
+  // --- NEW: Replaced email states with a single generating state ---
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  // --- NEW STORY STYLES ---
+  const storyTextStyle = {
+    fontFamily: "'Pinyon Script', cursive",
+    fontSize: "18px",
+    color: "#000000",
+    textAlign: "center",
+    maxWidth: "700px",
+    margin: "5px auto",
+    lineHeight: "1.5",
+    padding: "0 20px",
+    textShadow: "0px 1px 1px rgba(0,0,0,0.1)"
+  };
 
   // Progress (exclude name question)
   const TOTAL_QUESTIONS = 18;
@@ -527,26 +487,14 @@ export default function StudentSwotForm() {
     if (step < QUESTIONS.length - 1) setStep(step + 1);
   };
 
-  // ✅ NEW CODE
   const calculateSWOT = () => {
-    // 1. Get the Index (0-3) of the Primary Question for each Category
-    // Strength (S) -> Q1 (Consistency)
-    // Weakness (W) -> Q3 (Syllabus)
-    // Opportunity (O) -> Q13 (Energy)
-    // Threat (T) -> Q15 (Environment)
-
     const sIndex = Number(answers["q1"] || 0);
     const wIndex = Number(answers["q3"] || 0);
     const oIndex = Number(answers["q13"] || 0);
     const tIndex = Number(answers["q15"] || 0);
 
-    // 2. Select a Random Line from that Specific Bucket
-    // We use a simple randomizer to pick one of the 5 lines in that bucket
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-    // 3. Fallback logic (in case of missing data)
     const getResponse = (lib, idx) => {
-      // Check if lib[idx] exists, otherwise fall back to bucket 0
       const bucket = lib && lib[idx] ? lib[idx] : (lib ? lib[0] : ["Data missing"]);
       return pick(bucket);
     };
@@ -564,15 +512,10 @@ export default function StudentSwotForm() {
   const submit = () => calculateSWOT();
 
   // --------------------------------------------------------
-  // HANDLE REPORT SENDING
+  // HANDLE DIRECT PDF DOWNLOAD (Admin Workflow)
   // --------------------------------------------------------
-  const handleSendReport = async () => {
-    if (!email || !email.includes("@")) {
-      alert("Please enter a valid email address.");
-      return;
-    }
-
-    setIsSending(true);
+  const handleDownloadReport = async () => {
+    setIsGenerating(true);
 
     const result = computeScores(answers);
     const { 
@@ -588,38 +531,26 @@ export default function StudentSwotForm() {
     const safeExpected = expected_percentile_range || [0, 0];
     const safePotential = potential_percentile_range || [0, 0];
 
-    // ---------------------------------------------------------
-    // THE FIX: DYNAMIC MAPPING ALGORITHM
-    // Translates answers (e.g., q4: 1) into manifest keys (Q4_B)
-    // ---------------------------------------------------------
     const optionMap = ["A", "B", "C", "D"];
     const generatedManifestKeys = {};
 
     Object.keys(answers).forEach((key) => {
-      // Check if the key is a question (q1, q2, etc.)
       if (key.startsWith("q")) {
         const answerIndex = Number(answers[key]);
         if (!isNaN(answerIndex) && optionMap[answerIndex]) {
-          // Converts "q4" + 1 -> "Q4_B"
           generatedManifestKeys[key] = `${key.toUpperCase()}_${optionMap[answerIndex]}`;
         }
       }
     });
 
-    // ... inside handleSendReport
-
-    // Prepare payload
+    // Prepare payload (No email field needed anymore)
     const reportPayload = {
-      email: email,
       name: answers["name"] || "Future IITian",
       answers: answers,
-      
       jee_society_score: jee_society_score,
       target_attempt: attemptLabel,
-      
       expected_percentile: safeExpected,
       potential_percentile: safePotential,
-
       swot: {
         strengths: finalSWOT.S,
         weaknesses: finalSWOT.W,
@@ -627,12 +558,7 @@ export default function StudentSwotForm() {
         threats: finalSWOT.T
       },
       recommendations: "Focus on your flagged weaknesses. Use the Opportunity areas to gain extra marks.",
-
-      // Send the mapped keys so the backend knows EXACTLY which JSON blocks to pull
       manifestKeys: generatedManifestKeys
-      
-      // NOTICE: We completely deleted the 'dynamicText' object from here!
-      // Now it won't block q18 from pulling the real Verdict.
     };
 
     try {
@@ -642,68 +568,67 @@ export default function StudentSwotForm() {
         body: JSON.stringify(reportPayload) 
       });
       
-      const data = await response.json();
-      if (data.success) {
-        alert("✅ Success! The Detailed Report has been sent to your email.");
-      } else {
-        alert("Server Error: " + data.error);
+      if (!response.ok) {
+        throw new Error("Server failed to generate the PDF.");
       }
+
+      // Convert the raw response into a file blob
+      const blob = await response.blob();
+      
+      // Create a temporary link and trigger the browser download
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      
+      const studentName = (answers["name"] || "Student").replace(/\s+/g, '_');
+      link.setAttribute("download", `JEEsociety_Report_${studentName}.pdf`);
+      
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
     } catch (err) {
       console.error(err);
-      alert("Error connecting to server. Make sure the backend is running.");
+      alert("Error generating report. Make sure the backend is running.");
     } finally {
-      setIsSending(false);
+      setIsGenerating(false);
     }
   };
 
-
-
-  // ---------------- RENDER: RESULTS PAGE (FIXED) ----------------
+  // ---------------- RENDER: RESULTS PAGE (ADMIN DASHBOARD) ----------------
   if (showSWOT) {
     const scores = computeScores(answers);
     const { jee_society_score, expected_percentile_range, potential_percentile_range } = scores;
 
-    // 1. FIX: Calculate Average for the Circle Value (since you only have a range [min, max])
-    // If range is [90, 94], the circle should show progress for 92.
     const epValue = (expected_percentile_range[0] + expected_percentile_range[1]) / 2;
     const ppValue = (potential_percentile_range[0] + potential_percentile_range[1]) / 2;
 
-    // 2. FIX: specific logic to get the text for the "Attempt" answer
     const attemptIndex = answers["q17"];
     const attemptLabel = QUESTIONS.find(q => q.id === "q17").options[attemptIndex] || "JEE Main";
 
-    // Helper Style for the "Row" layout
     const rowStyle = {
-      display: "flex",
-      flexWrap: "wrap",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: "30px",
-      marginBottom: "40px",
-      textAlign: "left"
+      display: "flex", flexWrap: "wrap", alignItems: "center",
+      justifyContent: "center", gap: "30px", marginBottom: "40px", textAlign: "left"
     };
 
-    // Helper Style for the Text Box
     const boxStyle = (color, bg) => ({
-      flex: "1 1 300px",
-      minWidth: "280px",
-      background: bg,
-      padding: "20px",
-      borderRadius: "12px",
-      borderLeft: `6px solid ${color}`,
+      flex: "1 1 300px", minWidth: "280px", background: bg,
+      padding: "20px", borderRadius: "12px", borderLeft: `6px solid ${color}`,
       boxShadow: "0 4px 15px rgba(0,0,0,0.05)"
     });
 
     return (
       <div className="swot-container">
-        <h2 style={{ marginBottom: "10px", fontSize: "28px" }}>Your Performance Summary</h2>
+        <h2 style={{ marginBottom: "10px", fontSize: "28px" }}>Admin Performance Summary</h2>
         
-        {/* 3. FIX: Display the Target Attempt */}
         <div style={{ marginBottom: "40px", color: "#666", fontSize: "18px", background: "#f1f1f1", display: "inline-block", padding: "8px 20px", borderRadius: "20px" }}>
           Target: <strong>{attemptLabel}</strong>
         </div>
         
-        {/* --- ROW 1: EP (BIGGEST - Scale 1.25) --- */}
+        {/* --- ROW 1: EP --- */}
         <div style={{ ...rowStyle, gap: "40px", marginBottom: "50px" }}>
            <div style={{ flex: "0 0 auto", transform: "scale(1.25)", transformOrigin: "center", zIndex: 2 }}>
              <CleanEPCircle 
@@ -730,11 +655,11 @@ export default function StudentSwotForm() {
            </div>
         </div>
 
-<p style={storyTextStyle}>
+        <p style={storyTextStyle}>
           This is the future your current daily habits are quietly building.
         </p>
 
-        {/* --- ROW 2: JSS (MEDIUM - Scale 1.12) --- */}
+        {/* --- ROW 2: JSS --- */}
         <div style={{ ...rowStyle, gap: "35px", marginTop: "44px", marginBottom: "45px" }}>
            <div style={{ flex: "0 0 auto", transform: "scale(1.12)", transformOrigin: "center", zIndex: 1 }}>
               <CircularScore value={jee_society_score} color="#6a11cb" title="JSS" rangeText={jee_society_score} />
@@ -752,9 +677,7 @@ export default function StudentSwotForm() {
            </div>
         </div>
 
-
-
-        {/* --- ROW 3: PP (STANDARD - No Scale) --- */}
+        {/* --- ROW 3: PP --- */}
         <div style={rowStyle}>
            <div style={{ flex: "0 0 auto" }}>
              <GoldenPPCircle 
@@ -773,7 +696,7 @@ export default function StudentSwotForm() {
            </div>
         </div>
 
-<p style={{ margin: "20px 0", fontSize: "19px", color: "#333", fontFamily: "Georgia", lineHeight: "1.7" }}>
+        <p style={{ margin: "20px 0", fontSize: "19px", color: "#333", fontFamily: "Georgia", lineHeight: "1.7" }}>
           The gap between your Expected Percentile and Potential Percentile defines your <b>Performance Gap</b>.
         </p>
 
@@ -782,138 +705,60 @@ export default function StudentSwotForm() {
         <div className="swot-box strength"><b>Strength:</b> {finalSWOT.S}</div>
         <div className="swot-box weakness"><b>Weakness:</b> {finalSWOT.W}</div>
 
-        {/* --- DYNAMIC DECISION SECTION --- */}
+        {/* --- CLEAN ADMIN ACTION SECTION --- */}
         <div style={{ marginTop: "60px", minHeight: "150px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <h3 style={{ 
+            fontFamily: "'Poppins', 'Inter', system-ui, -apple-system, sans-serif", 
+            fontSize: "26px", 
+            fontWeight: "800", 
+            letterSpacing: "-0.5px", 
+            marginBottom: "30px",
+            background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            color: "transparent", 
+            textShadow: "0px 4px 15px rgba(124, 58, 237, 0.15)",
+            lineHeight: "1.3"
+          }}>
+            Admin Dashboard Actions
+          </h3>
           
-          {!showFinalButtons ? (
-            /* PHASE 1: The Gamified Question */
-            <div style={{ position: "relative", width: "100%", textAlign: "center" }}>
-              <h3 style={{ fontSize: "24px", fontWeight: "800", color: "#0f172a", marginBottom: "25px" }}>
-                Do you want to improve your score?
-              </h3>
-              
-              <div style={{ display: "flex", justifyContent: "center", gap: "20px", alignItems: "center", flexWrap: "wrap", position: "relative", minHeight: "60px" }}>
-                
-                {/* The "YES" Button */}
-                <button
-                  onClick={() => setShowFinalButtons(true)}
-                  style={{
-                    padding: "14px 32px", borderRadius: "12px",
-                    background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-                    color: "white", fontSize: "18px", fontWeight: "bold", border: "none",
-                    cursor: "pointer", transition: "0.2s ease",
-                    boxShadow: "0 8px 20px rgba(124, 58, 237, 0.35)",
-                    zIndex: 10
-                  }}
-                  onMouseEnter={(e) => { e.target.style.transform = "scale(1.05)"; }}
-                  onMouseLeave={(e) => { e.target.style.transform = "scale(1)"; }}
-                >
-                  Yes, I want to improve
-                </button>
-
-                {/* THE GHOST SPOT (Where the button used to be) */}
-                <div style={{ width: "220px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                  {noCount === 0 ? (
-                    /* Initial state: The button sits normally here */
-                    <button
-                      onClick={moveNoButton} 
-                      style={{
-                        padding: "14px 24px", borderRadius: "12px",
-                        background: "#f1f5f9", color: "#64748b", 
-                        fontSize: "16px", fontWeight: "600", border: "1px solid #cbd5e1",
-                        cursor: "pointer", whiteSpace: "nowrap"
-                      }}
-                    >
-                      No, I don't want to improve
-                    </button>
-                  ) : (
-                    /* After click: Show the mocking texts here instead! */
-                    <span style={{ 
-                      color: "#ef4444", fontWeight: "bold", fontStyle: "italic", 
-                      animation: "fadeIn 0.3s ease" 
-                    }}>
-                      {placeholderTexts[Math.min(noCount - 1, placeholderTexts.length - 1)]}
-                    </span>
-                  )}
-                </div>
-
-                {/* THE MOVING BUTTON (Only exists after the first click) */}
-                {noCount > 0 && (
-                  <button
-                    onClick={moveNoButton} /* Only triggers on click now! */
-                    style={{
-                      padding: "14px 24px", borderRadius: "12px",
-                      background: "#f1f5f9", color: "#64748b", 
-                      fontSize: "16px", fontWeight: "600", border: "1px solid #cbd5e1",
-                      cursor: "pointer", whiteSpace: "nowrap",
-                      transition: "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
-                      position: "absolute",
-                      transform: `translate(${noPos.x}px, ${noPos.y}px)`,
-                      zIndex: 50
-                    }}
-                  >
-                    No, I don't want to improve
-                  </button>
-                )}
-
-              </div>
-            </div>
-          ) : (
-            /* PHASE 2: The Original Action Buttons (Revealed after clicking Yes) */
-            <div style={{ animation: "slideUp 0.5s ease" }}>
-              <h3 style={{ 
-  fontFamily: "'Poppins', 'Inter', system-ui, -apple-system, sans-serif", /* ✅ The premium tech font stack */
-  fontSize: "26px", /* Bumped up slightly for more impact */
-  fontWeight: "800", 
-  letterSpacing: "-0.5px", /* ✅ Tight tracking makes it look modern and sleek */
-  marginBottom: "30px",
-  background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-  WebkitBackgroundClip: "text",
-  WebkitTextFillColor: "transparent",
-  backgroundClip: "text",
-  color: "transparent", 
-  textShadow: "0px 4px 15px rgba(124, 58, 237, 0.15)",
-  lineHeight: "1.3"
-}}>
-  Your performance report is ready:
-</h3>
-              <div style={{ display: "flex", gap: "15px", justifyContent: "center", flexWrap: "wrap" }}>
-                
-                <button
-                  onClick={() => setShowEmailModal(true)}
-                  style={{
-                    padding: "12px 24px", borderRadius: "12px",
-                    background: "linear-gradient(90deg, #4b6bff, #7b2fff)",
-                    color: "white", fontSize: "16px", border: "none",
-                    cursor: "pointer", transition: "0.2s ease",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                  }}
-                  onMouseEnter={(e) => e.target.style.transform = "scale(1.05)"}
-                  onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
-                >
-                  Download Full Report
-                </button>
-
-                <button
-                  onClick={() => window.open("/sample-report.pdf", "_blank")}
-                  style={{
-                    padding: "12px 24px", borderRadius: "12px",
-                    background: "#1e90ff", color: "white", fontSize: "16px",
-                    border: "none", cursor: "pointer", transition: "0.2s ease",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                  }}
-                  onMouseEnter={(e) => e.target.style.transform = "scale(1.05)"}
-                  onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
-                >
-                  View Sample Report
-                </button>
-
-              </div>
-            </div>
-          )}
+          <div style={{ display: "flex", gap: "15px", justifyContent: "center", flexWrap: "wrap" }}>
+            <button
+              onClick={handleDownloadReport}
+              disabled={isGenerating}
+              style={{
+                padding: "14px 32px", borderRadius: "12px",
+                background: isGenerating ? "#94a3b8" : "linear-gradient(135deg, #2563eb, #7c3aed)",
+                color: "white", fontSize: "18px", fontWeight: "bold", border: "none",
+                cursor: isGenerating ? "not-allowed" : "pointer", transition: "0.2s ease",
+                boxShadow: isGenerating ? "none" : "0 8px 20px rgba(124, 58, 237, 0.35)",
+              }}
+              onMouseEnter={(e) => { if(!isGenerating) e.target.style.transform = "scale(1.05)"; }}
+              onMouseLeave={(e) => { if(!isGenerating) e.target.style.transform = "scale(1)"; }}
+            >
+              {isGenerating ? "Generating PDF..." : "📥 Generate & Download PDF"}
+            </button>
+            
+            <button
+              onClick={() => window.open("/sample-report.pdf", "_blank")}
+              style={{
+                padding: "14px 32px", borderRadius: "12px",
+                background: "#1e90ff", color: "white", fontSize: "16px", fontWeight: "bold",
+                border: "none", cursor: "pointer", transition: "0.2s ease",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+              }}
+              onMouseEnter={(e) => e.target.style.transform = "scale(1.05)"}
+              onMouseLeave={(e) => e.target.style.transform = "scale(1)"}
+            >
+              View Sample Report
+            </button>
+          </div>
         </div>
+
         {/* --- YOUTUBE BUTTON --- */}
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: "40px" }}>
           <a 
             href="https://www.youtube.com/@SreyashBhaiyaIITB" 
             target="_blank" 
@@ -922,18 +767,11 @@ export default function StudentSwotForm() {
           >
             <button
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "12px 28px", 
-                borderRadius: "50px", // Pill shape
-                background: "#FF0000", // Official YouTube Red
-                color: "white", 
-                fontSize: "16px", 
-                fontWeight: "700",
-                border: "none", 
-                cursor: "pointer", 
-                boxShadow: "0 4px 15px rgba(255, 0, 0, 0.3)", // Red glow
+                display: "flex", alignItems: "center", gap: "10px",
+                padding: "12px 28px", borderRadius: "50px", 
+                background: "#FF0000", color: "white", 
+                fontSize: "16px", fontWeight: "700", border: "none", 
+                cursor: "pointer", boxShadow: "0 4px 15px rgba(255, 0, 0, 0.3)", 
                 transition: "all 0.3s ease"
               }}
               onMouseEnter={(e) => {
@@ -945,7 +783,6 @@ export default function StudentSwotForm() {
                 e.currentTarget.style.boxShadow = "0 4px 15px rgba(255, 0, 0, 0.3)";
               }}
             >
-              {/* YouTube Vector Icon */}
               <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
                 <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
               </svg>
@@ -968,78 +805,17 @@ export default function StudentSwotForm() {
             </ul>
         </details>
 
-        {/* ---------------- EMAIL MODAL ---------------- */}
-        {showEmailModal && (
-          <div style={{
-            position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-            background: "rgba(0,0,0,0.5)", backdropFilter: "blur(5px)",
-            display: "flex", justifyContent: "center", alignItems: "center",
-            zIndex: 1000
-          }}>
-             {/* ... (Modal Content) ... */}
-             <div style={{
-              background: "white", padding: "30px", borderRadius: "16px",
-              width: "90%", maxWidth: "400px", boxShadow: "0 20px 50px rgba(0,0,0,0.2)",
-              textAlign: "center", animation: "slideUp 0.4s ease"
-            }}>
-              <h3 style={{ fontSize: "22px", marginBottom: "15px", color: "#333" }}>
-                Receive Your Full Report
-              </h3>
-              <p style={{ color: "#666", marginBottom: "20px", fontSize: "15px" }}>
-                Enter your email address to get the detailed PDF report sent directly to your inbox.
-              </p>
-              
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={{
-                  width: "100%", padding: "12px", borderRadius: "8px",
-                  border: "1px solid #ddd", fontSize: "16px", marginBottom: "20px",
-                  boxSizing: "border-box", outlineColor: "#4b6bff"
-                }}
-              />
-
-              <div style={{ display: "flex", gap: "10px" }}>
-                <button 
-                  onClick={() => setShowEmailModal(false)}
-                  style={{
-                    flex: 1, padding: "12px", borderRadius: "8px", border: "none",
-                    background: "#f0f0f0", color: "#555", fontWeight: "600",
-                    cursor: "pointer"
-                  }}
-                >
-                  Cancel
-                </button>
-                <button 
-                  onClick={handleSendReport}
-                  disabled={isSending}
-                  style={{
-                    flex: 1, padding: "12px", borderRadius: "8px", border: "none",
-                    background: isSending ? "#ccc" : "linear-gradient(90deg, #4b6bff, #7b2fff)",
-                    color: "white", fontWeight: "600", cursor: isSending ? "not-allowed" : "pointer"
-                  }}
-                >
-                  {isSending ? "Sending..." : "Send Report"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
         <div style={{ marginTop: "40px", textAlign: "center", paddingBottom: "20px" }}>
           <button
-            onClick={() => navigate("/")} 
+            onClick={() => {
+              setStep(0);
+              setAnswers({});
+              setShowSWOT(false);
+            }} 
             style={{
-              background: "transparent",
-              border: "2px solid #e0e0e0",
-              padding: "10px 25px",
-              borderRadius: "50px",
-              color: "#666",
-              fontWeight: "600",
-              cursor: "pointer",
-              transition: "all 0.2s"
+              background: "transparent", border: "2px solid #e0e0e0",
+              padding: "10px 25px", borderRadius: "50px", color: "#666",
+              fontWeight: "600", cursor: "pointer", transition: "all 0.2s"
             }}
             onMouseEnter={(e) => {
               e.target.style.borderColor = "#c62828";
@@ -1050,7 +826,7 @@ export default function StudentSwotForm() {
               e.target.style.color = "#666";
             }}
           >
-            ← Return Home / Take Again
+            + Start New Assessment
           </button>
         </div>
       </div>

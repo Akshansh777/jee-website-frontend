@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-
 const generatePDF = require("./generateReportPDF.cjs");
-const sendReport = require("./sendEmail.cjs");
 
 const app = express();
 app.use(cors());
@@ -10,21 +8,22 @@ app.use(express.json());
 
 app.post("/send-dynamic-report", async (req, res) => {
   try {
-    console.log("Incoming data request for:", req.body.name);
-
-    if (!req.body.email) {
-      return res.status(400).json({ success: false, error: "Email is required." });
-    }
+    console.log("Incoming admin request to generate PDF for:", req.body.name);
 
     // 1. Generate the PDF buffer
     const pdf = await generatePDF(req.body);
 
-    // 2. Send the Email
-    const emailResult = await sendReport(req.body.email, pdf);
+    // 2. Set headers to tell the browser this is a downloadable file
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="JEEsociety_Report_${req.body.name || "Student"}.pdf"`
+    );
 
-    console.log("📧 Email sent to:", req.body.email);
+    // 3. Send the raw PDF data back to the admin's browser
+    res.send(pdf);
 
-    res.json({ success: true, message: "Dynamic report sent!", emailResult });
+    console.log("✅ PDF successfully generated and sent to client.");
 
   } catch (err) {
     console.error("ERROR in PDF Pipeline:", err);

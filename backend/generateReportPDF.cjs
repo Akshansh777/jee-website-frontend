@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const path = require("path");
 const fs = require("fs");
-const solutionManifest = require("../PDFgen-code/Project/data/solutionManifest.json");
+const solutionManifest = require("./solutionManifest.json");
 
 // ---------- helpers ----------
 function imgToBase64(imgPath) {

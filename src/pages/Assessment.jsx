@@ -601,10 +601,7 @@ export default function StudentSwotForm() {
   // ---------------- RENDER: RESULTS PAGE (ADMIN DASHBOARD) ----------------
   if (showSWOT) {
     const scores = computeScores(answers);
-    const { jee_society_score, expected_percentile_range, potential_percentile_range } = scores;
-
-    const epValue = (expected_percentile_range[0] + expected_percentile_range[1]) / 2;
-    const ppValue = (potential_percentile_range[0] + potential_percentile_range[1]) / 2;
+    const { jee_society_score } = scores;
 
     const attemptIndex = answers["q17"];
     const attemptLabel = QUESTIONS.find(q => q.id === "q17").options[attemptIndex] || "JEE Main";
@@ -628,39 +625,8 @@ export default function StudentSwotForm() {
           Target: <strong>{attemptLabel}</strong>
         </div>
         
-        {/* --- ROW 1: EP --- */}
-        <div style={{ ...rowStyle, gap: "40px", marginBottom: "50px" }}>
-           <div style={{ flex: "0 0 auto", transform: "scale(1.25)", transformOrigin: "center", zIndex: 2 }}>
-             <CleanEPCircle 
-               value={epValue}  
-               color="#1db954" 
-               title="Expected Percentile" 
-               rangeText={`${expected_percentile_range[0]} - ${expected_percentile_range[1]}%`} 
-             />
-           </div>
-
-           <div style={{ 
-             ...boxStyle("#1db954", "#e8fdf0"), 
-             padding: "25px 30px", 
-             borderLeft: "8px solid #1db954",
-             boxShadow: "0 10px 30px rgba(29, 185, 84, 0.25)",
-             position: "relative"
-           }}>
-             <h3 style={{ margin: "0 0 10px 0", color: "#1db954", fontSize: "24px", fontWeight: "900", textTransform: "uppercase", letterSpacing: "0.5px" }}>
-                 Expected Percentile
-             </h3>
-             <p style={{ margin: 0, fontSize: "17px", color: "#222", lineHeight: "1.7" }}>
-               If you continue <b>exactly</b> as you are today - without changing your habits - this is where you will land.
-             </p>
-           </div>
-        </div>
-
-        <p style={storyTextStyle}>
-          This is the future your current daily habits are quietly building.
-        </p>
-
-        {/* --- ROW 2: JSS --- */}
-        <div style={{ ...rowStyle, gap: "35px", marginTop: "44px", marginBottom: "45px" }}>
+        {/* --- ONLY ROW: JSS --- */}
+        <div style={{ ...rowStyle, gap: "35px", marginTop: "20px", marginBottom: "45px" }}>
            <div style={{ flex: "0 0 auto", transform: "scale(1.12)", transformOrigin: "center", zIndex: 1 }}>
               <CircularScore value={jee_society_score} color="#6a11cb" title="JSS" rangeText={jee_society_score} />
            </div>
@@ -676,29 +642,6 @@ export default function StudentSwotForm() {
              </p>
            </div>
         </div>
-
-        {/* --- ROW 3: PP --- */}
-        <div style={rowStyle}>
-           <div style={{ flex: "0 0 auto" }}>
-             <GoldenPPCircle 
-               value={ppValue}  
-               color="#ff7a00" 
-               title="Potential Percentile"
-               rangeText={`${potential_percentile_range[0]} - ${potential_percentile_range[1]}%`} 
-             />
-           </div>
-
-           <div style={boxStyle("#ff7a00", "#fff8e6")}>
-             <h3 style={{ margin: "0 0 8px 0", color: "#ff7a00", fontSize: "20px" }}>Potential Percentile</h3>
-             <p style={{ margin: 0, fontSize: "15px", color: "#444", lineHeight: "1.6" }}>
-               This is your <b>Ceiling</b>. It calculates what you are capable of if you fix your identified "Weakness" and "Threats" immediately.
-             </p>
-           </div>
-        </div>
-
-        <p style={{ margin: "20px 0", fontSize: "19px", color: "#333", fontFamily: "Georgia", lineHeight: "1.7" }}>
-          The gap between your Expected Percentile and Potential Percentile defines your <b>Performance Gap</b>.
-        </p>
 
         {/* --- SWOT SECTION --- */}
         <h2 style={{ marginTop: "50px" }}>Your Strength & Weakness</h2>
@@ -797,7 +740,6 @@ export default function StudentSwotForm() {
             What will your report contain?
           </summary>
           <ul style={{ display: "inline-block", textAlign: "left", maxWidth: "550px", paddingLeft: "20px", lineHeight: "1.8", color: "#555" }}>
-              <li><strong>Trajectory Insight:</strong> Visual graph of your predicted vs. potential growth.</li>
               <li><strong>Detailed SWOT Snapshot:</strong> Deep dive into your Strengths, Weaknesses, Opportunities, and Threats.</li>
               <li><strong>Health & Environment Audit:</strong> Analysis of your physical stamina and study space.</li>
               <li><strong>Key Barriers:</strong> Identifying the specific root causes holding you back.</li>

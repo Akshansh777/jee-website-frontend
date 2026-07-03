@@ -110,7 +110,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 /* PAGE 1: COVER (Cleaned up coordinates) */
 .p1-name{ top: 733px; left: 187px; font-size: 20px; font-weight: 700; }
 .p1-target{ top: 773px; left: 191px; font-size: 18px; font-weight: 700; }
-.p1-score{ top: 887px; left: 331px; font-size: 18px; font-weight: 700; }
+.p1-score{ top: 813px; left: 331px; font-size: 18px; font-weight: 700; }
 
 /* PAGE 2: DIAGNOSTICS (Cleaned up graph) */
 .p2-score { top: 123px; left: 65px; font-size: 25px; color: #a40000; font-weight: 800; }

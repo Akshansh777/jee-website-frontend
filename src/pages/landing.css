@@ -186,6 +186,135 @@
   100% { transform: translateY(0px); }
 }
 
+/* =========================================
+   REPORT DECK (Hero Image Replacement)
+   Fanned auto-cycling deck of report screenshots
+   ========================================= */
+
+.landing-wrapper .report-deck {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: deck-entrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes deck-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.landing-wrapper .report-deck-stage {
+  position: relative;
+  width: 100%;
+  height: 0;
+  /* padding-bottom hack instead of aspect-ratio: this is resolved
+     purely from the element's own width, so it can never collapse or
+     get squashed by a flex/grid parent — guarantees the stage (and
+     therefore the dots below it) always has real, predictable size,
+     regardless of which card's own shape is currently active.
+     150% = 2:3, tall enough to reserve space for the tallest ratio
+     among your screenshots (1024x1536). Shorter cards (e.g. the
+     1122x1402 one) simply sit centered with empty space around them
+     instead of being stretched/padded — no white bars on the card. */
+  padding-bottom: 150%;
+}
+
+.landing-wrapper .report-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* Width is fixed; height is NOT — it comes from each card's own
+     aspect-ratio (set inline per-image in JSX), so every card keeps
+     its true proportions and its rounded corners always align with
+     the artwork's own curved edges. No cropping, no white letterbox. */
+  width: 82%;
+  height: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  background: transparent;
+  box-shadow:
+    0 25px 50px -12px rgba(15, 23, 42, 0.25),
+    0 8px 16px -4px rgba(15, 23, 42, 0.1);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  transition:
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.6s ease,
+    filter 0.6s ease,
+    z-index 0s;
+  will-change: transform, opacity;
+  animation: report-floating 5s ease-in-out infinite;
+}
+
+@keyframes report-floating {
+  0% { margin-top: 0px; }
+  50% { margin-top: -10px; }
+  100% { margin-top: 0px; }
+}
+
+/* Stagger the floating animation slightly so cards don't move in unison */
+.landing-wrapper .report-card:nth-child(odd) {
+  animation-delay: -2.5s;
+}
+
+.landing-wrapper .report-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* "cover" is now safe (no cropping) because the card box itself is
+     already sized to the image's exact aspect ratio via the inline
+     aspect-ratio style — cover and contain produce an identical result
+     here, but cover guarantees zero sub-pixel gaps at the edges. */
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+.landing-wrapper .report-card-active {
+  box-shadow:
+    0 30px 60px -12px rgba(15, 23, 42, 0.3),
+    0 10px 20px -4px rgba(198, 40, 40, 0.12),
+    0 0 0 1px rgba(198, 40, 40, 0.06);
+}
+
+/* --- Dot Navigation --- */
+.landing-wrapper .report-deck-dots {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+  z-index: 100; /* always sits above the deck stage, just in case */
+  flex-shrink: 0;
+}
+
+.landing-wrapper .report-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(15, 23, 42, 0.18);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.landing-wrapper .report-dot:hover {
+  background: rgba(198, 40, 40, 0.4);
+}
+
+.landing-wrapper .report-dot-active {
+  width: 26px;
+  border-radius: 5px;
+  background: var(--primary-red);
+}
+
 /* --- TESTIMONIALS --- */
 .landing-wrapper .testimonials-section {
   padding: 80px 0;
@@ -514,6 +643,8 @@
     flex-direction: column;
     text-align: center;
     padding-top: 40px;
+    padding-bottom: 30px; /* was too tall, creating a big gap before testimonials */
+    min-height: auto;
   }
   
   .landing-wrapper .hero-img {
@@ -523,6 +654,50 @@
 
   .landing-wrapper .hero-title { font-size: 36px; }
   .landing-wrapper .hero-subtitle { font-size: 18px; }
+
+  .landing-wrapper .report-deck {
+    max-width: 100%;
+    width: 100%;
+    margin: 24px auto 0;
+    padding: 0 4px;
+  }
+
+  /* NOTE: no aspect-ratio/max-height override here anymore — the base
+     .report-deck-stage rule (padding-bottom: 150%) already handles
+     sizing responsively and correctly on all screen widths. Overriding
+     it here was the reason mobile stayed tiny/broken before. */
+
+  /* On mobile only the active card is shown, so it can take up nearly
+     the full width — no fanned neighbors competing for space. Height
+     is intentionally NOT set here: it must stay driven by each card's
+     own aspect-ratio (inline style from JSX), otherwise it gets
+     stretched/cropped away from its true proportions again. */
+  .landing-wrapper .report-card {
+    width: 98%;
+  }
+
+  .landing-wrapper .report-card:not(.report-card-active) {
+    opacity: 0 !important;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.98) !important;
+    filter: none !important;
+  }
+
+  .landing-wrapper .report-card-active {
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+
+  .landing-wrapper .report-deck-dots {
+    margin-top: 16px;
+  }
+
+  .landing-wrapper .testimonials-section {
+    padding: 32px 0; /* was 80px 0 — that plus the hero gap was the big empty space */
+  }
+
+  .landing-wrapper .testimonials-section .section-title {
+    margin-bottom: 30px;
+  }
   
   .landing-wrapper .features-grid { flex-direction: column; align-items: center; }
   .landing-wrapper .feature-card { width: 90%; }

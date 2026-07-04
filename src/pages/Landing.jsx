@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import "./landing.css";
@@ -45,6 +45,105 @@ const WhatsAppMessage = ({ name, content, avatar, time }) => (
     </div>
   </div>
 );
+
+// --- REPORT DECK: replace these with your actual screenshot filenames ---
+// width/height = the real pixel dimensions of each file, used to size
+// each card to its own exact aspect ratio (no cropping, no white bars).
+const REPORT_IMAGES = [
+  { src: "/report-1.png", alt: "JEE Performance Report - Percentile Overview", width: 1024, height: 1536 },
+  { src: "/report-2.png", alt: "JEE Performance Report - SWOT Analysis", width: 1122, height: 1402 },
+  { src: "/report-3.png", alt: "JEE Performance Report - Personalized Action Plan", width: 1024, height: 1536 },
+  { src: "/report-4.png", alt: "JEE Performance Report - Rank Prediction", width: 1024, height: 1536 },
+  { src: "/report-5.png", alt: "JEE Performance Report - Execution Guidelines", width: 1024, height: 1536 },
+];
+
+const AUTO_CYCLE_MS = 4000;
+
+const ReportDeck = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const timerRef = useRef(null);
+  const resumeTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    if (isPaused) return;
+    timerRef.current = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % REPORT_IMAGES.length);
+    }, AUTO_CYCLE_MS);
+    return () => clearInterval(timerRef.current);
+  }, [isPaused]);
+
+  const handleDotClick = (index) => {
+    setActiveIndex(index);
+    setIsPaused(true);
+    clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => setIsPaused(false), 6000);
+  };
+
+  // Compute each card's position relative to the active card
+  // so the "front" card is always centered and others fan out behind it.
+  const getCardStyle = (index) => {
+    const total = REPORT_IMAGES.length;
+    let offset = index - activeIndex;
+    if (offset > total / 2) offset -= total;
+    if (offset < -total / 2) offset += total;
+
+    const absOffset = Math.abs(offset);
+    const aspectRatio = `${REPORT_IMAGES[index].width} / ${REPORT_IMAGES[index].height}`;
+
+    if (absOffset === 0) {
+      return {
+        aspectRatio,
+        transform: "translate(-50%, -50%) translateY(0) rotate(0deg) scale(1)",
+        zIndex: 50,
+        opacity: 1,
+        filter: "none",
+      };
+    }
+
+    const direction = offset > 0 ? 1 : -1;
+    const depth = Math.min(absOffset, 3);
+
+    return {
+      aspectRatio,
+      transform: `translate(-50%, -50%) translate(${direction * depth * 26}px, ${depth * 14}px) rotate(${direction * depth * 6}deg) scale(${1 - depth * 0.08})`,
+      zIndex: 50 - depth,
+      opacity: depth > 2 ? 0 : 1 - depth * 0.22,
+      filter: `blur(${depth * 0.4}px)`,
+    };
+  };
+
+  return (
+    <div
+      className="report-deck"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div className="report-deck-stage">
+        {REPORT_IMAGES.map((img, index) => (
+          <div
+            key={img.src}
+            className={`report-card ${index === activeIndex ? "report-card-active" : ""}`}
+            style={getCardStyle(index)}
+          >
+            <img src={img.src} alt={img.alt} draggable="false" />
+          </div>
+        ))}
+      </div>
+
+      <div className="report-deck-dots">
+        {REPORT_IMAGES.map((_, index) => (
+          <button
+            key={index}
+            className={`report-dot ${index === activeIndex ? "report-dot-active" : ""}`}
+            onClick={() => handleDotClick(index)}
+            aria-label={`Show report snapshot ${index + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -97,7 +196,7 @@ const Landing = () => {
         </div>
 
         <div className="hero-visual-container">
-          <img src="/hero-visual.png" alt="JEE Report Preview" className="hero-img" />
+          <ReportDeck />
         </div>
       </section>
 

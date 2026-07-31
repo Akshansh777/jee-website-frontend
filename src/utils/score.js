@@ -31,6 +31,76 @@ function clamp(val, min, max) {
   return Math.min(Math.max(val, min), max);
 }
 
+// --- 1b. PERCENTILE-VS-ASPIRANTS ---
+// A *deterministic* function of the student's own JSS — not random. Models
+// the realistic spread of aspirants who take this diagnostic (mean ~38,
+// std ~16 — most self-selecting into a "reality check" quiz are still
+// mid-prep, not toppers), so a moderate JSS can honestly rank well against
+// this specific population even while still being far from elite JEE
+// readiness (a separate, stricter comparison already captured by
+// expected/potential percentile above). Clamped to [3, 97] so it never
+// claims an absolute "everyone" or "no one".
+function erf(x) {
+  // Abramowitz-Stegun approximation (accurate to ~1.5e-7)
+  const sign = x < 0 ? -1 : 1;
+  x = Math.abs(x);
+  const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741,
+        a4 = -1.453152027, a5 = 1.061405429, p = 0.3275911;
+  const t = 1 / (1 + p * x);
+  const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+  return sign * y;
+}
+
+function normalCDF(x, mean, std) {
+  return 0.5 * (1 + erf((x - mean) / (std * Math.SQRT2)));
+}
+
+function computePercentileVsAspirants(jss) {
+  const ASPIRANT_MEAN = 38;
+  const ASPIRANT_STD = 16;
+  const raw = normalCDF(jss, ASPIRANT_MEAN, ASPIRANT_STD) * 100;
+  return clamp(raw, 3, 97);
+}
+
+// --- 1c. DIAGNOSED-STATUS COPY PER BREAKDOWN CATEGORY ---
+// Short, specific-sounding diagnostic text per category, tiered by how
+// much of that category's max points were earned — mirrors the tone of
+// "56% Covered (Needs Core Focus)" style labels.
+function diagnoseStatus(categoryKey, ratio) {
+  const tiers = {
+    consistency_execution: [
+      [0.75, "Strong Daily Execution"],
+      [0.45, "Unstable Study Hours"],
+      [0, "Execution Breaking Down"],
+    ],
+    syllabus_coverage: [
+      [0.75, "Strong Syllabus Control"],
+      [0.45, `${Math.round(ratio * 100)}% Covered (Needs Core Focus)`],
+      [0, `${Math.round(ratio * 100)}% Covered (Critical Backlog)`],
+    ],
+    recall_error_control: [
+      [0.75, "Sharp Recall Under Pressure"],
+      [0.45, "Moderate Formula Decay in Mocks"],
+      [0, "High Formula Decay in Mock Tests"],
+    ],
+    exam_baseline: [
+      [0.75, "Strong Recent Mock Performance"],
+      [0.45, "Mid-Tier Mock Performance"],
+      [0, "Low Solving Density in Mocks"],
+    ],
+    environment_stability: [
+      [0.75, "Stable, Supportive Environment"],
+      [0.45, "Some Environmental Friction"],
+      [0, "High Environmental Disruption"],
+    ],
+  };
+  const list = tiers[categoryKey] || [[0, "Needs Review"]];
+  for (const [threshold, label] of list) {
+    if (ratio >= threshold) return label;
+  }
+  return list[list.length - 1][1];
+}
+
 // --- 2. MAIN COMPUTE FUNCTION ---
 
 export function computeScores(responses) {
@@ -131,6 +201,27 @@ export function computeScores(responses) {
 
   const manifestKeys = mapAnswersToManifest(responses);
 
+  // --- BREAKDOWN: the 5 weighted terms above, expressed as earned/max
+  // points that ALWAYS sum to JSS exactly (30+25+20+15+10 = 100). ---
+  const breakdownRaw = [
+    { key: "consistency_execution", label: "Consistency & Execution", max: 30, earnedRatio: EI },
+    { key: "syllabus_coverage", label: "Syllabus Coverage", max: 25, earnedRatio: CI },
+    { key: "recall_error_control", label: "Recall & Error Control", max: 20, earnedRatio: REI },
+    { key: "exam_baseline", label: "Exam Performance Baseline", max: 15, earnedRatio: P_base / 100 },
+    { key: "environment_stability", label: "Environment & Stability", max: 10, earnedRatio: SI },
+  ];
+
+  const breakdown = breakdownRaw.map((b) => ({
+    key: b.key,
+    label: b.label,
+    max: b.max,
+    earned: format(b.earnedRatio * b.max),
+    ratio: clamp(b.earnedRatio, 0, 1),
+    status: diagnoseStatus(b.key, clamp(b.earnedRatio, 0, 1)),
+  }));
+
+  const percentileVsAspirants = format(computePercentileVsAspirants(JSS));
+
   return {
     jee_society_score: format(JSS),
     expected_percentile: format(P_expected),
@@ -144,6 +235,8 @@ export function computeScores(responses) {
       format(clamp(Potential_Range[1], 0, 99.9))
     ],
     attempt_type: attemptType,
-    manifestKeys
+    manifestKeys,
+    breakdown,
+    percentile_vs_aspirants: percentileVsAspirants,
   };
 }

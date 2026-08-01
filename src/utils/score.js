@@ -12,6 +12,16 @@ function normalize(answerIndex) {
   return map[idx] !== undefined ? map[idx] : 0;
 }
 
+// Q19 (active vs passive study ratio) uses its own explicit multiplier
+// scale rather than the generic normalize() mapping above, since these
+// were given as specific target values (0.3 / 0.5 / 0.8 / 1.0), not the
+// standard 1.0/0.66/0.33/0 ladder the other questions use.
+const Q19_MULTIPLIER = [0.3, 0.5, 0.8, 1.0];
+function getQ19Multiplier(responses) {
+  const idx = Number(responses["q19"]);
+  return Q19_MULTIPLIER[idx] !== undefined ? Q19_MULTIPLIER[idx] : 0.5;
+}
+
 function getEpsilon(responses) {
   const keys = Object.keys(responses).sort();
   let str = "";
@@ -108,7 +118,13 @@ export function computeScores(responses) {
   // A. INPUTS & INDICES
   const getQ = (qid) => normalize(responses[qid]);
 
-  const EI = 0.35 * getQ("q1") + 0.35 * getQ("q8") + 0.15 * getQ("q2") + 0.15 * getQ("q9");
+  // EI internally reweighted to fold in Q19 (active vs passive study
+  // ratio) as a real signal — EI's own 30% share of the overall JSS
+  // formula below is unchanged, only its internal composition shifted:
+  // was 0.35*q1 + 0.35*q8 + 0.15*q2 + 0.15*q9 (summed to 1.0),
+  // now includes q19 at 0.20 with the others proportionally trimmed,
+  // still summing to 1.0.
+  const EI = 0.30 * getQ("q1") + 0.25 * getQ("q8") + 0.10 * getQ("q2") + 0.15 * getQ("q9") + 0.20 * getQ19Multiplier(responses);
   const avgPCM = (getQ("q4") + getQ("q5") + getQ("q6")) / 3;
   const CI = 0.4 * getQ("q3") + 0.2 * avgPCM;
   const REI = 0.6 * getQ("q7") + 0.4 * getQ("q10");

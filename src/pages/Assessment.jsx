@@ -247,6 +247,35 @@ const QUESTIONS = [
       "I generally can’t score more than 50 marks in JEE Mains Mock Tests."
     ],
     weights: [0, 0, 0, 0] 
+  },
+  // Q19 NEW: active vs passive study ratio — feeds EI (Consistency & Execution)
+  {
+    id: "q19",
+    question: "Q19. Out of your daily study time, how is your hours distribution split between watching lectures/classes versus solving questions on your own?",
+    options: [
+      "80% Lectures / 20% Solving",
+      "60% Lectures / 40% Solving",
+      "50% Lectures / 50% Solving",
+      "20% Lectures / 80% Solving"
+    ],
+    // These are used directly as multipliers in score.js (Q19_MULTIPLIER),
+    // not run through the generic 1.0/0.66/0.33/0 index mapping other
+    // questions use, since they were given as specific target values.
+    weights: [0.3, 0.5, 0.8, 1.0]
+  },
+  // Q20 NEW: accountability/mentorship signal — display + report-context
+  // only, does NOT feed the JSS formula. See AccountabilityCallout on the
+  // results page for how this is used.
+  {
+    id: "q20",
+    question: "Q20. Who currently audits your weekly test performance and holds you accountable to your daily targets?",
+    options: [
+      "Nobody, I analyze them alone (or skip analysis entirely)",
+      "My coaching teachers (they care, but rarely have time for 1-on-1 audits)",
+      "My parents (they support me, but don't know technical JEE strategy)",
+      "A dedicated senior / IITian mentor"
+    ],
+    weights: [0, 0, 0, 0]
   }
 ];
 
@@ -290,7 +319,7 @@ const SECTIONS = [
     subtitle: "The external factors shaping your prep.",
     reflection: "Your mindset: captured.",
     startStep: 13,
-    endStep: 18,
+    endStep: 20,
   },
 ];
 
@@ -1622,7 +1651,7 @@ const PercentileCard = ({ percentile, jss, color }) => {
           <path d="M20 6L9 17l-5-5" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <span style={{ fontSize: "12.5px", color: "#64748b", fontWeight: "600" }}>
-          Benchmarked against 5,357+ completed assessments
+          Benchmarked against 5,357 completed assessments
         </span>
       </div>
     </div>
@@ -1654,6 +1683,44 @@ const TopStudentsCallout = ({ weakestLabel, weakestKey, color }) => (
     </p>
   </div>
 );
+
+// Personalized to their Q20 answer (who audits their weekly performance).
+// This is intentionally NOT tied to the JSS formula — it's a separate
+// signal used purely to surface a real, honest gap (accountability),
+// without naming or pricing any specific mentorship product here.
+const ACCOUNTABILITY_COPY = [
+  "Right now, nobody is checking whether your plan is actually being executed. That blind spot is exactly where most aspirants quietly fall behind, week after week, without realizing it.",
+  "Your teachers care, but with hundreds of students, they can't personally audit your week-to-week execution. That gap between being taught and being held accountable is where preparation quietly slips.",
+  "Your parents keep you going, but they can't tell you whether last week's execution actually moved the needle. Emotional support and technical accountability solve two different problems.",
+  "You already have someone in your corner keeping you accountable. That's rare, and it's exactly why aspirants with it tend to close their gaps faster than everyone else.",
+];
+
+const AccountabilityCallout = ({ answers }) => {
+  const idx = Number(answers["q20"]);
+  const hasMentor = idx === 3;
+  const copy = ACCOUNTABILITY_COPY[idx] !== undefined ? ACCOUNTABILITY_COPY[idx] : ACCOUNTABILITY_COPY[0];
+  return (
+    <div style={{ background: "#fff", border: "1px solid #f1f1f1", borderRadius: "20px", padding: "26px 24px", boxShadow: "0 10px 30px rgba(0,0,0,0.06)" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
+        <div style={{ width: "34px", height: "34px", borderRadius: "10px", background: "#0d948815", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+          <div style={{ transform: "scale(1.3)" }}>
+            <IconClipboard color="#0d9488" />
+          </div>
+        </div>
+        <div style={{ fontSize: "12.5px", fontWeight: "800", letterSpacing: "0.5px", color: "#0d9488", textTransform: "uppercase" }}>
+          Your Accountability Gap
+        </div>
+      </div>
+      <p style={{ fontSize: "16px", color: "#1e293b", lineHeight: "1.65", margin: "0 0 10px" }}>{copy}</p>
+      {!hasMentor && (
+        <p style={{ fontSize: "14.5px", color: "#64748b", margin: 0 }}>
+          Structured, technical accountability is one of the biggest differences between aspirants who
+          actually close their gap and those who just keep re-diagnosing it.
+        </p>
+      )}
+    </div>
+  );
+};
 
 // Founder video — placeholder until a real link is provided. Swap
 // FOUNDER_VIDEO_URL to a YouTube embed URL and this renders automatically.
@@ -1937,7 +2004,7 @@ export default function StudentSwotForm() {
   // Progress (exclude name question)
   // Endowed progress effect: start at 8% (not 0%) so the bar never feels
   // like "nothing has happened yet" the moment the form opens.
-  const TOTAL_QUESTIONS = 18;
+  const TOTAL_QUESTIONS = 20;
   const BASE_PROGRESS = 8;
   const currentQuestionIndex = Math.max(step - 1, 0); 
   const progressPercent = Math.min(
@@ -2289,7 +2356,7 @@ export default function StudentSwotForm() {
               <path d="M20 6L9 17l-5-5" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             <span style={{ fontSize: "12.5px", color: "#64748b", fontWeight: "600" }}>
-              Calculated the same way for all 5,357+ aspirants who've taken this assessment
+              Scored using the same model already trusted by 5,357 JEE aspirants
             </span>
           </div>
         </div>
@@ -2328,12 +2395,17 @@ export default function StudentSwotForm() {
         </div>
 
         {/* --- 4. WHAT TOP STUDENTS DO DIFFERENTLY (personalized to weakest category) --- */}
-        <div style={{ marginBottom: "40px" }}>
+        <div style={{ marginBottom: "26px" }}>
           <TopStudentsCallout
             weakestLabel={weakestCategory.label}
             weakestKey={weakestCategory.key}
             color={BREAKDOWN_COLORS[weakestCategory.key] || "#c62828"}
           />
+        </div>
+
+        {/* --- 4b. ACCOUNTABILITY GAP (personalized to Q20, subtle mentorship-need primer) --- */}
+        <div style={{ marginBottom: "40px" }}>
+          <AccountabilityCallout answers={answers} />
         </div>
 
         {/* --- 5. SWOT SECTION (kept) --- */}
@@ -2470,7 +2542,7 @@ export default function StudentSwotForm() {
     <div style={{ minHeight: "100vh", background: "#fafafa", padding: "20px 12px" }}>
       <Helmet>
         <title>Start Assessment | JEE Society</title>
-        <meta name="description" content="Answer 18 questions to analyze your JEE Main & Advanced consistency, focus, and syllabus coverage." />
+        <meta name="description" content="Answer 20 questions to analyze your JEE Main & Advanced consistency, focus, and syllabus coverage." />
         <link rel="canonical" href="https://report.jeesociety.in/assessment" />
         <meta name="robots" content="noindex" /> {/* Optional: Keep Google away from the quiz questions directly? Usually yes. */}
       </Helmet>

@@ -1,0 +1,562 @@
+{
+  "Q1_A": {
+    "question": "Your Consistency Meter",
+    "option_label": "The Machine",
+    "one_line": "You already have the rare skill of showing up daily. Now it is time to make those hours smarter.",
+    "mentor_note": "Daily consistency is not common. Most students struggle to even sit every day. You do not. That means your discipline muscle is strong. But consistency alone does not guarantee rank. Direction and feedback decide results. If you repeat the same mistakes daily, effort will stay effort, not progress. You must regularly check what is working and what is not. Weekly tests and honest analysis convert effort into marks. Once feedback enters the loop, your preparation accelerates fast. You are not far from a breakthrough. You just need sharper correction, not more hours.",
+    "action_24h": "Attempt one timed sectional test today under exam conditions. Do not pause or check solutions midway. After the test, analyse calmly. Write down the top three reasons for lost marks. Concept gap, silly error, or time issue. Then write one clear fix for each reason. This analysis is more important than the test itself.",
+    "action_7d": "Schedule two short sectional tests this week. Fix specific days and times. After each test, do a dedicated error correction session of at least 60 minutes. Track whether the same mistake repeats. If yes, change your method. By the end of the week, you should see fewer repeated errors."
+  },
+  "Q1_B": {
+    "question": "Your Consistency Meter",
+    "option_label": "The Weekend Warrior",
+    "one_line": "You can work hard, but only when motivation is high. Real progress comes from discipline on low days.",
+    "mentor_note": "Good days prove you have the ability. Bad days reveal your system. Right now, your system collapses when energy is low. That creates guilt and inconsistency. The solution is not more motivation. It is a minimum habit that you follow even on tired days. A small non-negotiable task protects momentum and self-trust. Once momentum is protected, confidence slowly rebuilds. Long streaks are built from boring days, not inspired ones.",
+    "action_24h": "Sit now and do 45 minutes of pure problem solving. No phone. No switching subjects. Choose one topic and solve continuously. Even if the quality feels average, complete the session. The goal today is showing up, not perfection.",
+    "action_7d": "Fix a daily 45-minute minimum study rule. No matter how the day goes, this block must be completed. Track completion on paper. Do not compensate for missed days. The goal is an unbroken chain of seven days."
+  },
+  "Q1_C": {
+    "question": "Your Consistency Meter",
+    "option_label": "The Burst Worker",
+    "one_line": "You work in spikes, but your brain needs rhythm, not explosions.",
+    "mentor_note": "Long study marathons feel productive and heroic. But memory does not form well under exhaustion. Your brain prefers repeated exposure over extreme sessions. Burst working also causes burnout and irregular sleep. A steady routine builds stronger recall with less stress. You will remember more with fewer total hours if the schedule is stable. Discipline here is about stopping on time, not pushing harder.",
+    "action_24h": "Limit today’s study to six focused hours. Break it into clean blocks. Do not extend late into the night. Sleep before 11:30 PM. This resets your energy cycle and improves recall tomorrow.",
+    "action_7d": "Follow a five-day routine with four to five focused hours daily. Keep start and end times fixed. Track how your energy and memory feel. You should feel calmer and sharper by the end of the week."
+  },
+  "Q1_D": {
+    "question": "Your Consistency Meter",
+    "option_label": "The Procrastinator",
+    "one_line": "You think a lot. Execution is missing.",
+    "mentor_note": "Planning feels productive because it avoids discomfort. Execution feels risky because results are uncertain. But confidence only comes from finished tasks. Over-planning delays learning. Shrink planning time and expand doing time. One completed task daily rebuilds trust in yourself faster than any new timetable. Momentum fixes motivation, not the other way around.",
+    "action_24h": "Make a short plan tonight for tomorrow. No more than five tasks. Include a 15-minute morning workout before study. Then sleep. Tomorrow, execute without modifying the plan.",
+    "action_7d": "Plan each night for the next day. Keep plans realistic. Finish tasks before sleeping. At the end of the week, review how many days you fully executed. Aim for progress, not perfection."
+  },
+  "Q2_A": {
+    "question": "Your Deep Work Reality",
+    "option_label": "Deep Focus",
+    "one_line": "You can focus deeply. That is a major advantage.",
+    "mentor_note": "Six or more distraction-free hours are rare. Most students never reach this state. But deep focus must be used correctly. If you spend it on passive reading or easy tasks, the advantage is wasted. Deep work should attack weak chapters, difficult problems, and timed solving. Pair focus with feedback. That is where rank improvement happens.",
+    "action_24h": "Use your first deep focus block on your weakest chapter. Solve problems, not theory. Time yourself and note where your focus breaks.",
+    "action_7d": "Plan one deep focus block daily. End the week with a timed chapter test to check if deep work is converting into marks."
+  },
+  "Q2_B": {
+    "question": "Your Deep Work Reality",
+    "option_label": "Standard Grind",
+    "one_line": "You are putting in decent hours. The next jump will come from improving how those hours are used.",
+    "mentor_note": "Four to six hours of study per day is not bad at all. Many students clear JEE within this range. The issue is not time, it is structure and intensity inside those hours. If focus keeps breaking or tasks are not clearly defined, the output stays average. Right now, your study likely mixes thinking, distraction, and comfort work. That gives the feeling of effort without strong results. What you need is fewer but cleaner study blocks. One strong, focused block does more than three distracted ones. When quality improves, confidence improves automatically because you start seeing questions click faster. Another problem with the standard grind is that students underestimate recovery. Without planned breaks, attention drops silently. You should treat focus like a muscle. Use it hard, then let it recover. This balance is what allows consistency without burnout.",
+    "action_24h": "Today, plan one 90-minute phone-free study block. Choose a single subject and a single chapter. Before starting, write exactly what you will do in that block.",
+    "action_7d": "For the next seven days, schedule one compulsory deep block daily between 90 and 120 minutes. Fix the time slot so your brain expects it. Do not negotiate with yourself."
+  },
+  "Q2_C": {
+    "question": "Your Deep Work Reality",
+    "option_label": "Passive Consumption",
+    "one_line": "You are watching success, not building it. The pen must move more than the video player.",
+    "mentor_note": "Watching lectures feels like studying because you understand the logic in the moment. But understanding is not solving. In the exam, there is no video player, only a blank sheet. If you spend 80% of your time consuming content and only 20% applying it, your brain never learns to retrieve information under pressure. This is why you feel you 'know' the chapter but get stuck in the exam. Real confidence comes from struggling with problems, not nodding at solutions.",
+    "action_24h": "Stop watching videos for the next 24 hours. Pick a chapter you have already 'watched'. Pick up a pen and solve 15 problems from it. Struggle with them. Do not look at the solution immediately.",
+    "action_7d": "Flip your ratio. For every 1 hour of lecture, you must do 2 hours of self-practice. Track this ratio daily. If you watch a 2-hour one-shot, you owe yourself 4 hours of solving before watching the next one."
+  },
+  "Q2_D": {
+    "question": "Your Deep Work Reality",
+    "option_label": "Distracted",
+    "one_line": "You are physically present but mentally absent. This is 'Fake Work'.",
+    "mentor_note": "Sitting for 10 hours with a phone nearby is worse than sitting for 2 hours with focus. Why? Because you exhaust your brain without getting the results, leading to frustration. The constant switching between study and distraction prevents your brain from entering 'Deep Mode', where complex concepts are actually learned. You are training your brain to be distracted. You need to physically separate yourself from your distractions. Willpower is not enough; you need a barrier.",
+    "action_24h": "Give your phone to your parents or lock it in another room for 3 hours. Sit with just your books. If you feel bored, stare at the wall, but do not pick up the phone.",
+    "action_7d": "Create a 'Phone-Free Zone'. Identify a study space where the phone is never allowed. Use it only for study. If you need a break, leave that space. Train your brain that 'Chair = Focus'."
+  },
+  "Q3_A": {
+    "question": "Syllabus Status",
+    "option_label": "On Track",
+    "one_line": "You have a massive lead. Now, protect it with revision.",
+    "mentor_note": "Completing 80% syllabus with problem solving is a winning position. Most aspirants are far behind. However, the danger now is forgetting. As you push for the final 20%, the first 80% will start fading if not revisited. Your priority shifts from 'Coverage' to 'Retention'. Do not rush the remaining chapters at the cost of losing the old ones.",
+    "action_24h": "Identify one 'completed' chapter from 3 months ago. Attempt 10 PYQs from it today without revising notes. Check how much you recall.",
+    "action_7d": "Dedicate 30% of your daily time purely to revision. Do not let old chapters die. Start a 'cycling revision' plan where you touch every old unit once every two weeks."
+  },
+  "Q3_B": {
+    "question": "Syllabus Status",
+    "option_label": "Manageable Debt",
+    "one_line": "You are in the fight. Strategic selection is your key to winning.",
+    "mentor_note": "50-80% is a standard, fighting position. You can definitely clear the exam, but you cannot afford to waste time on low-yield chapters now. You need to be a sniper. Focus on high-weightage chapters first. Do not try to complete 100% just for the sake of it. 85% syllabus mastered perfectly is better than 100% done vaguely.",
+    "action_24h": "List down the chapters you have NOT done. Mark the ones that are 'High Weightage' (e.g., Modern Physics, Vector 3D). Ignore the low weightage hard ones for now.",
+    "action_7d": "Create a 'Kill List' for this week. Pick 2 high-weightage chapters you haven't done. Finish them completely (Theory + PYQs). Ignore everything else until these two are secure."
+  },
+  "Q3_C": {
+    "question": "Syllabus Status",
+    "option_label": "Panic Mode",
+    "one_line": "Panic freezes you. Action frees you. Forget the mountain, climb the hill.",
+    "mentor_note": "Less than 50% feels scary, but the cutoff for a good NIT is often achievable with just 50-60% of the paper if accuracy is high. The biggest mistake you can make now is trying to do everything and finishing nothing. You need to cut your syllabus. Ignore the hardest 30% of the syllabus completely. Focus entirely on the easiest, highest-scoring 50%. You are not fighting for Rank 1; you are fighting for a seat.",
+    "action_24h": "Stop looking at the full syllabus. It causes anxiety. Pick ONE easy unit (e.g., Chemistry in Everyday Life / Kinematics) and finish it today. One small win will kill the panic.",
+    "action_7d": "Adopt the '40-Day Rule'. Assume you only have 40 days. Select only 25 chapters that are easy and high scoring. Commit to mastering ONLY these. If you master these, you clear the cutoff."
+  },
+  "Q3_D": {
+    "question": "Syllabus Status",
+    "option_label": "Fresh Start",
+    "one_line": "The past is gone. You are playing a T20 match now, not a Test match.",
+    "mentor_note": "Starting from zero (or near zero) is tough, but not impossible if the target is realistic. Do not aim for IIT Bombay CSE right now. Aim to get a college. You need to hack the exam. Physics and Chemistry have many formula-based questions that don't require deep theory. Math is hard, so pick only the easiest 3-4 chapters. Your goal is to find the 30 easiest questions in the paper and hunt them down.",
+    "action_24h": "Download the 'High Weightage - Low Effort' chapter list. Pick the single easiest chapter from Chemistry. Read the NCERT and solve 20 PYQs. Prove to yourself you can learn.",
+    "action_7d": "Forget the 'Syllabus'. Focus on 'Marks'. Your goal is 100 marks. Identify the chapters that give you those 100 marks most easily. Study ONLY those. Ignore the rest of the world."
+  },
+  "Q4_A": {
+    "question": "Physics Strategy",
+    "option_label": "Strong",
+    "one_line": "Physics is your sword. Sharpen it until it cuts through everything.",
+    "mentor_note": "Having strong Physics is a massive competitive advantage because most medical/engineering aspirants struggle here. Since you are good, you must aim for 80+ in this section to cover up for other subjects. However, do not get arrogant. Strong students often lose marks to 'silly mistakes' in easy questions because they rush. Your next level is speed with accuracy.",
+    "action_24h": "Take a sectional Physics mock test (1 hour). Your target is not just to solve, but to solve in under 50 minutes. Push your speed limit.",
+    "action_7d": "Start solving 'Rank Booster' problems or Advanced level single-choice questions to deepen your concepts further. Make Physics your 'Bank'—guaranteed marks."
+  },
+  "Q4_B": {
+    "question": "Physics Strategy",
+    "option_label": "Average",
+    "one_line": "You are close to a breakthrough. You need problem variety, not more theory.",
+    "mentor_note": "Average means you understand the concept but get stuck on the application. You likely re-read notes when you get stuck. Stop that. The disconnect is between the formula and the question language. You need exposure to different *types* of problems. You don't need new concepts; you need to see how the same concept is twisted in exam questions.",
+    "action_24h": "Pick a chapter you call 'Average'. Don't read the theory. Open a book and solve 20 solved examples by hiding the solution. See where you get stuck.",
+    "action_7d": "Focus on 'Application'. For the next week, spend 80% of Physics time solving PYQs. If you get stuck, read the solution, understand the *step* you missed, and re-solve it."
+  },
+  "Q4_C": {
+    "question": "Physics Strategy",
+    "option_label": "Weak",
+    "one_line": "Physics is logical. If you fear it, you haven't seen it simply enough.",
+    "mentor_note": "You struggle because you likely have gaps in basics (Vectors, Calculus, Mechanics). Physics builds on itself. If you don't know Vectors, Electostatics will feel like magic. You are probably trying to memorize formulas without understanding the physical situation. That doesn't work. You need to go back to basics. Drop the complex books. Stick to NCERT level or basic coaching modules first.",
+    "action_24h": "Watch a 'Basic Math for Physics' summary video. Ensure you understand differentiation and vectors. Then pick 'Units and Dimensions'—it's easy and guarantees marks.",
+    "action_7d": "Target 'Low Hanging Fruit'. Modern Physics, Semiconductors, and Current Electricity. These are easy and independent of mechanics. Master these to get confident before attacking mechanics."
+  },
+  "Q4_D": {
+    "question": "Physics Strategy",
+    "option_label": "Comfort Trap",
+    "one_line": "Loving Physics is good. Obsessing over it is dangerous.",
+    "mentor_note": "You are falling into the 'PhD Trap'. You love Physics, so you keep studying it because it feels good. But the exam treats Physics, Chemistry, and Math equally. Scoring 100 in Physics and 20 in Chemistry is a bad rank strategy. You are using Physics to avoid the pain of studying your weaker subjects. You need to cap your Physics time and force yourself to face Chemistry/Math.",
+    "action_24h": "Hard stop on Physics today. You are forbidden from touching Physics. Study your weakest subject for 3 hours. Feel the discomfort. That is where growth is.",
+    "action_7d": "Limit Physics to 30% of your study time. Use Physics as a 'Reward'. Tell yourself: 'I can only do Physics after I finish 2 hours of Chemistry'."
+  },
+  "Q5_A": {
+    "question": "Chemistry Strategy",
+    "option_label": "Strong",
+    "one_line": "Chemistry is the rank decider. You are sitting on a goldmine.",
+    "mentor_note": "Strong Chemistry is the secret of almost every topper. It saves time. You can finish the paper in 40 minutes and use the saved time for Math. Your goal now should be 'Speed'. Can you solve Organic/Inorganic without lifting the pen? Keep revising NCERT lines—Examiners love to pick hidden lines from there.",
+    "action_24h": "Take a Chemistry sectional test. Try to finish it in 45 minutes. See if you can maintain accuracy at that speed.",
+    "action_7d": "Make 'Short Notes' of all volatile facts (Inorganic trends, named reactions). Read these sheets every morning for 15 minutes. Make it muscle memory."
+  },
+  "Q5_B": {
+    "question": "Chemistry Strategy",
+    "option_label": "Volatile",
+    "one_line": "Chemistry evaporates. The only lid is Spaced Repetition.",
+    "mentor_note": "You memorize it, you forget it. This is normal. The problem isn't your brain; it's your method. You are likely 'binge-studying' Chemistry—studying it hard for 2 days and then leaving it for 10 days. Chemistry needs small, daily doses. It is like brushing your teeth; you have to do it every day for it to work.",
+    "action_24h": "Create a simple 'Daily Ritual'. 30 minutes of Inorganic/Organic revision every single morning before you start your main study.",
+    "action_7d": "Implement the '1-3-7 Rule'. If you study a reaction today (Day 1), revise it on Day 3, and again on Day 7. Use flashcards or a wall chart."
+  },
+  "Q5_C": {
+    "question": "Chemistry Strategy",
+    "option_label": "Weak",
+    "one_line": "You are throwing away the easiest marks in the paper.",
+    "mentor_note": "Hating Chemistry is expensive. It is the only subject where you can score 80 marks in 50 minutes. You don't have to love it; you just have to do it. Start with Physical Chemistry—it is logical and math-based (like Physics). Then move to Organic logic. Treat Inorganic as 'Daily News'—just read it without stress.",
+    "action_24h": "Pick 'Atomic Structure' or 'Solutions'. These are logical and easy. Finish one today. Prove to yourself that Chemistry isn't magic; it's just rules.",
+    "action_7d": "Target 40 Marks first. Physical Chemistry easy chapters + Environmental Chem + Biomolecules + Polymers (if in syllabus) + Chemistry in Everyday life. Secure the 'GK' marks of Chemistry."
+  },
+  "Q5_D": {
+    "question": "Chemistry Strategy",
+    "option_label": "Average",
+    "one_line": "Balance your attack. Fix the broken leg.",
+    "mentor_note": "Being good at one part (e.g., Physical) and bad at another (e.g., Organic) is common. But the exam asks from all three. You are likely ignoring the part you are bad at. This creates a ceiling on your score. You need to stop polishing your strong area and start scrubbing the dirty one. Even basics of your weak area will fetch easy marks.",
+    "action_24h": "Identify your weakest branch (PC/OC/IOC). Spend 2 hours today ONLY on the basics of that branch. Do not touch your strong area.",
+    "action_7d": "Dedicate this week to 'Balancing'. If Organic is weak, do GOC (General Organic Chemistry) every day this week. Strong GOC fixes 70% of Organic issues."
+  },
+  "Q6_A": {
+    "question": "Mathematics Strategy",
+    "option_label": "Killer",
+    "one_line": "Math is your superpower. Use it to crush the competition.",
+    "mentor_note": "If you are good at Math, you are already in the top 5%. Most students drown here. Your advantage is massive. However, Math is a time sink. The danger for you is 'Ego Solving'—getting stuck on a hard problem for 10 minutes in the exam. You must learn the art of 'Skipping'. If a problem takes too long, kill it and move on, even if you know how to do it.",
+    "action_24h": "Pick a set of 10 'Lengthy' Math problems (Calculus/Coordinate). Try to solve them using options, substitution, or short-cuts. Force yourself to find the fast way.",
+    "action_7d": "Practice 'Exam Mode' Math. Solve 25 questions in 60 minutes. Train your brain to switch between Algebra and Calculus instantly. Speed is your next frontier."
+  },
+  "Q6_B": {
+    "question": "Mathematics Strategy",
+    "option_label": "Survivor",
+    "one_line": "Smart survival is better than foolish bravery. Clear the cutoff, win the war.",
+    "mentor_note": "You don't need 100/100 in Math to get a top rank. You need 40-50 marks. Your strategy is excellent: Target high-weightage, doable chapters. Vector 3D, Matrices, Statistics, Mathematical Reasoning. These are your bread and butter. Master them so well that you never lose a mark here. Ignore the complex, twisted Calculus problems if they scare you.",
+    "action_24h": "Verify your 'Survivor Kit'. Pick Vector 3D. Solve 10 PYQs. If you get them right, your survival is guaranteed.",
+    "action_7d": "Identify 8 'Safe Chapters'. Study ONLY these 8 for Math this week. Forget the rest of the syllabus. Your goal is 100% accuracy in these 8 chapters."
+  },
+  "Q6_C": {
+    "question": "Mathematics Strategy",
+    "option_label": "Phobia",
+    "one_line": "Fear kills more dreams than Math does. Face it, but on your terms.",
+    "mentor_note": "You are terrified of Math, so you avoid it, which makes you weaker, which makes you more terrified. Break the cycle. You don't need to be a mathematician. You just need 25-30 marks. That is just 6-7 correct questions. You can find 6 easy questions in any paper (Stats, Sets, Matrices, Basic Coordinate). Stop looking at the hard questions. Hunt for the easy ones.",
+    "action_24h": "Download a previous year paper. Scan the Math section. Find 5 questions that look 'Short' and 'Easy'. Try to solve only those. Ignore the rest.",
+    "action_7d": "Start with 'Statistics' and 'Mathematical Reasoning'. They are the easiest 8 marks in the JEE paper. Master them this week. It will break your zero-confidence streak."
+  },
+  "Q6_D": {
+    "question": "Mathematics Strategy",
+    "option_label": "The Ego Lifter",
+    "one_line": "Marks matter, difficulty doesn't. Stop fighting the exam.",
+    "mentor_note": "You are trying to prove you are smart by solving the hardest problems. The exam gives +4 marks for a hard integration sum and +4 marks for an easy Matrix sum. Why choose the hard one? Your ego is wasting your time. You need to learn humility. Solving easy questions fast is a skill. Solving impossible questions is a hobby. Do not make the exam your hobby.",
+    "action_24h": "Pick a chapter you are weak at. Force yourself to solve the 'Easy' level questions from it. Do not touch the advanced ones. Learn to walk before you fly.",
+    "action_7d": "Practice 'Selection'. Open a mock test. Give yourself 5 minutes to just 'Select' the 10 easiest questions. Do not solve. Just select. Then check if they were actually easy. Train your selection eye."
+  },
+  "Q7_A": {
+    "question": "Recall Strength",
+    "option_label": "Crystal Clear",
+    "one_line": "Your memory is sharp. Now build speed on top of it.",
+    "mentor_note": "Being able to recall formulas instantly is a huge asset. It means your conceptual clarity is high. Now, shift your focus to 'Application Speed'. Since you don't waste time thinking 'What was the formula?', use that saved time to solve more complex, multi-concept problems.",
+    "action_24h": "Take a timed quiz of 30 mixed-bag questions. See how fast you can switch between chapters without losing recall accuracy.",
+    "action_7d": "Start doing 'Full Syllabus' mock tests. Your memory is ready for the big game."
+  },
+  "Q7_B": {
+    "question": "Recall Strength",
+    "option_label": "Blurry",
+    "one_line": "You know it, but you don't trust it. Strengthen the connection.",
+    "mentor_note": "Blurry recall is frustrating. It usually happens when you understand the logic but haven't practiced enough questions to make it automatic. You waste valuable exam minutes trying to derive or remember things. You need to bridge the gap between 'Understanding' and 'Knowing'.",
+    "action_24h": "Write down all formulas of a chapter on a blank sheet without looking. Compare with your notes. Highlighting what you missed fixes the blur.",
+    "action_7d": "Revise using 'Active Recall'. Don't just read notes. Close the book and ask yourself 'What was on that page?'. Force your brain to retrieve."
+  },
+  "Q7_C": {
+    "question": "Recall Strength",
+    "option_label": "Leaky Bucket",
+    "one_line": "You are filling the bucket, but the holes are too big. Plug them.",
+    "mentor_note": "You study hard, but it vanishes in a week. This is 'Passive Learning'. You are likely reading too much and solving too little. Reading gives a false sense of security. Only testing yourself solidifies memory. You need a system that forces you to revisit old topics regularly.",
+    "action_24h": "Create a 'Mistake Notebook'. Write down one concept you forgot today. Reviewing this notebook is more valuable than reading a new chapter.",
+    "action_7d": "Adopt Spaced Repetition. Review a topic 1 day, 3 days, and 7 days after studying it. Stop the leakage before adding new water."
+  },
+  "Q7_D": {
+    "question": "Recall Strength",
+    "option_label": "Blank Out",
+    "one_line": "Fear is erasing your hard work. Calm the mind to access the data.",
+    "mentor_note": "Blanking out is an emotional issue, not an intellectual one. Your brain goes into 'Fight or Flight' mode and shuts down the memory centers. You need to practice exam temperament. You need to normalize the pressure so your brain stops panicking.",
+    "action_24h": "Simulate a mini-exam. 10 questions, 20 minutes. Create a high-stress environment at home. Teach your brain that 'Timer = Focus', not 'Timer = Panic'.",
+    "action_7d": "Practice deep breathing techniques before every study session. Lower your baseline anxiety level."
+  },
+  "Q8_A": {
+    "question": "Efficiency",
+    "option_label": "High Efficiency",
+    "one_line": "You are a sniper. You make every minute count.",
+    "mentor_note": "20+ MCQs per hour is elite speed. You are converting time into marks efficiently. Ensure your accuracy doesn't suffer due to this speed. If you can maintain this, you will have ample time for revision in the final exam.",
+    "action_24h": "Double-check your accuracy. Take a test. If you get negatives, slow down slightly to increase precision.",
+    "action_7d": "Maintain this pace. Add 'Skipping Strategy' to your arsenal to become untouchable."
+  },
+  "Q8_B": {
+    "question": "Efficiency",
+    "option_label": "Decent Speed",
+    "one_line": "Good pace, but the finish line requires a sprint.",
+    "mentor_note": "10-15 MCQs is the standard safe zone. You will clear the paper, but you might miss the 'Bonus' high-rank questions at the end. You need to shave off 30 seconds per question. Look for shortcuts and option elimination methods.",
+    "action_24h": "Analyze your solutions. Did you take the long method? Find the shorter alternate method for at least 5 questions.",
+    "action_7d": "Drill 'Speed Sets'. 30 easy questions in 30 minutes. Force your brain to process faster."
+  },
+  "Q8_C": {
+    "question": "Efficiency",
+    "option_label": "Slow Solver",
+    "one_line": "Perfectionism is slowing you down. Good enough is better than perfect.",
+    "mentor_note": "Staring at a question for 10 minutes is a crime in JEE. You are likely trying to understand the 'Deep Meaning' of every question or afraid of writing the wrong step. You need to be messier and faster. Scribble, try options, move on.",
+    "action_24h": "Set a timer for 3 minutes per question. If the alarm rings, you MUST leave the question. Learn to let go.",
+    "action_7d": "Focus on 'Quantity' over 'Quality' for one week. Solve 50 easy questions daily just to build momentum."
+  },
+  "Q8_D": {
+    "question": "Efficiency",
+    "option_label": "Solving Aversion",
+    "one_line": "You cannot win a swimming race by reading about swimming.",
+    "mentor_note": "You avoid solving because it feels hard. Reading notes feels easy. But notes don't get marks. You need to break the inertia. Start with stupidly easy questions just to get the pen moving. Once you solve 10, the fear disappears.",
+    "action_24h": "Solve 10 Board-level questions today. Just get them right. Feel the win.",
+    "action_7d": "Gradually increase difficulty. Do not touch JEE Advanced questions this week. Build confidence with Mains level first."
+  },
+  "Q9_A": {
+    "question": "Attention Span",
+    "option_label": "Deep Diver",
+    "one_line": "Your focus is your weapon. Protect it from burnout.",
+    "mentor_note": "Being able to sit for 3 hours is a superpower. It mimics the actual exam slot. Just ensure you are taking micro-breaks to keep the brain fresh. Don't let deep work turn into 'dull work'.",
+    "action_24h": "Optimize your 3-hour block. Mimic the exam time (e.g., 9-12 or 2-5).",
+    "action_7d": "Ensure your posture and hydration are perfect during these long blocks."
+  },
+  "Q9_B": {
+    "question": "Attention Span",
+    "option_label": "The Hopper",
+    "one_line": "Short bursts work, but the exam is a marathon.",
+    "mentor_note": "You have good energy but low endurance. The JEE exam is 3 hours long. You need to train your brain to stretch past the 45-minute comfort zone. It's like training for a run; add 10 minutes every day.",
+    "action_24h": "Push your session to 60 minutes today. Fight the urge to take a break at the 45th minute.",
+    "action_7d": "Gradually extend to 90-minute blocks. The goal is to reach two 1.5-hour blocks back-to-back."
+  },
+  "Q9_C": {
+    "question": "Attention Span",
+    "option_label": "Reels Brain",
+    "one_line": "Your dopamine receptors are fried. You need a detox.",
+    "mentor_note": "Constant notification checking has destroyed your ability to hold a thought. Complex JEE problems require holding multiple variables in your head. You cannot do that if you need a dopamine hit every 10 minutes. This is a medical emergency for your rank.",
+    "action_24h": "Delete Instagram/Shorts apps for 24 hours. Feel the boredom. Let your brain reset.",
+    "action_7d": "Use 'Forest' or similar apps to gamify your focus. Reward yourself with screen time ONLY after study goals are met."
+  },
+  "Q9_D": {
+    "question": "Attention Span",
+    "option_label": "Daydreamer",
+    "one_line": "You are escaping reality. Bring your mind back to the table.",
+    "mentor_note": "Daydreaming happens when the study material is passive. If you are just reading, your mind wanders. If you are writing, calculating, and drawing diagrams, your mind is engaged. You need 'Active Study' methods.",
+    "action_24h": "Study with a pen in hand. Summarize every paragraph you read. If the pen stops, you know you are daydreaming.",
+    "action_7d": "Use the 'Feynman Technique'. Teach the concept to an imaginary student out loud. Speaking keeps the mind tethered to the topic."
+  },
+  "Q10_A": {
+    "question": "Error Pattern",
+    "option_label": "Conceptual",
+    "one_line": "You cannot apply what you do not truly understand.",
+    "mentor_note": "You are losing marks because your foundation is shaky. You might have memorized the formula but didn't understand the derivation or conditions. Go back to the theory. Read standard textbooks or watch detailed lectures for these specific topics.",
+    "action_24h": "Identify one topic where you constantly make errors. Re-learn it from scratch today.",
+    "action_7d": "Don't solve new papers until you fix the conceptual holes in the previous ones."
+  },
+  "Q10_B": {
+    "question": "Error Pattern",
+    "option_label": "Silly Mistakes",
+    "one_line": "Speed without control is dangerous. Slow down to speed up.",
+    "mentor_note": "Silly mistakes are painful because you knew the answer. It usually happens due to rushing, bad handwriting, or not reading the question (asking for 'Incorrect' vs 'Correct'). This is a discipline issue, not a knowledge issue.",
+    "action_24h": "Solve 20 questions today with a focus on 'Neatness'. Write every step clearly.",
+    "action_7d": "Read every question TWICE before starting to solve. It costs 5 seconds but saves 5 marks."
+  },
+  "Q10_C": {
+    "question": "Error Pattern",
+    "option_label": "Ego Traps",
+    "one_line": "The exam is not a place to prove your intelligence. It's a place to gather marks.",
+    "mentor_note": "Getting stuck on hard questions destroys your paper. You need to develop the 'Art of Leaving'. If a question takes more than 3 minutes with no progress, it is a trap. Drop it immediately.",
+    "action_24h": "Take a test and deliberately SKIP the hardest 5 questions. See how much time you save.",
+    "action_7d": "Practice identifying 'Time wasters' at a glance. Be ruthless in skipping."
+  },
+  "Q10_D": {
+    "question": "Error Pattern",
+    "option_label": "Fear Skipping",
+    "one_line": "Don't judge a book by its cover. Scary questions can be easy.",
+    "mentor_note": "You skip questions because they look long or complex, but they might be simple substitution problems. You are leaving easy marks on the table due to anxiety. Read every question at least once.",
+    "action_24h": "Open a past paper. Find the longest, scariest looking question. Read it carefully. Try to solve it. You will be surprised.",
+    "action_7d": "Make it a habit to scan the entire paper. Never leave a question unread."
+  },
+  "Q11_A": {
+    "question": "Biggest Barrier",
+    "option_label": "The Collector",
+    "one_line": "Hoarding PDFs won't save you. Solving one book will.",
+    "mentor_note": "You have thousands of files but zero solutions. This is 'Productive Procrastination'. You feel like you are studying by downloading, but you aren't. Pick ONE source. Stick to it. Trust it. Delete the rest.",
+    "action_24h": "Pick ONE book/material for each subject. Put everything else in a folder named 'Later'. Do not open that folder.",
+    "action_7d": "Finish one chapter completely from your chosen source. Do not look for better notes."
+  },
+  "Q11_B": {
+    "question": "Biggest Barrier",
+    "option_label": "The Fear",
+    "one_line": "Fear of failure is ensuring your failure. Face the bad score.",
+    "mentor_note": "You are scared of getting low marks, so you don't take tests. But without tests, you won't improve, so you will get low marks. Break the loop. A bad score in a mock test is good—it shows you where to improve safely.",
+    "action_24h": "Take a test today. Expect to score zero. Tell yourself 'I don't care'. Just sit through it.",
+    "action_7d": "Normalize failure. Treat every wrong answer as a 'Discovery', not a 'Defeat'."
+  },
+  "Q11_C": {
+    "question": "Biggest Barrier",
+    "option_label": "Dopamine Addict",
+    "one_line": "Your phone is the enemy of your dream. Cut the cord.",
+    "mentor_note": "You cannot compete with students who have laser focus if you are addicted to scrolling. The algorithm is designed to keep you hooked. You need to physically remove the device. No willpower can fight an algorithm.",
+    "action_24h": "Install an app blocker. Or give your phone to your parents during study hours.",
+    "action_7d": "Build a life outside the screen. Go for a walk without music. Let your brain be bored."
+  },
+  "Q11_D": {
+    "question": "Biggest Barrier",
+    "option_label": "The Mountain",
+    "one_line": "The mountain is too high. Look at your feet.",
+    "mentor_note": "The backlog is overwhelming you, so you freeze. Stop looking at the summit. You cannot finish the backlog in a day. Just finish ONE topic today. Progress kills paralysis.",
+    "action_24h": "Ignore the backlog. Study what is being taught in class TODAY. Secure the present first.",
+    "action_7d": "Dedicate Sundays only for backlog. Keep weekdays for current topics. Chip away at the mountain slowly."
+  },
+  "Q12_A": {
+    "question": "Mindset",
+    "option_label": "Warrior",
+    "one_line": "You have the heart of a champion. Now get the skills.",
+    "mentor_note": "This mindset is your biggest asset. You are ready to fight. Use this energy to push through the boring, difficult days. You are unstoppable.",
+    "action_24h": "Channel this energy into your weakest subject. Attack it today.",
+    "action_7d": "Help a friend who is struggling. Teaching others sharpens your own sword."
+  },
+  "Q12_B": {
+    "question": "Mindset",
+    "option_label": "Hopeful",
+    "one_line": "Hope is good, but certainty is better. Build evidence of success.",
+    "mentor_note": "You believe you can, but you have doubts. Kill the doubts with 'Small Wins'. Every question you solve correctly is proof that you are capable. Stack up the proof.",
+    "action_24h": "Set a small, easy target (e.g., 20 questions). Hit it. feel the confidence rise.",
+    "action_7d": "Keep a 'Success Journal'. Write down 3 things you did well every day."
+  },
+  "Q12_C": {
+    "question": "Mindset",
+    "option_label": "Doubter",
+    "one_line": "Your thoughts are lying to you. Ignore them and work.",
+    "mentor_note": "You feel it's too late. It's not. Many students turn the game around in the last few months. Stop analyzing your chances and start improving your odds. Action cures fear.",
+    "action_24h": "Stop calculating your rank. Just study for the next hour. That is all you can control.",
+    "action_7d": "Read success stories of average students cracking JEE. Change your internal narrative."
+  },
+  "Q12_D": {
+    "question": "Mindset",
+    "option_label": "Lost",
+    "one_line": "You are not lost, you are just stopped. Start walking.",
+    "mentor_note": "Giving up is easy. Trying is hard. But the regret of giving up lasts forever. You don't need to crack IIT. You just need to do your best today. Reset your expectations. Just try.",
+    "action_24h": "Clean your desk. Open one book. Read one page. Start with the smallest possible step.",
+    "action_7d": "Talk to a mentor or teacher. Get a simple, low-pressure plan. You just need a map."
+  },
+  "Q13_A": {
+    "question": "Energy",
+    "option_label": "High Voltage",
+    "one_line": "You have a Ferrari engine. Drive it carefully.",
+    "mentor_note": "Energy is great, but don't burnout. Use your high energy periods for the toughest subjects (Math/Physics). Do rote memorization when energy is low.",
+    "action_24h": "Tackle the hardest chapter on your list today.",
+    "action_7d": "Maintain a consistent sleep schedule to protect this energy."
+  },
+  "Q13_B": {
+    "question": "Energy",
+    "option_label": "Afternoon Crash",
+    "one_line": "Biology is fighting you. Hack your routine.",
+    "mentor_note": "The post-lunch dip is real. Don't try to study heavy concepts then. Use this time for active tasks like taking a test or solving easy PYQs. Or take a 20-min power nap.",
+    "action_24h": "Schedule a mock test or nap during your crash time tomorrow.",
+    "action_7d": "Adjust your lunch. Eat lighter, less carbs. Stay hydrated."
+  },
+  "Q13_C": {
+    "question": "Energy",
+    "option_label": "Zombie Mode",
+    "one_line": "You cannot run on empty fumes. Recharge.",
+    "mentor_note": "Brain fog ruins study quality. 10 hours of zombie study is worth 2 hours of fresh study. You likely need more sleep, better food, or exercise. Prioritize your body.",
+    "action_24h": "Sleep for 8 hours tonight. No guilt. Treat it as 'Recovery Training'.",
+    "action_7d": "Add 15 minutes of cardio daily. Oxygenate your brain."
+  },
+  "Q13_D": {
+    "question": "Energy",
+    "option_label": "Night Owl",
+    "one_line": "The exam is in the morning. Reset your clock.",
+    "mentor_note": "Studying at night is peaceful, but if your exam is at 9 AM, your brain needs to be awake then. You are currently training your brain to sleep during exam hours. Dangerous.",
+    "action_24h": "Wake up 30 minutes earlier tomorrow. Don't nap.",
+    "action_7d": "Gradually shift your cycle back by 1 hour every 2 days until you are waking up at 7 AM."
+  },
+  "Q14_A": {
+    "question": "Health",
+    "option_label": "Fit",
+    "one_line": "A strong body houses a strong mind. Keep it up.",
+    "mentor_note": "You have a physical advantage. Your stamina helps you endure long study hours. Don't neglect it as exam pressure mounts.",
+    "action_24h": "Don't skip your exercise routine.",
+    "action_7d": "Ensure your nutrition supports your brain. Walnuts, hydration, fruits."
+  },
+  "Q14_B": {
+    "question": "Health",
+    "option_label": "Frequent Illness",
+    "one_line": "Health is your first syllabus. Fix it.",
+    "mentor_note": "Falling sick breaks momentum. It takes days to recover flow. Prioritize immunity. warm water, home food, proper sleep. Stop taking risks with street food.",
+    "action_24h": "Review your diet. Cut out anything risky.",
+    "action_7d": "Take multivitamins if recommended. Protect yourself from weather changes."
+  },
+  "Q14_C": {
+    "question": "Health",
+    "option_label": "Major Issues",
+    "one_line": "Your battle is harder. Be proud of your resilience.",
+    "mentor_note": "Managing a condition and JEE is heroic. Be kind to yourself. Adjust your schedule around your health. Study in shorter, focused bursts when you feel well.",
+    "action_24h": "Plan your study around your medication/energy peaks.",
+    "action_7d": "Don't compare your hours with others. Focus on your own efficiency."
+  },
+  "Q14_D": {
+    "question": "Health",
+    "option_label": "Unfit but Trying",
+    "one_line": "Small steps. Movement wakes up the brain.",
+    "mentor_note": "Sedentary life slows down cognitive function. You don't need to be an athlete, just active. Stretching and walking improves blood flow to the brain.",
+    "action_24h": "Take a 10-minute walk after dinner.",
+    "action_7d": "Do neck and back stretches between study sessions to prevent pain."
+  },
+  "Q15_A": {
+    "question": "Environment",
+    "option_label": "The Bunker",
+    "one_line": "You have the perfect setup. No excuses.",
+    "mentor_note": "Silence is golden. You have a privilege many don't. Maximize it. Ensure your bunker doesn't become a prison. Step out for fresh air occasionally.",
+    "action_24h": "Ensure your desk is clean and organized.",
+    "action_7d": "Optimize lighting and ventilation."
+  },
+  "Q15_B": {
+    "question": "Environment",
+    "option_label": "The Library",
+    "one_line": "Focus contagion. Seeing others study helps.",
+    "mentor_note": "Libraries are great for discipline. But commute time is a cost. Ensure the travel is productive (listen to revision audio) or minimized.",
+    "action_24h": "Pack your bag the night before to save morning time.",
+    "action_7d": "Track your 'Seat Time' vs 'Travel Time'. Optimize."
+  },
+  "Q15_C": {
+    "question": "Environment",
+    "option_label": "Living Room",
+    "one_line": "Noise is a distraction. Fight for your space.",
+    "mentor_note": "Constant interruptions break flow. Negotiate quiet hours with family. Or invest in earplugs/noise-canceling headphones.",
+    "action_24h": "Buy simple earplugs. Or use 'White Noise' on headphones.",
+    "action_7d": "Set a 'Do Not Disturb' signal (like a red flag on your desk) for family."
+  },
+  "Q15_D": {
+    "question": "Environment",
+    "option_label": "The Chaos",
+    "one_line": "Chaos is hard. But diamonds are made under pressure.",
+    "mentor_note": "Toxic environments drain energy. Use the library or school as an escape. If you must study at home, use late nights or early mornings when the chaos sleeps.",
+    "action_24h": "Find a local library or a quiet friend's house.",
+    "action_7d": "Shift your sleep cycle to be awake when the house is quiet."
+  },
+  "Q16_A": {
+    "question": "Parents",
+    "option_label": "The Rock",
+    "one_line": "You are lucky. Lean on their support.",
+    "mentor_note": "Supportive parents are a team. Share your fears with them. Let them handle the logistics (food, laundry) so you can focus on the war.",
+    "action_24h": "Thank your parents today. It boosts morale.",
+    "action_7d": "Have a weekly 10-min chat with them about your progress, not just marks."
+  },
+  "Q16_B": {
+    "question": "Parents",
+    "option_label": "Pressure Cooker",
+    "one_line": "Pressure bursts pipes. Build a shield.",
+    "mentor_note": "Comparisons hurt. Understand their intent is usually good, but the method is bad. Develop a 'thick skin'. Listen, nod, but don't let it enter your heart. Prove them wrong with action, not arguments.",
+    "action_24h": "Don't argue today. Just say 'I am working on it' and go back to study.",
+    "action_7d": "Use their doubts as fuel. 'I will show them'."
+  },
+  "Q16_C": {
+    "question": "Parents",
+    "option_label": "The Silent",
+    "one_line": "Independence is strength. You are the captain.",
+    "mentor_note": "They leave you alone. This is freedom, but also isolation. You need to be your own manager. Find a peer group or mentor to discuss academic stress.",
+    "action_24h": "Create your own accountability chart.",
+    "action_7d": "Find an online study buddy for accountability."
+  },
+  "Q16_D": {
+    "question": "Parents",
+    "option_label": "The Manager",
+    "one_line": "Micromanagement is annoying. Earn their trust.",
+    "mentor_note": "They nag because they are anxious. If you show them a plan and results, they will back off. Proactively tell them your schedule before they ask.",
+    "action_24h": "Post your timetable on the fridge. Show them you have a plan.",
+    "action_7d": "Update them daily on what you finished. Over-communicate to stop the nagging."
+  },
+  "Q17_A": {
+    "question": "Roadmap",
+    "option_label": "Final Lap",
+    "one_line": "SURGICAL STRIKE (Final Month): Stop new theory. Daily Mock Test (9am-12pm). Analysis (2pm-5pm). Weakness Fixing (6pm-9pm). Sleep at 11pm. Repeat.",
+    "mentor_note": "You have no time for experiments. Your score will come from revision and exam temperament. Simulate the exam daily. Your biological clock must peak at 9 AM. Do not touch any new heavy chapter. Secure what you know."
+  },
+  "Q17_B": {
+    "question": "Roadmap",
+    "option_label": "Mid-Game",
+    "one_line": "THE ACCELERATOR (2-6 Months): Finish remaining syllabus in 45 days. Dedicate the last 60 days purely to revision and part-tests. Full mocks in final month.",
+    "mentor_note": "You have time to fix weak areas. Identify your 'Red' chapters and turn them 'Green'. But keep a hard deadline for syllabus completion. You need at least 2 months for pure revision."
+  },
+  "Q17_C": {
+    "question": "Roadmap",
+    "option_label": "Marathon",
+    "one_line": "FOUNDATION BUILDER (6-12 Months): Do not rush. One chapter a week. Solve 100+ questions per chapter. Weekly revision of old topics is mandatory.",
+    "mentor_note": "You have the luxury of depth. Don't just solve Mains questions; touch Advanced level concepts. Build a solid base. The mistake you can make is 'Procrastination' thinking you have time. Time flies."
+  },
+  "Q17_D": {
+    "question": "Roadmap",
+    "option_label": "Long Haul",
+    "one_line": "MARATHON PACER (>1 Year): Focus on concept depth. Read NCERT line by line. Build a habit of 4 focused hours daily rather than 10 hours occasionally.",
+    "mentor_note": "Consistency is your only goal. If you study 4 hours every day for 2 years, you are Top 100 material. Don't burnout. Enjoy the learning process. Master the basics."
+  },
+  "Q18_A": {
+    "question": "Verdict",
+    "option_label": "High Flyer",
+    "one_line": "VERDICT: TOP TIER. You are executing well. Your biggest risk is overconfidence. Maintain your routine and focus heavily on reducing silly errors.",
+    "mentor_note": "You are in the safe zone. Now fight for the 'Rank'. Precision matters. One silly mistake can drop your rank by 500. Polish your paper attempting strategy."
+  },
+  "Q18_B": {
+    "question": "Verdict",
+    "option_label": "Mid-Range",
+    "one_line": "VERDICT: GOOD BUT UNSAFE. You are clearing cutoffs but missing top branches. You need to convert 'partial knowledge' into 'complete marks'.",
+    "mentor_note": "You are 'almost' there. Identify the 3 chapters that always leak marks. Fix them. You need just +40 marks to jump to the top tier."
+  },
+  "Q18_C": {
+    "question": "Verdict",
+    "option_label": "Struggler",
+    "one_line": "VERDICT: CRITICAL ZONE. Your current strategy is not working. Stop everything and focus on just 10 high-weightage chapters to clear the cutoff first.",
+    "mentor_note": "Don't try to be a hero. Be a survivor. Pick the easiest 40% of the syllabus. Master it 100%. Clearing the cutoff is your first victory."
+  },
+  "Q18_D": {
+    "question": "Verdict",
+    "option_label": "Untested",
+    "one_line": "VERDICT: HIGH RISK. You are flying blind. Fear of testing is worse than low marks. Give a mock test tomorrow to face reality.",
+    "mentor_note": "You cannot improve what you don't measure. A mock test score of 50 is better than ignorance. Face the number. Then improve it."
+  }
+}

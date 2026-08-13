@@ -5,42 +5,39 @@ import "./landing.css";
 
 // --- COMPONENTS FOR TESTIMONIALS ---
 
+// --- UPDATED YOUTUBE COMMENT COMPONENT ---
 const YouTubeComment = ({ name, content, avatar, time }) => (
-  <div className="youtube-card">
-    <div className="yt-header">
-      <div className="yt-avatar">{avatar}</div>
-      <div className="yt-info">
-        <div className="yt-name-row">
-          <span className="yt-name">{name}</span>
-          <span className="yt-time">{time}</span>
-        </div>
-        <p className="yt-content">{content}</p>
-        <div className="yt-actions">
-          <div className="yt-likes">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-            </svg>
-            <span>{Math.floor(Math.random() * 50) + 10}</span>
-          </div>
-          <span className="yt-reply">Reply</span>
-        </div>
+  <div className="yt-card-v2">
+    <div className="yt-pill-tag">
+      <span className="yt-play-icon">▶</span> YOUTUBE COMMENT
+    </div>
+    <div className="yt-user-row">
+      <div className="yt-avatar-circle">{avatar}</div>
+      <div className="yt-user-meta">
+        <span className="yt-user-name">{name}</span>
+        <span className="yt-time-ago">{time}</span>
       </div>
+    </div>
+    <p className="yt-comment-text">{content}</p>
+    <div className="yt-card-footer">
+      <span className="yt-like-btn">👍 {Math.floor(Math.random() * 40) + 12}</span>
+      <span className="yt-reply-btn">Reply</span>
     </div>
   </div>
 );
 
+// --- UPDATED WHATSAPP MESSAGE COMPONENT ---
 const WhatsAppMessage = ({ name, content, avatar, time }) => (
-  <div className="whatsapp-card">
-    <div className="wa-avatar">{avatar}</div>
-    <div className="wa-body">
-      <div className="wa-name">{name}</div>
-      <p className="wa-content">{content}</p>
-      <div className="wa-meta">
-        <span className="wa-time">{time}</span>
-        <svg className="wa-ticks" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-          <path d="M15.5 6.5L14 5 8.5 10.5l1.5 1.5 5.5-5.5z"/>
-        </svg>
+  <div className="wa-card-v2">
+    <div className="wa-header-bar">
+      <div className="wa-header-avatar">{avatar}</div>
+      <span className="wa-header-name">{name}</span>
+    </div>
+    <div className="wa-bubble-body">
+      <p className="wa-message-text">{content}</p>
+      <div className="wa-time-row">
+        <span className="wa-time-text">{time}</span>
+        <span className="wa-blue-ticks">✓✓</span>
       </div>
     </div>
   </div>
@@ -200,28 +197,7 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* --- TESTIMONIALS (MARQUEE) --- */}
-      <section className="testimonials-section">
-        <div style={{ textAlign: "center" }}>
-          <span className="section-badge" style={{ background: "#e0e7ff", color: "#4338ca" }}>Real Student Feedback</span>
-          <h2 className="section-title">What Aspirants Are Saying</h2>
-        </div>
-
-        <div className="scroll-container">
-          {/* Loop twice for infinite scroll effect */}
-          {[...testimonials, ...testimonials].map((t, i) => (
-            <div key={i} className="testimonial-wrapper">
-              {t.type === "youtube" ? (
-                <YouTubeComment {...t} />
-              ) : (
-                <WhatsAppMessage {...t} />
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* --- FEATURES --- */}
+      {/* --- FEATURES (WHY IT WORKS FIRST) --- */}
       <section className="features-section">
         <span className="section-badge" style={{ background: "#fee2e2", color: "#b91c1c" }}>Why It Works</span>
         <h2 className="section-title">
@@ -246,9 +222,28 @@ const Landing = () => {
           <div className="feature-card">
             <div className="icon-box icon-orange">📋</div>
             <h3 className="f-title">A Personalized Action Plan</h3>
-            <p className="f-desc">Know your exact weaknesses. Get specific guidelines to fix
-your weaknesses immediately.</p>
+            <p className="f-desc">Know your exact weaknesses. Get specific guidelines to fix your weaknesses immediately.</p>
           </div>
+        </div>
+      </section>
+
+      {/* --- TESTIMONIALS (MOVED AFTER WHY IT WORKS, NO AUTO SCROLL) --- */}
+      <section className="testimonials-section">
+        <div style={{ textAlign: "center" }}>
+          <span className="section-badge" style={{ background: "#e0e7ff", color: "#4338ca" }}>Real Student Feedback</span>
+          <h2 className="section-title">What Aspirants Are Saying</h2>
+        </div>
+
+        <div className="testimonials-static-grid">
+          {testimonials.map((t, i) => (
+            <div key={i} className="testimonial-wrapper">
+              {t.type === "youtube" ? (
+                <YouTubeComment {...t} />
+              ) : (
+                <WhatsAppMessage {...t} />
+              )}
+            </div>
+          ))}
         </div>
       </section>
 

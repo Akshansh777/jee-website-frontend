@@ -1,3 +1,55 @@
+/* =========================================================
+   PASTE THIS INTO swot.css (or wherever your assessment page's
+   stylesheet lives) to get the same cursor/selection/scrollbar treatment
+   on that page too. Identical to the landing page's version, just scoped
+   to .assessment-wrapper instead of .landing-wrapper.
+   ========================================================= */
+
+.assessment-wrapper {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M7 4 L26 14 L16 17 L13 26 Z" fill="%237a1010" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg>') 7 4, auto;
+}
+
+.assessment-wrapper a,
+.assessment-wrapper button,
+.assessment-wrapper [role="button"],
+.assessment-wrapper input[type="button"],
+.assessment-wrapper input[type="submit"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M7 4 L26 14 L16 17 L13 26 Z" fill="%237a1010" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg>') 7 4, pointer;
+}
+
+.assessment-wrapper ::selection {
+  background-color: #7a1010;
+  color: #ffffff;
+}
+.assessment-wrapper ::-moz-selection {
+  background-color: #7a1010;
+  color: #ffffff;
+}
+
+.assessment-wrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.assessment-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.assessment-wrapper::-webkit-scrollbar-thumb {
+  background: #7a1010;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+.assessment-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #5c0c0c;
+}
+.assessment-wrapper {
+  scrollbar-color: #7a1010 #f1f1f1;
+  scrollbar-width: thin;
+}
+
+.assessment-wrapper *:focus-visible {
+  outline: 2px solid #7a1010;
+  outline-offset: 2px;
+}
 /* Full background gradient */
 .swot-wrapper {
   min-height: 100vh;
@@ -229,4 +281,219 @@
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(15px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+/* =========================================
+   1. STRENGTH & WEAKNESS WHITE CARDS & PILL BADGES
+   ========================================= */
+.swot-card-white {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  text-align: left;
+}
+
+.swot-pill-badge {
+  display: inline-block;
+  padding: 6px 22px;
+  border-radius: 50px;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.strength-badge {
+  background-color: #10b981; /* Green pill */
+}
+
+.weakness-badge {
+  background-color: #ef4444; /* Red pill */
+}
+
+.swot-text {
+  margin: 0;
+  font-size: 15px;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+/* =========================================
+   2. STATIC TESTIMONIALS GRID (NO AUTO-SCROLL)
+   ========================================= */
+.landing-wrapper .testimonials-static-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* =========================================
+   3. REALISTIC YOUTUBE & WHATSAPP CARD UI
+   ========================================= */
+
+/* --- YouTube Card UI --- */
+.landing-wrapper .yt-card-v2 {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 18px;
+  width: 310px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  text-align: left;
+}
+
+.landing-wrapper .yt-pill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef2f2;
+  color: #ef4444;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+  letter-spacing: 0.3px;
+}
+
+.landing-wrapper .yt-play-icon {
+  font-size: 9px;
+}
+
+.landing-wrapper .yt-user-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.landing-wrapper .yt-avatar-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #a855f7;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.landing-wrapper .yt-user-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.landing-wrapper .yt-user-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.landing-wrapper .yt-time-ago {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.landing-wrapper .yt-comment-text {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.5;
+  margin: 0 0 12px 0;
+}
+
+.landing-wrapper .yt-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.landing-wrapper .yt-reply-btn {
+  cursor: pointer;
+}
+
+/* --- WhatsApp Card UI --- */
+.landing-wrapper .wa-card-v2 {
+  background: #e5ddd5;
+  border-radius: 20px;
+  width: 310px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  text-align: left;
+}
+
+.landing-wrapper .wa-header-bar {
+  background: #075e54;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.landing-wrapper .wa-header-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #128c7e;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.landing-wrapper .wa-header-name {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.landing-wrapper .wa-bubble-body {
+  background: #d9fdd3;
+  margin: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.landing-wrapper .wa-message-text {
+  font-size: 14px;
+  color: #111b21;
+  line-height: 1.45;
+  margin: 0 0 6px 0;
+}
+
+.landing-wrapper .wa-time-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.landing-wrapper .wa-time-text {
+  font-size: 10px;
+  color: #667781;
+}
+
+.landing-wrapper .wa-blue-ticks {
+  font-size: 11px;
+  color: #53bdeb;
+  font-weight: bold;
 }

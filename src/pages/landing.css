@@ -7,7 +7,72 @@
   --text-light: #64748b;
   --bg-gradient: linear-gradient(135deg, #f8f9fa 0%, #eef2ff 100%);
   --font-landing: 'Montserrat', sans-serif;
+  --cursor-maroon: #7a1010;
 }
+
+/* =========================================
+   PREMIUM CURSOR + SELECTION + SCROLLBAR POLISH (LANDING PAGE ONLY)
+   A custom SVG cursor (no separate image file needed — it's a data URI
+   right here), a solid "dart" arrow shape with a thick white outline, in
+   dark maroon to match the brand. Falls back to the browser's normal
+   cursor automatically if a browser doesn't support custom cursors.
+   ========================================= */
+
+.landing-wrapper {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M7 4 L26 14 L16 17 L13 26 Z" fill="%237a1010" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg>') 7 4, auto;
+}
+
+/* Same dart shape on clickable elements too — this is the one shape from
+   your reference image, used consistently everywhere rather than
+   swapping to a different cursor style on hover. */
+.landing-wrapper a,
+.landing-wrapper button,
+.landing-wrapper [role="button"],
+.landing-wrapper input[type="button"],
+.landing-wrapper input[type="submit"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M7 4 L26 14 L16 17 L13 26 Z" fill="%237a1010" stroke="white" stroke-width="2.5" stroke-linejoin="round"/></svg>') 7 4, pointer;
+}
+
+/* Text selection highlight, matching brand instead of default OS blue */
+.landing-wrapper ::selection {
+  background-color: #7a1010;
+  color: #ffffff;
+}
+.landing-wrapper ::-moz-selection {
+  background-color: #7a1010;
+  color: #ffffff;
+}
+
+/* Custom scrollbar (WebKit browsers) — thin, maroon thumb, matches the
+   rest of the premium visual language instead of the default grey OS bar */
+.landing-wrapper::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.landing-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.landing-wrapper::-webkit-scrollbar-thumb {
+  background: #7a1010;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+.landing-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #5c0c0c;
+}
+/* Firefox scrollbar (limited styling support, but color still applies) */
+.landing-wrapper {
+  scrollbar-color: #7a1010 #f1f1f1;
+  scrollbar-width: thin;
+}
+
+/* Focus outline in brand maroon instead of default browser blue — still
+   clearly visible for accessibility/keyboard navigation, just on-brand */
+.landing-wrapper *:focus-visible {
+  outline: 2px solid #7a1010;
+  outline-offset: 2px;
+}
+
 
 /* 🔴 CRITICAL FIX: 
    Removed 'body' selector to prevent affecting Assessment Page.

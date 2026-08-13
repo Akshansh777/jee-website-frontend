@@ -2207,7 +2207,8 @@ export default function StudentSwotForm() {
     const { 
       jee_society_score, 
       expected_percentile_range, 
-      potential_percentile_range 
+      potential_percentile_range,
+      breakdown,
     } = result;
 
     const q17Obj = QUESTIONS.find(q => q.id === "q17");
@@ -2244,7 +2245,8 @@ export default function StudentSwotForm() {
         threats: finalSWOT.T
       },
       recommendations: "Focus on your flagged weaknesses. Use the Opportunity areas to gain extra marks.",
-      manifestKeys: generatedManifestKeys
+      manifestKeys: generatedManifestKeys,
+      breakdown: breakdown,
     };
 
     try {
@@ -2312,7 +2314,7 @@ export default function StudentSwotForm() {
     });
 
     return (
-      <div className="swot-container" style={{ maxWidth: "760px", margin: "0 auto", fontFamily: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" }}>
+      <div className="assessment-wrapper swot-container" style={{ maxWidth: "760px", margin: "0 auto", fontFamily: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" }}>
         {/* --- Breadcrumb / personalized greeting (kept) --- */}
         {studentName && (
           <p style={{ fontSize: "16px", color: "#666", marginBottom: "6px" }}>
@@ -2408,10 +2410,16 @@ export default function StudentSwotForm() {
           <AccountabilityCallout answers={answers} />
         </div>
 
-        {/* --- 5. SWOT SECTION (kept) --- */}
-        <h2 style={{ marginTop: "10px" }}>Your Strength & Weakness</h2>
-        <div className="swot-box strength"><b>Strength:</b> {finalSWOT.S}</div>
-        <div className="swot-box weakness"><b>Weakness:</b> {finalSWOT.W}</div>
+       {/* --- 5. SWOT SECTION --- */}
+<h2 style={{ marginTop: "10px" }}>Your Strength & Weakness</h2>
+<div className="swot-card-white">
+  <span className="swot-pill-badge strength-badge">STRENGTH</span>
+  <p className="swot-text">{finalSWOT.S}</p>
+</div>
+<div className="swot-card-white">
+  <span className="swot-pill-badge weakness-badge">WEAKNESS</span>
+  <p className="swot-text">{finalSWOT.W}</p>
+</div>
 
         {/* --- 6. FOUNDER VIDEO --- */}
         <div style={{ marginTop: "44px", marginBottom: "40px" }}>
@@ -2539,7 +2547,7 @@ export default function StudentSwotForm() {
   const q = QUESTIONS[step];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fafafa", padding: "20px 12px" }}>
+    <div className="assessment-wrapper" style={{ minHeight: "100vh", background: "#fafafa", padding: "20px 12px" }}>
       <Helmet>
         <title>Start Assessment | JEE Society</title>
         <meta name="description" content="Answer 20 questions to analyze your JEE Main & Advanced consistency, focus, and syllabus coverage." />

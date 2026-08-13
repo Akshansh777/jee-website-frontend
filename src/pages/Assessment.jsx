@@ -1628,12 +1628,17 @@ const PercentileCard = ({ percentile, jss, color }) => {
 
   return (
     <div style={{ background: "#fff", borderRadius: "20px", padding: "26px 24px", boxShadow: "0 10px 30px rgba(0,0,0,0.06)", border: "1px solid #f1f1f1" }}>
-      <div style={{ display: "flex", alignItems: "baseline", gap: "10px", flexWrap: "wrap" }}>
-        <span style={{ fontSize: "42px", fontWeight: "900", color }}>{Math.round(percentile)}%</span>
-        <span style={{ fontSize: "16.5px", color: "#475569", fontWeight: "700" }}>
-          of aspirants are behind you right now
-        </span>
-      </div>
+  <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+    <span style={{ fontSize: "18px", color: "#475569", fontWeight: "700" }}>
+      You're ahead of
+    </span>
+    <span style={{ fontSize: "42px", fontWeight: "900", color, lineHeight: "1" }}>
+      {Math.round(percentile)}%
+    </span>
+    <span style={{ fontSize: "18px", color: "#475569", fontWeight: "700" }}>
+      of aspirants right now...
+    </span>
+  </div>
       <p style={{ fontSize: "15px", color: "#64748b", marginTop: "10px", marginBottom: "0", lineHeight: "1.65" }}>
         Most aspirants haven't fixed their execution gaps yet, so you're already ahead of the pack. Top-1%
         IITians are still <strong>{gap} points of readiness</strong> ahead of where you are today, and that gap is
@@ -1671,7 +1676,7 @@ const TOP_STUDENT_TIPS = {
 const TopStudentsCallout = ({ weakestLabel, weakestKey, color }) => (
   <div style={{ background: `linear-gradient(135deg, ${color}0d, #ffffff)`, border: `1px solid ${color}30`, borderRadius: "20px", padding: "26px 24px" }}>
     <div style={{ fontSize: "12.5px", fontWeight: "800", letterSpacing: "0.5px", color, textTransform: "uppercase", marginBottom: "10px" }}>
-      What Top Students Do Differently
+      What Top 1% Students do differently
     </div>
     <p style={{ fontSize: "16px", color: "#1e293b", lineHeight: "1.65", margin: "0 0 12px" }}>
       Students who score 90+ on <strong>{weakestLabel}</strong>, your current biggest gap, typically{" "}

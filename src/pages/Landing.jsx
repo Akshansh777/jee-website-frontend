@@ -179,7 +179,7 @@ const Landing = () => {
             IS JEE <br/>
             <span className="hero-highlight">STILL POSSIBLE?</span>
           </h1>
-          <h2 className="hero-subtitle">In just 5 minutes, get a data-backed roadmap that shows your real standing, predicted rank, and what exactly you are doing wrong</h2>
+          <h2 className="hero-subtitle">In just 5 minutes, get a data-backed roadmap that shows your real standing, hidden score leaks, exact plan, and what exactly you are doing wrong</h2>
           
           
           <button onClick={() => navigate("/assessment")} className="cta-main">
@@ -216,8 +216,9 @@ const Landing = () => {
           </div>
           <div className="feature-card">
             <div className="icon-box icon-green">📊</div>
-            <h3 className="f-title">Accurate Percentile Prediction</h3>
-            <p className="f-desc">Our algorithm compares your habits against successful IITians to predict your realistic rank range (Expected Percentile & Potential Percentile).</p>
+            <h3 className="f-title">A Realistic Rank Reality Check</h3>
+            <p className="f-desc">A single mock score is a misleading snapshot. We map your preparation against real NTA trends and rank-holder data to give you your true predicted range.
+</p>
           </div>
           <div className="feature-card">
             <div className="icon-box icon-orange">📋</div>

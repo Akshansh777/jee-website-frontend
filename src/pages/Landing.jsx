@@ -154,23 +154,40 @@ const Landing = () => {
       </Helmet>
 
       {/* --- NAVBAR --- */}
-      <nav className="navbar">
-        <div className="nav-brand">
-          <img src="/JEEsociety_logo.png" alt="Logo" className="nav-logo" />
-          <span>JEE<span style={{ color: "#c62828" }}>society</span></span>
-        </div>
-        <a 
-          href="https://www.youtube.com/@SreyashBhaiyaIITB" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="yt-btn"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-          </svg>
-          YouTube
-        </a>
-      </nav>
+<nav className="navbar">
+  <div className="nav-brand">
+    <img src="/JEEsociety_logo.png" alt="Logo" className="nav-logo" />
+    <span>JEE<span style={{ color: "#c62828" }}>society</span></span>
+  </div>
+
+  <div className="nav-actions">
+    {/* WhatsApp Button */}
+    <a 
+      href="https://whatsapp.com/channel/0029VbDZ6FnGE56sPOiSVL0a" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="wa-btn"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+      </svg>
+      <span>WhatsApp</span>
+    </a>
+
+    {/* YouTube Button */}
+    <a 
+      href="https://www.youtube.com/@SreyashBhaiyaIITB" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="yt-btn"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+      </svg>
+      <span>YouTube</span>
+    </a>
+  </div>
+</nav>
 
       {/* --- HERO SECTION --- */}
       <section className="hero-section">

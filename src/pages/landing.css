@@ -900,3 +900,231 @@
   align-items: center;
   gap: 10px;
 }
+
+/* --- TIGHTEN VERTICAL SECTION SPACING --- */
+.landing-wrapper .hero-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 45px 5%; /* Reduced from 80px */
+  min-height: 70vh;
+  background: radial-gradient(circle at 50% 50%, rgba(106, 17, 203, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+}
+
+.landing-wrapper .features-section {
+  padding: 45px 5%; /* Reduced from 80px */
+  text-align: center;
+  background: #fff;
+}
+
+.landing-wrapper .features-grid {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 28px; /* Reduced from 50px */
+  position: relative;
+  z-index: 2;
+}
+
+.landing-wrapper .testimonials-section {
+  padding: 45px 0; /* Reduced from 80px */
+  background: #fcfcfc;
+  overflow: hidden;
+}
+
+.landing-wrapper .dark-cta-section {
+  background: #120B0E;
+  color: white;
+  text-align: center;
+  padding: 55px 20px; /* Reduced from 100px */
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+/* --- NAVBAR ACTION BUTTONS (DESKTOP BASE) --- */
+.landing-wrapper .nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.landing-wrapper .wa-btn {
+  background: #25D366;
+  color: white;
+  padding: 9px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.landing-wrapper .wa-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+}
+
+.landing-wrapper .yt-btn {
+  background: var(--primary-red);
+  color: white;
+  padding: 9px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.landing-wrapper .yt-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(198, 40, 40, 0.35);
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS (CARDS FULLY RESTORED)
+   ========================================= */
+@media (max-width: 768px) {
+  /* 1. COMPACT NAVBAR */
+  .landing-wrapper .navbar {
+    padding: 12px 4%;
+  }
+
+  .landing-wrapper .nav-brand {
+    font-size: 18px;
+  }
+
+  .landing-wrapper .nav-logo {
+    width: 32px;
+    height: 32px;
+  }
+
+  .landing-wrapper .nav-actions {
+    gap: 6px;
+  }
+
+  .landing-wrapper .wa-btn,
+  .landing-wrapper .yt-btn {
+    padding: 7px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    gap: 5px;
+  }
+
+  .landing-wrapper .wa-btn svg,
+  .landing-wrapper .yt-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* 2. HERO SECTION & VISUAL CONTAINER */
+  .landing-wrapper .hero-section {
+    flex-direction: column;
+    text-align: center;
+    padding-top: 36px !important;
+    padding-bottom: 24px !important;
+    min-height: auto !important;
+  }
+
+  .landing-wrapper .hero-content {
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .landing-wrapper .hero-title {
+    font-size: 34px;
+    margin-bottom: 12px;
+  }
+
+  .landing-wrapper .hero-subtitle {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .landing-wrapper .hero-visual-container {
+    display: flex !important;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .landing-wrapper .report-deck {
+    display: flex !important;
+    max-width: 100%;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 4px;
+  }
+
+  .landing-wrapper .report-deck-stage {
+    display: block !important;
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 150%;
+  }
+
+  .landing-wrapper .report-card {
+    width: 96%;
+  }
+
+  .landing-wrapper .report-card:not(.report-card-active) {
+    opacity: 0 !important;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.98) !important;
+    filter: none !important;
+  }
+
+  .landing-wrapper .report-card-active {
+    transform: translate(-50%, -50%) scale(1) !important;
+  }
+
+  .landing-wrapper .report-deck-dots {
+    margin-top: 16px;
+  }
+
+  /* 3. LOWER SECTIONS */
+  .landing-wrapper .features-section {
+    padding: 40px 5%;
+  }
+
+  .landing-wrapper .testimonials-section {
+    padding: 32px 0;
+  }
+
+  .landing-wrapper .testimonials-section .section-title {
+    margin-bottom: 24px;
+  }
+
+  .landing-wrapper .features-grid {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 24px;
+  }
+
+  .landing-wrapper .feature-card {
+    width: 90%;
+  }
+
+  .landing-wrapper .dark-title {
+    font-size: 28px;
+  }
+
+  .landing-wrapper .footer {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+}

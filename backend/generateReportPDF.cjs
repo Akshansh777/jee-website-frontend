@@ -175,45 +175,45 @@ const SUBJECT_AFFIRMATION = {
 const CASE_STUDIES = {
   physics: {
     1: { // "Average" — stuck, understands concepts but freezes on unfamiliar problems
-      story: "You know what, one student from our mentorship was in a pretty similar spot with Physics. He scored consistently 45-50/100 for months, understood every concept in class but froze on anything unfamiliar in mocks. We didn't add more theory. We made him solve 15 previous-year Physics questions daily from only 4 chapters, Rotational Motion, Electrostatics, Current Electricity, and Modern Physics, without watching a single new lecture. Three weeks later his Physics score was 68/100. He wasn't missing knowledge, he was missing exposure to how JEE actually twists standard concepts.",
-      takeaway: "Lesson for you: Stop watching more lectures. You already know the theory. Solve 15 PYQs a day from your weakest 4 chapters before touching anything new.",
+      story: "One student from our mentorship program was in a similar spot with Physics. He was scoring consistently 45-50 out of 100 for months, he understood every concept in class, but froze the moment a question looked unfamiliar in mocks. We didn't add more theory. We had him solve 15 previous-year Physics questions daily from just 4 chapters, Rotational Motion, Electrostatics, Current Electricity, and Modern Physics, without watching a single new lecture. Three weeks later his Physics score was 68/100. He wasn't missing knowledge. He was missing exposure to how JEE actually twists standard concepts.",
+takeaway: "Lesson for you: stop watching more lectures. You already know the theory. Solve 15 PYQs a day from your weakest 4 chapters before touching anything new.",
     },
     2: { // "Weak" — struggles with basics
-      story: "Funny thing, I had a student last year who thought he \"just wasn't a Physics person.\" He was scoring under 20/100, convinced it was a talent problem. We checked his basics instead: Vectors, Units and Dimensions, Kinematics, all shaky. We stopped him from touching Modern Physics or Electrostatics entirely for 3 weeks, pure NCERT-level basics, nothing else. When he came back to the harder chapters, they suddenly made sense. He jumped to 44/100 in the very next mock.",
-      takeaway: "Lesson for you: You're not bad at Physics, you're missing the foundation Physics is built on. Go back to Vectors and Kinematics before anything else.",
+      story: "I had a student last year who was convinced he \"just wasn't a Physics person.\" He was scoring under 20 out of 100. We checked his basics instead, Vectors, Units and Dimensions, Kinematics, all shaky. We stopped him from touching Modern Physics or Electrostatics for 3 weeks. Pure NCERT-level basics, nothing else. When he came back to the harder chapters, they suddenly made sense. He jumped to 44/100 in the very next mock.",
+takeaway: "Lesson for you: you're not bad at Physics. You're missing the foundation Physics is built on. Go back to Vectors and Kinematics before anything else.",
     },
     3: { // "Comfort Trap" — over-invests in strongest subject
-      story: "Here's something I've seen a lot, actually. One mentee of ours was already scoring 78/100 in Physics and kept spending 4+ hours a day on it anyway, because it felt productive and he genuinely enjoyed it. Meanwhile his Chemistry sat at 30/100. We capped his Physics time at 45 minutes a day, revision only, no new content, and moved those hours to Chemistry. His Physics score barely moved, 79 to 81. His Chemistry jumped from 30 to 58 in six weeks.",
-      takeaway: "Lesson for you: The subject you love most is probably not the one costing you the most marks. Cap your time on it and redirect the hours to whichever subject you're avoiding.",
+      story: "One mentee of ours was already scoring 78 out of 100 in Physics and kept spending four or more hours a day on it anyway, because it felt productive and he genuinely enjoyed it. Meanwhile his Chemistry sat at 30/100. We capped his Physics time at 45 minutes a day, revision only, no new content, and moved those hours to Chemistry. His Physics score barely moved, 79 to 81. His Chemistry jumped from 30 to 58 in six weeks.",
+takeaway: "Lesson for you: the subject you love most is probably not the one costing you the most marks. Cap your time on it and redirect the hours to whichever subject you're avoiding.",
     },
   },
   chemistry: {
     1: { // "Volatile" — memorizes but forgets fast
-      story: "I remember one student telling me Chemistry felt like it kept slipping through his fingers. He could recall every reaction perfectly the day after studying it, and completely forget it three days later. His Chemistry score swung between 25 and 60 depending on how recently he'd revised. We put him on a strict cycle: revisit every topic on Day 1, Day 3, and Day 7 after first studying it, no exceptions. Six weeks later his lowest Chemistry mock score was 55, and it stopped swinging.",
-      takeaway: "Lesson for you: Your problem isn't understanding, it's retention. Fixed-interval revision (Day 1, 3, 7) matters more than how many new topics you cover.",
+      story: "One student told us Chemistry kept slipping through his fingers. He could recall a reaction perfectly the day after studying it, and completely forget it three days later. His Chemistry score swung between 25 and 60 depending on how recently he'd revised. We put him on a strict cycle, revisit every topic on Day 1, Day 3, and Day 7 after first studying it, no exceptions. Six weeks later his lowest Chemistry mock score was 55, and it stopped swinging.",
+takeaway: "Lesson for you: your problem isn't understanding, it's retention. Fixed-interval revision, Day 1, 3, 7, matters more than how many new topics you cover.",
     },
     2: { // "Weak" — avoids the subject
-      story: "One of our mentees genuinely avoided Chemistry like the plague, barely opened the book, and was scoring under 15/100. We didn't ask him to love it. We picked the single highest-yield, lowest-effort chapter, Chemical Bonding, gave him just the NCERT lines and 20 PYQs, nothing else. He scored 14/20 on those PYQs on his first attempt, his first real \"win\" in Chemistry in months. That one win changed how he approached the whole subject.",
-      takeaway: "Lesson for you: You don't need to fix your relationship with Chemistry. You need one small, fast win to prove to yourself you can actually do this.",
-    },
+      story: "One of our mentees avoided Chemistry almost entirely, barely opened the book, and was scoring under 15 out of 100. We didn't ask him to love it. We picked the single highest-yield, lowest-effort chapter, Chemical Bonding, gave him just the NCERT lines and 20 PYQs, nothing else. He scored 14 out of 20 on those questions on his first attempt, his first real win in Chemistry in months. That one win changed how he approached the whole subject.",
+takeaway: "Lesson for you: you don't need to fix your relationship with Chemistry. You need one small, fast win to prove to yourself you can actually do this.",
+},
     3: { // "Average" — uneven across sub-topics
-      story: "Here's an interesting one. A student of ours was almost perfect in half of Chemistry, near-perfect on Mole Concept and Thermodynamics, but scored almost zero on Organic reaction mechanisms, treating them as \"impossible to memorize.\" We reframed Organic as logic, not memory: 6 reaction \"families\" instead of 200 individual reactions. Within a month his Organic-specific score went from 8/40 to 26/40.",
-      takeaway: "Lesson for you: Your strong half is fine, don't touch it. Your weak half needs a different strategy, most likely you're studying it the wrong way, not too little.",
-    },
+      story: "A student of ours was almost perfect in half of Chemistry, near-perfect on Mole Concept and Thermodynamics, but scored almost zero on Organic reaction mechanisms, he treated them as impossible to memorize. We reframed Organic as logic, not memory, six reaction families instead of two hundred individual reactions. Within a month his Organic-specific score went from 8 out of 40 to 26 out of 40.",
+takeaway: "Lesson for you: your strong half is fine, don't touch it. Your weak half needs a different strategy. Most likely you're studying it the wrong way, not too little.",
+ },
   },
   maths: {
     1: { // "Survivor" — narrow safe-zone chapters only
-      story: "One mentee of ours only ever touched the \"safe\" chapters in Maths, Vectors, 3D Geometry, Straight Lines, and skipped everything else, hard-capped at 45/100 no matter what. We forced him to add just one new chapter every 10 days, starting with Permutations & Combinations. His ceiling broke for the first time in months, 45 became 58, then 64.",
-      takeaway: "Lesson for you: Your safe zone has a hard ceiling. Every chapter you refuse to touch is a ceiling you've built yourself.",
+      story: "One mentee of ours only ever touched the safe chapters in Maths, Vectors, 3D Geometry, Straight Lines, and skipped everything else. He was hard-capped at 45 out of 100 no matter what. We had him add one new chapter every 10 days, starting with Permutations and Combinations. His ceiling broke for the first time in months, 45 became 58, then 64.",
+takeaway: "Lesson for you: your safe zone has a hard ceiling. Every chapter you refuse to touch is a ceiling you've built yourself.",
     },
     2: { // "Phobia"
-      story: "You know what, one student of ours was in your exact spot. Maths felt impossible, he'd scored 12/100 for two straight mocks and was ready to write it off completely. We didn't ask him to love Maths. We asked him to master exactly 4 chapters, Quadratic Equations, Sets & Relations, Statistics, and Straight Lines, the most formula-based, least \"clever-thinking-required\" chapters in the syllabus. Six weeks later his Maths score was 46/100. His overall percentile jumped more from that than from anything he did in Physics or Chemistry that term.",
-      takeaway: "Lesson for you: Stop trying to complete the full Maths syllabus. Target the 4 chapters above first, they reward formula-memorization, not \"genius,\" and they're worth real marks.",
-    },
+      story: "One student of ours was in your exact spot. Maths felt impossible, he'd scored 12 out of 100 for two straight mocks and was ready to write it off completely. We didn't ask him to love Maths. We asked him to master exactly 4 chapters, Quadratic Equations, Sets and Relations, Statistics, and Straight Lines, the most formula-based, least \"clever-thinking-required\" chapters in the syllabus. Six weeks later his Maths score was 46 out of 100. His overall percentile moved more from that than from anything he did in Physics or Chemistry that term.",
+takeaway: "Lesson for you: stop trying to complete the full Maths syllabus. Target the 4 chapters above first, they reward formula-memorization, not genius, and they're worth real marks.",
+ },
     3: { // "Ego Lifter" — chases hard problems for pride
-      story: "I've seen this one a lot, honestly. A mentee would spend 25 minutes on a single hard integration problem \"on principle,\" refusing to move on, while 3 easy Matrices questions worth the same total marks sat untouched. We banned him from attempting anything he couldn't solve in under 3 minutes during practice, no exceptions, for two weeks. His accuracy on easy-to-medium questions went from 60% to 91%, and his Maths score jumped 22 points without him getting \"smarter\" at all.",
-      takeaway: "Lesson for you: JEE gives the same marks for an easy question and a hard one. Chasing the hard ones to prove something is costing you marks you could get for free.",
-    },
+      story: "I've seen this pattern often. A mentee would spend 25 minutes on a single hard integration problem on principle, refusing to move on, while three easy Matrices questions worth the same total marks sat untouched. We stopped him from attempting anything he couldn't solve in under 3 minutes during practice, no exceptions, for two weeks. His accuracy on easy-to-medium questions went from 60% to 91%, and his Maths score jumped 22 points without him getting any \"smarter\" at all.",
+takeaway: "Lesson for you: JEE gives the same marks for an easy question and a hard one. Chasing the hard ones to prove something is costing you marks you could get for free.",
+ },
   },
 };
 
@@ -392,6 +392,7 @@ async function generatePDF(data) {
     p13: getAsset("page13_mock.png"),
     p14: getAsset("page14_mock_analysis_guide.png"), // NEW: final page, fully static
     sundayTracker: getAsset("sunday_tracker.png"),
+    mentorshipPromo: getAsset("mentorship_promo.png"),
     physics: getAsset(`physics_${prevYearChapters}.png`),
     chemistry: getAsset(`chemistry_${prevYearChapters}.png`),
     maths: getAsset(`maths_${prevYearChapters}.png`)
@@ -726,6 +727,11 @@ ${attemptType === "2028" ? `
 <!-- PAGE 15: SUNDAY TRACKER (NEW STATIC PAGE) -->
 <div class="page">
   <img src="${images.sundayTracker}" class="bg-img" onerror="this.style.display='none'"/>
+</div>
+
+<!-- MENTORSHIP PROMO PAGE -->
+<div class="page">
+  <img src="${images.mentorshipPromo}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 
 </body>

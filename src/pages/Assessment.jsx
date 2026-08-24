@@ -1468,10 +1468,20 @@ const BREAKDOWN_COLORS = {
   environment_stability: "#0d9488",
 };
 
-// One row of the JSS breakdown — bar fills in on mount (staggered per row)
-// so the reveal feels like the score is being "computed" live.
+// Status tier mapper for qualitative display
+const getStatusTier = (ratio) => {
+  if (ratio >= 0.7) {
+    return { label: "HIGH", color: "#16a34a", bg: "#dcfce7", border: "#86efac" };
+  }
+  if (ratio >= 0.45) {
+    return { label: "MEDIUM", color: "#d97706", bg: "#fef3c7", border: "#fde68a" };
+  }
+  return { label: "LOW", color: "#dc2626", bg: "#fee2e2", border: "#fca5a5" };
+};
+
+// One row of the JAS breakdown — replaces raw numbers with LOW / MEDIUM / HIGH badges
 const BreakdownRow = ({ item, delay }) => {
-  const [progress, setProgress] = useState(0); // 0 to 1, drives both bar width and earned-number count-up
+  const [progress, setProgress] = useState(0);
   const rowRef = useRef(null);
   const hasAnimatedRef = useRef(false);
 
@@ -1481,7 +1491,7 @@ const BreakdownRow = ({ item, delay }) => {
 
     let raf;
     let startTimeout;
-    const duration = 2100;
+    const duration = 1800;
     const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
     const runAnimation = () => {
@@ -1496,8 +1506,6 @@ const BreakdownRow = ({ item, delay }) => {
       }, delay);
     };
 
-    // Only starts once the row actually scrolls into view, and only ever
-    // fires once (observer disconnects itself immediately after).
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -1517,55 +1525,61 @@ const BreakdownRow = ({ item, delay }) => {
       clearTimeout(startTimeout);
       cancelAnimationFrame(raf);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [delay]);
 
   const Icon = BREAKDOWN_ICONS[item.key] || IconTarget;
-  const color = BREAKDOWN_COLORS[item.key] || "#c62828";
-  const width = progress * item.ratio * 100;
-  const animatedEarned = (progress * item.earned).toFixed(1);
+  const tier = getStatusTier(item.ratio || 0);
+  const width = progress * (item.ratio || 0.1) * 100;
 
   return (
     <div ref={rowRef} style={{ display: "flex", alignItems: "flex-start", gap: "14px", padding: "16px 0", borderBottom: "1px solid #f1f1f1" }}>
-      <div style={{ width: "38px", height: "38px", borderRadius: "11px", background: `${color}15`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: "2px" }}>
+      <div style={{ width: "38px", height: "38px", borderRadius: "11px", background: `${tier.color}15`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: "2px" }}>
         <div style={{ transform: "scale(1.35)" }}>
-          <Icon color={color} />
+          <Icon color={tier.color} />
         </div>
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "8px", marginBottom: "7px", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px", marginBottom: "7px", flexWrap: "wrap" }}>
           <span style={{ fontWeight: "700", fontSize: "16px", color: "#1e293b" }}>{item.label}</span>
-          <span style={{ fontSize: "14.5px", color: "#64748b", fontWeight: "700" }}>{animatedEarned}/{item.max}</span>
+          <span style={{
+            fontSize: "12px",
+            fontWeight: "900",
+            color: tier.color,
+            background: tier.bg,
+            border: `1px solid ${tier.border}`,
+            padding: "3px 12px",
+            borderRadius: "20px",
+            letterSpacing: "0.5px"
+          }}>
+            {tier.label}
+          </span>
         </div>
         <div style={{ height: "9px", background: "#f1f1f1", borderRadius: "6px", overflow: "hidden" }}>
-          <div style={{ height: "100%", width: `${width}%`, background: `linear-gradient(90deg, ${color}, ${color}bb)`, borderRadius: "6px" }} />
+          <div style={{ height: "100%", width: `${width}%`, background: tier.color, borderRadius: "6px", transition: "width 0.4s ease" }} />
         </div>
-        <div style={{ fontSize: "14px", color: "#64748b", marginTop: "7px", fontWeight: "500" }}>{item.status}</div>
+        <div style={{ fontSize: "13.5px", color: "#64748b", marginTop: "7px", fontWeight: "500" }}>{item.status}</div>
       </div>
     </div>
   );
 };
 
-// Full breakdown card — the 5 rows sum EXACTLY to the JSS shown above it.
-const JSSBreakdownCard = ({ breakdown, jss }) => (
+// Full breakdown card with qualitative status levels
+const JASBreakdownCard = ({ breakdown }) => (
   <div style={{ background: "#fff", borderRadius: "20px", padding: "26px 24px", boxShadow: "0 10px 30px rgba(0,0,0,0.06)", border: "1px solid #f1f1f1" }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-      <h3 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#0f172a" }}>Your JSS: Full Breakdown</h3>
+      <h3 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#0f172a" }}>Your JAS: Area Breakdown</h3>
     </div>
     <p style={{ margin: "4px 0 6px", fontSize: "15px", color: "#64748b" }}>
-      Here's exactly how your <strong>{jss}/100</strong> was calculated. Not a black box.
+      Your qualitative readiness rating across all 5 key preparation pillars:
     </p>
     <div>
       {breakdown.map((item, i) => (
-        <BreakdownRow key={item.key} item={item} delay={200 + i * 160} />
+        <BreakdownRow key={item.key} item={item} delay={200 + i * 140} />
       ))}
-    </div>
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", paddingTop: "14px", borderTop: "2px solid #f1f1f1" }}>
-      <span style={{ fontWeight: "800", fontSize: "15px", color: "#0f172a" }}>= Your JSS Score</span>
-      <span style={{ fontWeight: "900", fontSize: "20px", color: "#6a11cb" }}>{jss}/100</span>
     </div>
   </div>
 );
+
 
 // Illustrative bell-curve position meter — marker slides in on mount.
 const PercentileMeter = ({ percentile, color }) => {
@@ -1577,20 +1591,22 @@ const PercentileMeter = ({ percentile, color }) => {
   const markerX = 20 + (animPct / 100) * 360;
 
   return (
-    <div style={{ position: "relative", padding: "40px 10px 10px" }}>
+    <div style={{ position: "relative", padding: "35px 10px 10px" }}>
       <style>{`
         @keyframes marker-drop {
           0% { transform: translateY(-8px); opacity: 0; }
           100% { transform: translateY(0); opacity: 1; }
         }
       `}</style>
-      <svg width="100%" viewBox="0 0 400 110" style={{ overflow: "visible", display: "block" }}>
+      <svg width="100%" viewBox="0 0 400 130" style={{ overflow: "visible", display: "block" }}>
         <defs>
           <linearGradient id="pct-fill" x1="0" x2="1">
             <stop offset="0%" stopColor={color} stopOpacity="0.04" />
             <stop offset="100%" stopColor={color} stopOpacity="0.28" />
           </linearGradient>
         </defs>
+        
+        {/* Main Curve */}
         <path d="M20,95 C90,95 130,15 200,15 C270,15 310,95 380,95" fill="none" stroke="#e5e7eb" strokeWidth="2" />
         <path
           d={`M20,95 C90,95 130,15 200,15 C270,15 310,95 380,95 L${markerX},95 L20,95 Z`}
@@ -1598,9 +1614,20 @@ const PercentileMeter = ({ percentile, color }) => {
           opacity={animPct > 0 ? 1 : 0}
           style={{ transition: "opacity 0.8s ease" }}
         />
+
+        {/* Reference Line 1: Average Student (~50%) */}
+        <line x1="200" y1="20" x2="200" y2="95" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="3 3" />
+        <text x="200" y="112" textAnchor="middle" fill="#64748b" fontSize="10.5" fontWeight="600">Avg Aspirant (50%)</text>
+
+        {/* Reference Line 2: Top IITians (~95%) */}
+        <line x1="360" y1="20" x2="360" y2="95" stroke="#d97706" strokeWidth="1.5" strokeDasharray="3 3" />
+        <text x="360" y="112" textAnchor="middle" fill="#d97706" fontSize="10.5" fontWeight="700">Top 1% IITians</text>
+
+        {/* Dynamic User Marker */}
         <line x1={markerX} y1="12" x2={markerX} y2="95" stroke={color} strokeWidth="2" strokeDasharray="4 4" style={{ transition: "all 1.1s cubic-bezier(0.16,1,0.3,1)" }} />
         <circle cx={markerX} cy="15" r="6.5" fill={color} style={{ transition: "all 1.1s cubic-bezier(0.16,1,0.3,1)" }} />
       </svg>
+
       <div
         style={{
           position: "absolute", left: `${(markerX / 400) * 100}%`, top: "0px", transform: "translateX(-50%)",
@@ -1611,10 +1638,6 @@ const PercentileMeter = ({ percentile, color }) => {
         }}
       >
         You are here
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", color: "#94a3b8", marginTop: "4px", padding: "0 4px", fontWeight: "600" }}>
-        <span>Just starting out</span>
-        <span>Top-tier ready</span>
       </div>
     </div>
   );
@@ -2299,9 +2322,6 @@ export default function StudentSwotForm() {
     const attemptIndex = answers["q17"];
     const attemptLabel = QUESTIONS.find(q => q.id === "q17").options[attemptIndex] || "JEE Main";
 
-    // Whichever of the 5 breakdown categories they scored lowest on
-    // (as a ratio, not raw points, so categories with different maxes
-    // are compared fairly) — drives the personalized "top students" tip.
     const weakestCategory = scores.breakdown.reduce(
       (worst, item) => (item.ratio < worst.ratio ? item : worst),
       scores.breakdown[0]
@@ -2309,7 +2329,7 @@ export default function StudentSwotForm() {
 
     const rowStyle = {
       display: "flex", flexWrap: "wrap", alignItems: "center",
-      justifyContent: "center", gap: "30px", marginBottom: "40px", textAlign: "left"
+      justifyContent: "center", gap: "30px", marginBottom: "26px", textAlign: "left"
     };
 
     const boxStyle = (color, bg) => ({
@@ -2320,22 +2340,59 @@ export default function StudentSwotForm() {
 
     return (
       <div className="assessment-wrapper swot-container" style={{ maxWidth: "760px", margin: "0 auto", fontFamily: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" }}>
-        {/* --- Breadcrumb / personalized greeting (kept) --- */}
-        {studentName && (
-          <p style={{ fontSize: "16px", color: "#666", marginBottom: "6px" }}>
-            Great work, <strong>{studentName}</strong>. Here's your full breakdown.
-          </p>
-        )}
+        
+        {/* Top Header: Greeting + Top-Right WhatsApp Channel Button */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
+          <div>
+            {studentName ? (
+              <p style={{ fontSize: "16px", color: "#666", margin: 0 }}>
+                Great work, <strong>{studentName}</strong>. Here's your full breakdown.
+              </p>
+            ) : <div />}
+          </div>
+
+          <a
+            href="https://whatsapp.com/channel/0029VbDZ6FnGE56sPOiSVL0a"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <button
+              style={{
+                display: "flex", alignItems: "center", gap: "8px",
+                padding: "8px 18px", borderRadius: "50px",
+                background: "#25D366", color: "white",
+                fontSize: "13.5px", fontWeight: "700", border: "none",
+                cursor: "pointer", boxShadow: "0 3px 12px rgba(37, 211, 102, 0.3)",
+                transition: "all 0.3s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.05)";
+                e.currentTarget.style.boxShadow = "0 5px 16px rgba(37, 211, 102, 0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 3px 12px rgba(37, 211, 102, 0.3)";
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+              </svg>
+              WhatsApp Channel
+            </button>
+          </a>
+        </div>
+
         <h2 style={{ marginBottom: "10px", fontSize: "28px" }}>Your Performance Summary</h2>
 
-        <div style={{ marginBottom: "34px", color: "#666", fontSize: "18px", background: "#f1f1f1", display: "inline-block", padding: "8px 20px", borderRadius: "20px" }}>
+        <div style={{ marginBottom: "26px", color: "#666", fontSize: "16px", background: "#f1f1f1", display: "inline-block", padding: "6px 18px", borderRadius: "20px" }}>
           Target: <strong>{attemptLabel}</strong>
         </div>
 
-        {/* --- 1. BIG JSS SCORE REVEAL --- */}
-        <div style={{ ...rowStyle, gap: "35px", marginTop: "10px", marginBottom: "14px" }}>
+        {/* 1. BIG JAS SCORE REVEAL */}
+        <div style={{ ...rowStyle, gap: "35px", marginTop: "10px", marginBottom: "20px" }}>
            <div style={{ flex: "0 0 auto", transform: "scale(1.12)", transformOrigin: "center", zIndex: 1 }}>
-              <CircularScore value={jee_society_score} color="#6a11cb" title="JSS" rangeText={jee_society_score} />
+              <CircularScore value={jee_society_score} color="#6a11cb" title="JAS" rangeText={jee_society_score} />
            </div>
 
            <div style={{
@@ -2343,36 +2400,18 @@ export default function StudentSwotForm() {
              padding: "22px 25px",
              borderLeft: "7px solid #6a11cb"
            }}>
-             <h3 style={{ margin: "0 0 8px 0", color: "#6a11cb", fontSize: "22px" }}>JSS (JEEsociety Score)</h3>
+             <h3 style={{ margin: "0 0 8px 0", color: "#6a11cb", fontSize: "22px" }}>JAS (JEE Audit Score)</h3>
              <p style={{ margin: 0, fontSize: "15.5px", color: "#333", lineHeight: "1.65" }}>
-               This is your <b>Holistic Preparation Index</b>. Unlike a mock test that only checks knowledge, JSS accounts for your Consistency, Focus, Revision Quality, and Syllabus Coverage.
+               You are currently at <b>{jee_society_score}%</b> out of your 100% potential readiness. Unlike a standard mock test that only checks rote knowledge, JAS accounts for your Consistency, Focus Depth, Revision Quality, and Active Problem Solving.
              </p>
            </div>
         </div>
 
-        {/* Our strongest trust signal, pulled up here so nobody has to
-            scroll to find it. */}
-        <div style={{ textAlign: "center", marginBottom: "20px" }}>
-          <div
-            style={{
-              display: "inline-flex", alignItems: "center", gap: "7px",
-              padding: "7px 14px", borderRadius: "20px", background: "#f8fafc", border: "1px solid #e2e8f0",
-            }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <path d="M20 6L9 17l-5-5" stroke="#16a34a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            <span style={{ fontSize: "12.5px", color: "#64748b", fontWeight: "600" }}>
-              Scored using the same model already trusted by 5,357 JEE aspirants
-            </span>
-          </div>
-        </div>
-
-        {/* --- FRAMING BANNER: this page is the preview, the report is the real deliverable --- */}
+        {/* Framing Banner */}
         <div style={{
           display: "flex", alignItems: "center", gap: "12px",
           background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: "14px",
-          padding: "14px 18px", marginBottom: "30px",
+          padding: "14px 18px", marginBottom: "26px",
         }}>
           <LockIcon size={26} color="#9a3412" />
           <p style={{ margin: 0, fontSize: "14.5px", color: "#9a3412", fontWeight: "600", lineHeight: "1.55" }}>
@@ -2381,18 +2420,13 @@ export default function StudentSwotForm() {
           </p>
         </div>
 
-        {/* --- 2. DETAILED JSS BREAKDOWN (sums exactly to the score above) --- */}
+        {/* 2. GRAPH / PERCENTILE CARD (Above Breakdown) */}
         <div style={{ marginBottom: "26px" }}>
-          <JSSBreakdownCard breakdown={scores.breakdown} jss={jee_society_score} />
-        </div>
-
-        {/* --- 3. PERCENTILE VS ASPIRANTS --- */}
-        <div style={{ marginBottom: "30px" }}>
           <PercentileCard percentile={scores.percentile_vs_aspirants} jss={jee_society_score} color="#c62828" />
         </div>
 
-        {/* --- DOWNLOAD CTA #1 --- */}
-        <div style={{ marginBottom: "44px" }}>
+        {/* DOWNLOAD CTA #1 (Directly Below Graph) */}
+        <div style={{ marginBottom: "36px" }}>
           <DownloadCTAButton
             onClick={handleDownloadReport}
             isGenerating={isGenerating}
@@ -2401,8 +2435,45 @@ export default function StudentSwotForm() {
           />
         </div>
 
-        {/* --- 4. WHAT TOP STUDENTS DO DIFFERENTLY (personalized to weakest category) --- */}
-        <div style={{ marginBottom: "26px" }}>
+{/* --- LIMITED BONUS CALLOUT --- */}
+<div style={{
+  background: "linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)",
+  border: "1px solid rgba(129, 140, 248, 0.3)",
+  borderRadius: "16px",
+  padding: "20px 22px",
+  marginBottom: "30px",
+  textAlign: "left",
+  color: "#ffffff"
+}}>
+  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px", flexWrap: "wrap", gap: "8px" }}>
+    <span style={{
+      background: "#ef4444",
+      color: "#fff",
+      fontSize: "11px",
+      fontWeight: "900",
+      padding: "3px 10px",
+      borderRadius: "20px",
+      letterSpacing: "0.5px"
+    }}>
+      FREE BONUS • FIRST 500 ONLY
+    </span>
+  </div>
+
+  <h4 style={{ margin: "0 0 6px 0", fontSize: "17px", fontWeight: "800", color: "#fff" }}>
+    🎁 Unlocked: The Weekly JEE Dispatch (1 Year Free Access)
+  </h4>
+  <p style={{ margin: 0, fontSize: "14px", color: "#cbd5e1", lineHeight: "1.5" }}>
+    Get high-yield problem walkthroughs, revision frameworks, and unreleased exam hacks delivered straight to your inbox every Sunday by top IIT rankers.
+  </p>
+</div>
+
+        {/* 3. QUALITATIVE JAS BREAKDOWN */}
+        <div style={{ marginBottom: "28px" }}>
+          <JASBreakdownCard breakdown={scores.breakdown} />
+        </div>
+
+        {/* 4. WHAT TOP STUDENTS DO DIFFERENTLY */}
+        <div style={{ marginBottom: "34px" }}>
           <TopStudentsCallout
             weakestLabel={weakestCategory.label}
             weakestKey={weakestCategory.key}
@@ -2410,31 +2481,22 @@ export default function StudentSwotForm() {
           />
         </div>
 
-        {/* --- 4b. ACCOUNTABILITY GAP (personalized to Q20, subtle mentorship-need primer) --- */}
-        <div style={{ marginBottom: "40px" }}>
-          <AccountabilityCallout answers={answers} />
+        {/* 5. SWOT SECTION */}
+        <h2 style={{ marginTop: "10px" }}>Your Strength & Weakness</h2>
+        <div className="swot-card-white">
+          <span className="swot-pill-badge strength-badge">STRENGTH</span>
+          <p className="swot-text">{finalSWOT.S}</p>
+        </div>
+        <div className="swot-card-white">
+          <span className="swot-pill-badge weakness-badge">WEAKNESS</span>
+          <p className="swot-text">{finalSWOT.W}</p>
         </div>
 
-       {/* --- 5. SWOT SECTION --- */}
-<h2 style={{ marginTop: "10px" }}>Your Strength & Weakness</h2>
-<div className="swot-card-white">
-  <span className="swot-pill-badge strength-badge">STRENGTH</span>
-  <p className="swot-text">{finalSWOT.S}</p>
-</div>
-<div className="swot-card-white">
-  <span className="swot-pill-badge weakness-badge">WEAKNESS</span>
-  <p className="swot-text">{finalSWOT.W}</p>
-</div>
-
-        {/* --- 6. FOUNDER VIDEO --- */}
+        {/* 6. FOUNDER VIDEO */}
         <div style={{ marginTop: "44px", marginBottom: "40px" }}>
           <h3 style={{ textAlign: "center", fontSize: "20px", fontWeight: "800", color: "#0f172a", marginBottom: "10px" }}>
             Hear It Straight From The Founder
           </h3>
-          {/* Placeholder badge: I don't have the actual IIT Bombay crest file,
-              so this uses an <img> pointing at /iit-bombay-logo.png with a
-              text fallback. Drop the real logo file into /public with that
-              exact filename and it'll appear automatically. */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginBottom: "18px" }}>
             <img
               src="/iit-bombay-logo.png"
@@ -2447,12 +2509,12 @@ export default function StudentSwotForm() {
           <FounderVideoBlock />
         </div>
 
-        {/* --- 7. PRODUCT SPEC CHART (what's inside your report) --- */}
+        {/* 7. PRODUCT SPEC CHART */}
         <div style={{ marginBottom: "56px" }}>
           <ReportSpecChart />
         </div>
 
-        {/* --- DOWNLOAD CTA #2 --- */}
+        {/* DOWNLOAD CTA #2 */}
         <div style={{ marginBottom: "46px" }}>
           <DownloadCTAButton
             onClick={handleDownloadReport}
@@ -2462,12 +2524,12 @@ export default function StudentSwotForm() {
           />
         </div>
 
-        {/* --- 8. TESTIMONIALS --- */}
+        {/* 8. TESTIMONIALS */}
         <div style={{ marginBottom: "44px" }}>
           <TestimonialsGrid />
         </div>
 
-        {/* --- DOWNLOAD CTA #3 (final close) --- */}
+        {/* DOWNLOAD CTA #3 (Final Close) */}
         <div style={{
           background: "linear-gradient(135deg, #0b0f19, #1e1330)",
           borderRadius: "20px", padding: "34px 24px", textAlign: "center", marginBottom: "40px",
@@ -2485,8 +2547,40 @@ export default function StudentSwotForm() {
           />
         </div>
 
-        {/* --- YOUTUBE BUTTON (kept) --- */}
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
+        {/* BOTTOM BUTTONS (WhatsApp & YouTube Matching Style) */}
+        <div style={{ display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap", marginTop: "10px" }}>
+          
+          <a
+            href="https://whatsapp.com/channel/0029VbDZ6FnGE56sPOiSVL0a"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <button
+              style={{
+                display: "flex", alignItems: "center", gap: "10px",
+                padding: "12px 28px", borderRadius: "50px",
+                background: "#25D366", color: "white",
+                fontSize: "16px", fontWeight: "700", border: "none",
+                cursor: "pointer", boxShadow: "0 4px 15px rgba(37, 211, 102, 0.3)",
+                transition: "all 0.3s ease"
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.05)";
+                e.currentTarget.style.boxShadow = "0 6px 20px rgba(37, 211, 102, 0.5)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 4px 15px rgba(37, 211, 102, 0.3)";
+              }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+              </svg>
+              WhatsApp Channel
+            </button>
+          </a>
+
           <a
             href="https://www.youtube.com/@SreyashBhaiyaIITB"
             target="_blank"
@@ -2517,9 +2611,10 @@ export default function StudentSwotForm() {
               The JEEsociety YouTube
             </button>
           </a>
+
         </div>
 
-        {/* --- GO BACK / START NEW ASSESSMENT (kept) --- */}
+        {/* Start New Assessment */}
         <div style={{ marginTop: "40px", textAlign: "center", paddingBottom: "20px" }}>
           <button
             onClick={() => {
@@ -2547,7 +2642,6 @@ export default function StudentSwotForm() {
       </div>
     );
   }
-
   // -------------------- QUESTION PAGE --------------------
   const q = QUESTIONS[step];
 
@@ -2626,18 +2720,38 @@ export default function StudentSwotForm() {
               <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "20px" }}>{q.question}</h2>
 
               {/* INPUTS */}
-              {q.type === "text" ? (
-                <input
-                  type="text"
-                  value={answers[q.id] || ""}
-                  onChange={(e) => handleChange(e.target.value)}
-                  style={{
-                    width: "100%", padding: "12px", borderRadius: "10px",
-                    border: "1px solid #ccc", fontSize: "16px", boxSizing: "border-box"
-                  }}
-                  placeholder="Type your answer..."
-                />
-              ) : (
+{q.type === "text" ? (
+  <div>
+    <input
+      type="text"
+      value={answers[q.id] || ""}
+      onChange={(e) => handleChange(e.target.value)}
+      style={{
+        width: "100%", padding: "14px", borderRadius: "10px",
+        border: "1px solid #ccc", fontSize: "16px", boxSizing: "border-box"
+      }}
+      placeholder="Type your name..."
+    />
+
+    {/* Instructions for Step 0 (Name Question) */}
+    {q.id === "name" && (
+      <div style={{
+        marginTop: "22px", padding: "18px 20px", background: "#f8fafc",
+        border: "1px solid #e2e8f0", borderRadius: "14px", textAlign: "left"
+      }}>
+        <div style={{ fontSize: "14.5px", fontWeight: "800", color: "#0f172a", marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>
+          📋 Instructions Before You Begin:
+        </div>
+        <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "13.5px", color: "#475569", lineHeight: "1.65", display: "flex", flexDirection: "column", gap: "6px" }}>
+          <li><strong>20 Real Questions:</strong> Covers your daily consistency, focus depth, backlogs, and actual exam habits.</li>
+          <li><strong>Takes Just 5 Minutes:</strong> Quick, single-choice diagnostic with zero complex calculations.</li>
+          <li><strong>Be 100% Brutally Honest:</strong> No sugarcoating. Accurate inputs produce your true predicted baseline.</li>
+          <li><strong>Personalized PDF Report:</strong> Only serious aspirants will get the full diagnostic breakdown and action plan.</li>
+        </ul>
+      </div>
+    )}
+  </div>
+) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                   <style>{`
                     @keyframes option-ripple {

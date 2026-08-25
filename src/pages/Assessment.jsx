@@ -1433,7 +1433,7 @@ const ParticleLayer = ({ bursts }) => (
               boxShadow: `0 0 8px ${burst.color}`,
               "--endX": `${dx + jitterX}px`,
               "--endY": `${dy}px`,
-              animation: `particle-fly 0.85s cubic-bezier(0.3,0.6,0.4,1) forwards`,
+              animation: `particle-fly 1.3s cubic-bezier(0.3,0.6,0.4,1) forwards`,
               animationDelay: `${i * 55}ms`,
             }}
           />
@@ -1932,6 +1932,19 @@ export default function StudentSwotForm() {
   const [showSWOT, setShowSWOT] = useState(false);
   const [finalSWOT, setFinalSWOT] = useState({ S: "", W: "", O: "", T: "" });
   
+const handleStartNewAssessment = () => {
+    setStep(0);
+    setAnswers({});
+    setShowSWOT(false);
+    setIsPacking(false);            // 👈 Removes "Your report is ready" overlay
+    setResolvedBlocks({});          // 👈 Clears completed card blocks
+    setShowSectionIntro(null);
+    setMilestoneToast(null);
+    setShowMobilePreview(false);
+    shownSectionIntros.current = new Set();
+    shownMilestones.current = new Set();
+  };
+
   // --- NEW: Replaced email states with a single generating state ---
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -2617,27 +2630,23 @@ export default function StudentSwotForm() {
         {/* Start New Assessment */}
         <div style={{ marginTop: "40px", textAlign: "center", paddingBottom: "20px" }}>
           <button
-            onClick={() => {
-              setStep(0);
-              setAnswers({});
-              setShowSWOT(false);
-            }}
-            style={{
-              background: "transparent", border: "2px solid #e0e0e0",
-              padding: "10px 25px", borderRadius: "50px", color: "#666",
-              fontWeight: "600", cursor: "pointer", transition: "all 0.2s"
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.borderColor = "#c62828";
-              e.target.style.color = "#c62828";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.borderColor = "#e0e0e0";
-              e.target.style.color = "#666";
-            }}
-          >
-            + Start New Assessment
-          </button>
+  onClick={handleStartNewAssessment}
+  style={{
+    background: "transparent", border: "2px solid #e0e0e0",
+    padding: "10px 25px", borderRadius: "50px", color: "#666",
+    fontWeight: "600", cursor: "pointer", transition: "all 0.2s"
+  }}
+  onMouseEnter={(e) => {
+    e.target.style.borderColor = "#c62828";
+    e.target.style.color = "#c62828";
+  }}
+  onMouseLeave={(e) => {
+    e.target.style.borderColor = "#e0e0e0";
+    e.target.style.color = "#666";
+  }}
+>
+  + Start New Assessment
+</button>
         </div>
       </div>
     );
@@ -2645,8 +2654,15 @@ export default function StudentSwotForm() {
   // -------------------- QUESTION PAGE --------------------
   const q = QUESTIONS[step];
 
-  return (
-    <div className="assessment-wrapper" style={{ minHeight: "100vh", background: "#fafafa", padding: "20px 12px" }}>
+  return (<div 
+  className="assessment-wrapper" 
+  style={{ 
+    minHeight: "100vh", 
+    background: "#fafafa", 
+    padding: "20px 12px",
+    paddingBottom: isMobile ? "100px" : "30px" /* Adds clearance so the fixed pill never covers the Next button */
+  }}
+>
       <Helmet>
         <title>Start Assessment | JEE Society</title>
         <meta name="description" content="Answer 20 questions to analyze your JEE Main & Advanced consistency, focus, and syllabus coverage." />
@@ -2736,7 +2752,7 @@ export default function StudentSwotForm() {
     {/* Instructions for Step 0 (Name Question) */}
     {q.id === "name" && (
       <div style={{
-        marginTop: "22px", padding: "18px 20px", background: "#f8fafc",
+        marginTop: "22px", padding: "5px 15px", background: "#f8fafc",
         border: "1px solid #e2e8f0", borderRadius: "14px", textAlign: "left"
       }}>
         <div style={{ fontSize: "14.5px", fontWeight: "800", color: "#0f172a", marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>

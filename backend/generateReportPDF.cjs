@@ -256,58 +256,43 @@ function buildTieBreakInsight(subject) {
   return `Chemistry is checked last in NTA's tie-break order (after Maths, then Physics), but with lakhs of aspirants landing on similar totals, even a "last resort" tie-breaker resolves real ranks every single year.`;
 }
 
-// Modest, achievable next target (not a final goal) — avoids specific
-// rank-number claims per your call to keep this illustrative.
-function buildModestTarget(subject, currentMarks) {
-  const nextMilestone = Math.min(65, Math.round((currentMarks + 20) / 5) * 5);
-  const questionsNeeded = Math.round((nextMilestone - currentMarks) / 4);
-  return `You don't need to master ${SUBJECT_LABEL[subject]}. Moving from your current estimated <b>${currentMarks} marks</b> to just <b>${nextMilestone} marks</b> (roughly ${Math.max(1, questionsNeeded)} more correct questions) would meaningfully change your competitive position, especially given how tie-breaks work.`;
-}
-
-// --- Visuals: Temperature Gauge + Peer Position Bar (CSS-built, like the
-// Rank Degradation bars — no image needed, moves per student). ---
-function buildTemperatureGauge(marks) {
-  const pct = Math.max(0, Math.min(100, marks));
-  return `
-    <div style="margin-top:8px;">
-      <div style="height:14px; border-radius:8px; background:linear-gradient(90deg, #2563eb 0%, #06b6d4 25%, #facc15 50%, #fb923c 75%, #dc2626 100%); position:relative; box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);">
-        <div style="position:absolute; top:-6px; left:${pct}%; transform:translateX(-50%); width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-top:9px solid #111;"></div>
-      </div>
-      <div style="display:flex; justify-content:space-between; font-size:11px; color:#888; margin-top:4px;">
-        <span>Cold</span><span>Warm</span><span>Hot</span>
-      </div>
-    </div>
-  `;
-}
-
-function buildPeerPositionBar(marks) {
-  const AVERAGE_ASPIRANT_BENCHMARK = 45; // honest flat reference, not a real-data claim
-  const youPct = Math.max(2, Math.min(98, marks));
-  const avgPct = AVERAGE_ASPIRANT_BENCHMARK;
-
-  // When the two markers land close together, their labels collide
-  // horizontally (both centered near the same x position). Fix: give the
-  // container extra height and flip "You"'s label to sit ABOVE its line
-  // instead of below, so the two labels separate vertically instead of
-  // overlapping.
-  const isClose = Math.abs(youPct - avgPct) < 15;
-  const containerHeight = isClose ? 56 : 34;
-  const trackTop = isClose ? 36 : 14;
-
-  const avgLine = `<div style="position:absolute; top:${isClose ? 14 : 0}px; width:2px; height:22px; background:#94a3b8; left:50%; transform:translateX(-50%);"></div>`;
-  const avgLabel = `<div style="position:absolute; top:${isClose ? 38 : 24}px; width:90px; left:50%; transform:translateX(-50%); font-size:10px; color:#64748b; font-weight:700; white-space:nowrap; text-align:center;">Typical Aspirant</div>`;
-
-  const youBlock = isClose
-    ? `<div style="position:absolute; top:0; width:60px; left:50%; transform:translateX(-50%); font-size:10px; color:#c62828; font-weight:800; text-align:center;">You</div>
-       <div style="position:absolute; top:12px; width:2px; height:24px; background:#c62828; left:50%; transform:translateX(-50%);"></div>`
-    : `<div style="position:absolute; top:0; width:2px; height:22px; background:#c62828; left:50%; transform:translateX(-50%);"></div>
-       <div style="position:absolute; top:24px; width:60px; left:50%; transform:translateX(-50%); font-size:10px; color:#c62828; font-weight:800; text-align:center;">You</div>`;
+// --- Single Combined Gauge: "Where You Stand" + "Peer Reference" ---
+function buildCombinedStandGauge(marks, subjectLabel) {
+  const pct = Math.max(6, Math.min(94, marks));
+  const avgPct = 45;
+  const topPct = 90;
 
   return `
-    <div style="margin-top:6px; position:relative; height:${containerHeight}px;">
-      <div style="position:absolute; top:${trackTop}px; left:0; right:0; height:8px; background:#f1f1f1; border-radius:5px;"></div>
-      <div style="position:absolute; top:0; left:${avgPct}%; height:100%; width:1px;">${avgLine}${avgLabel}</div>
-      <div style="position:absolute; top:0; left:${youPct}%; height:100%; width:1px;">${youBlock}</div>
+    <div style="margin-bottom: 24px;">
+      <div style="font-size: 16px; font-weight: 800; color: #111; margin-bottom: 12px; letter-spacing: -0.2px;">
+        Where You Stand: ${subjectLabel}
+      </div>
+      
+      <div style="position: relative; margin-top: 24px; margin-bottom: 20px;">
+        <!-- Gradient Track -->
+        <div style="height: 12px; border-radius: 6px; background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 25%, #eab308 55%, #f97316 80%, #ef4444 100%); position: relative; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
+          <!-- Benchmark Tick: Typical Aspirant -->
+          <div style="position: absolute; left: ${avgPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
+          
+          <!-- Benchmark Tick: Top 1% IITians -->
+          <div style="position: absolute; left: ${topPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
+        </div>
+
+        <!-- Dynamic "You" Pointer -->
+        <div style="position: absolute; top: -26px; left: ${pct}%; transform: translateX(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center;">
+          <div style="background: #c62828; color: white; font-size: 11px; font-weight: 900; padding: 2px 8px; border-radius: 4px; white-space: nowrap; box-shadow: 0 2px 6px rgba(198,40,40,0.35);">
+            You
+          </div>
+          <div style="width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #c62828;"></div>
+        </div>
+
+        <!-- Reference Labels Below Bar -->
+        <div style="position: relative; height: 16px; margin-top: 6px; font-size: 11.5px; font-weight: 700;">
+          <span style="position: absolute; left: 0; color: #94a3b8;">Baseline</span>
+          <span style="position: absolute; left: ${avgPct}%; transform: translateX(-50%); color: #475569;">Typical Aspirant</span>
+          <span style="position: absolute; left: ${topPct}%; transform: translateX(-50%); color: #b45309;">Top 1% IITians</span>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -321,33 +306,32 @@ function buildSubjectPageHTML(subject, data, marksBySubject) {
   const compensation = detectCompensation(subject, marksBySubject);
 
   const compensationBlock = compensation ? `
-    <div class="subj-compensation">
-      We noticed your ${compensation.strongerLabel} standing is significantly higher than your ${compensation.weakerLabel}.
-      You may be trying to compensate by pushing ${compensation.strongerLabel} harder, here's the math on why that
-      strategy doesn't fully work: even a strong ${compensation.strongerLabel} score can't offset a
-      ${compensation.gap}-mark gap in ${compensation.weakerLabel}, because your overall rank is driven by the total
-      across all three subjects, not any single one.
+    <div style="margin-bottom: 8px; font-weight: 700; color: #9a3412;">
+      ⚠️ Score Imbalance: Your ${compensation.strongerLabel} is outperforming your ${compensation.weakerLabel} by ~${compensation.gap} marks. Compensating across subjects does not work under JEE aggregate ranking.
     </div>
   ` : "";
 
   const caseStudyBlock = content.isAffirmation ? `
     <div class="subj-affirmation">${content.text}</div>
   ` : `
-    <div class="subj-case-study">
-      <div class="subj-case-story">${content.story}</div>
-      <div class="subj-case-takeaway">${content.takeaway}</div>
-    </div>
+    <div class="subj-case-story">${content.story}</div>
+    <div class="subj-case-takeaway">${content.takeaway}</div>
   `;
 
   return `
-    <div class="subj-gauge-label">Where You Stand: ${SUBJECT_LABEL[subject]}</div>
-    ${buildTemperatureGauge(marks)}
-    <div class="subj-peer-label">Peer Position</div>
-    ${buildPeerPositionBar(marks)}
-    ${compensationBlock}
-    <div class="subj-tiebreak">${buildTieBreakInsight(subject)}</div>
-    <div class="subj-target">${buildModestTarget(subject, marks)}</div>
-    ${caseStudyBlock}
+    <!-- Top: Combined Where You Stand Bar -->
+    ${buildCombinedStandGauge(marks, SUBJECT_LABEL[subject])}
+
+    <!-- Box 1 (Top Yellow Box): Tie-break & Core Subject Insight -->
+    <div class="subj-box-1">
+      ${compensationBlock}
+      <div class="subj-tiebreak-text">${buildTieBreakInsight(subject)}</div>
+    </div>
+
+    <!-- Box 2 (Bottom Yellow Box): Case Study & Actionable Takeaway -->
+    <div class="subj-box-2">
+      ${caseStudyBlock}
+    </div>
   `;
 }
 
@@ -583,26 +567,67 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-<div class="page">
-  <img src="${images.p3a}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <div class="subj-content">${buildSubjectPageHTML("physics", data, marksBySubject)}</div>
-  </div>
-</div>
+/* =========================================
+   PAGES 3a/3b/3c: SUBJECT DEEP-DIVES (Physics, Chem, Maths)
+   Aligned to fit the two background yellow boxes cleanly
+   ========================================= */
+.subj-content {
+  position: absolute;
+  top: 170px;
+  left: 56px;
+  width: 681px;
+}
 
-<div class="page">
-  <img src="${images.p3b}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <div class="subj-content">${buildSubjectPageHTML("chemistry", data, marksBySubject)}</div>
-  </div>
-</div>
+/* TOP YELLOW BOX (Tie-break & compensation) */
+.subj-box-1 {
+  height: 125px;
+  padding: 16px 22px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-<div class="page">
-  <img src="${images.p3c}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <div class="subj-content">${buildSubjectPageHTML("maths", data, marksBySubject)}</div>
-  </div>
-</div>
+.subj-tiebreak-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #1e293b;
+}
+
+/* BOTTOM YELLOW BOX (Case study + Takeaway) */
+.subj-box-2 {
+  margin-top: 36px;
+  height: 255px;
+  padding: 18px 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.subj-case-story {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #334155;
+  margin-bottom: 12px;
+}
+
+.subj-case-takeaway {
+  font-size: 15px;
+  line-height: 1.55;
+  color: #7a1010;
+  font-weight: 800;
+}
+
+.subj-affirmation {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #1e293b;
+  font-weight: 700;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
 
 ${attemptType === "2028" ? `
 <div class="page">
@@ -623,13 +648,6 @@ ${attemptType === "2028" ? `
       ${get("q11", data)?.mentor_note || "Barrier notes..."}
     </div>
   </div>
-</div>
-
-<!-- PAGE 6b: ENLARGED MINDSET SECTION (NEW) — all text, checkboxes, and
-     writing lines are static, baked directly into page6b_mindset_systems.png.
-     No dynamic overlay needed, matches how page9 (Note to Parents) works. -->
-<div class="page">
-  <img src="${images.p6b}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 
 <div class="page">
@@ -727,6 +745,13 @@ ${attemptType === "2028" ? `
 <!-- PAGE 15: SUNDAY TRACKER (NEW STATIC PAGE) -->
 <div class="page">
   <img src="${images.sundayTracker}" class="bg-img" onerror="this.style.display='none'"/>
+</div>
+
+<!-- PAGE 6b: ENLARGED MINDSET SECTION (NEW) — all text, checkboxes, and
+     writing lines are static, baked directly into page6b_mindset_systems.png.
+     No dynamic overlay needed, matches how page9 (Note to Parents) works. -->
+<div class="page">
+  <img src="${images.p6b}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 
 <!-- MENTORSHIP PROMO PAGE -->

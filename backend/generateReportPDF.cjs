@@ -32,18 +32,10 @@ function joinMentorNotes(keys, data) {
 }
 
 // ---------- NEW: mentorship-pressure helpers ----------
-
-// Rank Degradation Warning (page 1): NOT based on expected/potential
-// percentile anymore (dropped per request). Instead built purely from
-// their reported daily execution pattern — Q2 (deep-work hours bracket)
-// gives a base hours estimate, Q19 (active vs passive study ratio) scales
-// it down for how much of that time is genuinely active/effective. Both
-// numbers are real answers, not invented. Includes a visual bar
-// comparison (You vs a Topper Benchmark) alongside the supporting text.
-const Q2_BASE_HOURS = [6.5, 5, 2, 1.5];       // Deep Focus / Standard Grind / Passive / Distracted
-const Q19_ACTIVE_MULTIPLIER = [0.3, 0.5, 0.8, 1.0]; // same scale as score.js's Q19_MULTIPLIER
+const Q2_BASE_HOURS = [6.5, 5, 2, 1.5];
+const Q19_ACTIVE_MULTIPLIER = [0.3, 0.5, 0.8, 1.0];
 const TOPPER_BENCHMARK_HOURS = 6.0;
-const BAR_SCALE_MAX = 8; // hours represented by a full-width bar
+const BAR_SCALE_MAX = 8;
 
 function buildRankDegradationWarning(data) {
   const q2Idx = Number(data.answers?.q2);
@@ -132,26 +124,14 @@ function buildRankDegradationWarning(data) {
   };
 }
 
-// NOTE: the 5-systems checklist text lives directly in
-// page6b_mindset_systems.png now (static, not code-generated) — see the
-// copy-paste content list provided separately for the exact wording.
-
 // =========================================================
 // SUBJECT DEEP-DIVE PAGES (Physics / Chemistry / Maths)
 // =========================================================
-
-// Illustrative marks estimate per qualitative answer — framed to the
-// student as an estimate based on their self-rating, never as their
-// literal real exam score (we don't collect actual numeric marks).
 const MARKS_ESTIMATE = {
-  physics: [72, 52, 28, 65],   // Strong, Average, Weak, Comfort Trap
-  chemistry: [75, 50, 25, 45], // Strong, Average, Weak, Volatile — NOTE: q5 option order is Strong/Volatile/Weak/Average
-  maths: [70, 40, 15, 35],     // Killer, Survivor, Phobia, Ego Lifter
+  physics: [72, 52, 28, 65],
+  chemistry: [75, 45, 25, 50],
+  maths: [70, 40, 15, 35],
 };
-// q5's actual option order (see QUESTIONS in assessment.jsx) is:
-// 0 Strong, 1 Volatile, 2 Weak, 3 Average — reordering the estimate array
-// to match that exactly:
-MARKS_ESTIMATE.chemistry = [75, 45, 25, 50]; // Strong, Volatile, Weak, Average
 
 const SUBJECT_QUESTION_KEY = { physics: "q4", chemistry: "q5", maths: "q6" };
 const SUBJECT_LABEL = { physics: "Physics", chemistry: "Chemistry", maths: "Maths" };
@@ -161,59 +141,54 @@ function estimateMarks(subject, idx) {
   return arr[idx] !== undefined ? arr[idx] : 45;
 }
 
-// Affirmation shown instead of a case study for the top bracket in each
-// subject (idx 0) — a "problem-solved" case study would ring false for
-// someone who doesn't have that problem.
 const SUBJECT_AFFIRMATION = {
   physics: "Physics is already your anchor. Protect it, don't let it quietly eat time that Chemistry or Maths actually needs.",
   chemistry: "Chemistry is already working for you. Keep the revision light and consistent, don't let it slip while you focus elsewhere.",
   maths: "You're already ahead of most aspirants in Maths. Push for 90+ instead of \"good enough\", it's the subject NTA checks first in a tie.",
 };
 
-// 9 case studies total (3 archetypes x 3 subjects), matched to whichever
-// non-top option they picked for that subject.
 const CASE_STUDIES = {
   physics: {
-    1: { // "Average" — stuck, understands concepts but freezes on unfamiliar problems
+    1: {
       story: "One student from our mentorship program was in a similar spot with Physics. He was scoring consistently 45-50 out of 100 for months, he understood every concept in class, but froze the moment a question looked unfamiliar in mocks. We didn't add more theory. We had him solve 15 previous-year Physics questions daily from just 4 chapters, Rotational Motion, Electrostatics, Current Electricity, and Modern Physics, without watching a single new lecture. Three weeks later his Physics score was 68/100. He wasn't missing knowledge. He was missing exposure to how JEE actually twists standard concepts.",
-takeaway: "Lesson for you: stop watching more lectures. You already know the theory. Solve 15 PYQs a day from your weakest 4 chapters before touching anything new.",
+      takeaway: "Lesson for you: stop watching more lectures. You already know the theory. Solve 15 PYQs a day from your weakest 4 chapters before touching anything new.",
     },
-    2: { // "Weak" — struggles with basics
+    2: {
       story: "I had a student last year who was convinced he \"just wasn't a Physics person.\" He was scoring under 20 out of 100. We checked his basics instead, Vectors, Units and Dimensions, Kinematics, all shaky. We stopped him from touching Modern Physics or Electrostatics for 3 weeks. Pure NCERT-level basics, nothing else. When he came back to the harder chapters, they suddenly made sense. He jumped to 44/100 in the very next mock.",
-takeaway: "Lesson for you: you're not bad at Physics. You're missing the foundation Physics is built on. Go back to Vectors and Kinematics before anything else.",
+      takeaway: "Lesson for you: you're not bad at Physics. You're missing the foundation Physics is built on. Go back to Vectors and Kinematics before anything else.",
     },
-    3: { // "Comfort Trap" — over-invests in strongest subject
+    3: {
       story: "One mentee of ours was already scoring 78 out of 100 in Physics and kept spending four or more hours a day on it anyway, because it felt productive and he genuinely enjoyed it. Meanwhile his Chemistry sat at 30/100. We capped his Physics time at 45 minutes a day, revision only, no new content, and moved those hours to Chemistry. His Physics score barely moved, 79 to 81. His Chemistry jumped from 30 to 58 in six weeks.",
-takeaway: "Lesson for you: the subject you love most is probably not the one costing you the most marks. Cap your time on it and redirect the hours to whichever subject you're avoiding.",
+      takeaway: "Lesson for you: the subject you love most is probably not the one costing you the most marks. Cap your time on it and redirect the hours to whichever subject you're avoiding.",
     },
   },
   chemistry: {
-    1: { // "Volatile" — memorizes but forgets fast
+    1: {
       story: "One student told us Chemistry kept slipping through his fingers. He could recall a reaction perfectly the day after studying it, and completely forget it three days later. His Chemistry score swung between 25 and 60 depending on how recently he'd revised. We put him on a strict cycle, revisit every topic on Day 1, Day 3, and Day 7 after first studying it, no exceptions. Six weeks later his lowest Chemistry mock score was 55, and it stopped swinging.",
-takeaway: "Lesson for you: your problem isn't understanding, it's retention. Fixed-interval revision, Day 1, 3, 7, matters more than how many new topics you cover.",
+      takeaway: "Lesson for you: your problem isn't understanding, it's retention. Fixed-interval revision, Day 1, 3, 7, matters more than how many new topics you cover.",
     },
-    2: { // "Weak" — avoids the subject
+    2: {
       story: "One of our mentees avoided Chemistry almost entirely, barely opened the book, and was scoring under 15 out of 100. We didn't ask him to love it. We picked the single highest-yield, lowest-effort chapter, Chemical Bonding, gave him just the NCERT lines and 20 PYQs, nothing else. He scored 14 out of 20 on those questions on his first attempt, his first real win in Chemistry in months. That one win changed how he approached the whole subject.",
-takeaway: "Lesson for you: you don't need to fix your relationship with Chemistry. You need one small, fast win to prove to yourself you can actually do this.",
-},
-    3: { // "Average" — uneven across sub-topics
+      takeaway: "Lesson for you: you don't need to fix your relationship with Chemistry. You need one small, fast win to prove to yourself you can actually do this.",
+    },
+    3: {
       story: "A student of ours was almost perfect in half of Chemistry, near-perfect on Mole Concept and Thermodynamics, but scored almost zero on Organic reaction mechanisms, he treated them as impossible to memorize. We reframed Organic as logic, not memory, six reaction families instead of two hundred individual reactions. Within a month his Organic-specific score went from 8 out of 40 to 26 out of 40.",
-takeaway: "Lesson for you: your strong half is fine, don't touch it. Your weak half needs a different strategy. Most likely you're studying it the wrong way, not too little.",
- },
+      takeaway: "Lesson for you: your strong half is fine, don't touch it. Your weak half needs a different strategy. Most likely you're studying it the wrong way, not too little.",
+    },
   },
   maths: {
-    1: { // "Survivor" — narrow safe-zone chapters only
+    1: {
       story: "One mentee of ours only ever touched the safe chapters in Maths, Vectors, 3D Geometry, Straight Lines, and skipped everything else. He was hard-capped at 45 out of 100 no matter what. We had him add one new chapter every 10 days, starting with Permutations and Combinations. His ceiling broke for the first time in months, 45 became 58, then 64.",
-takeaway: "Lesson for you: your safe zone has a hard ceiling. Every chapter you refuse to touch is a ceiling you've built yourself.",
+      takeaway: "Lesson for you: your safe zone has a hard ceiling. Every chapter you refuse to touch is a ceiling you've built yourself.",
     },
-    2: { // "Phobia"
+    2: {
       story: "One student of ours was in your exact spot. Maths felt impossible, he'd scored 12 out of 100 for two straight mocks and was ready to write it off completely. We didn't ask him to love Maths. We asked him to master exactly 4 chapters, Quadratic Equations, Sets and Relations, Statistics, and Straight Lines, the most formula-based, least \"clever-thinking-required\" chapters in the syllabus. Six weeks later his Maths score was 46 out of 100. His overall percentile moved more from that than from anything he did in Physics or Chemistry that term.",
-takeaway: "Lesson for you: stop trying to complete the full Maths syllabus. Target the 4 chapters above first, they reward formula-memorization, not genius, and they're worth real marks.",
- },
-    3: { // "Ego Lifter" — chases hard problems for pride
+      takeaway: "Lesson for you: stop trying to complete the full Maths syllabus. Target the 4 chapters above first, they reward formula-memorization, not genius, and they're worth real marks.",
+    },
+    3: {
       story: "I've seen this pattern often. A mentee would spend 25 minutes on a single hard integration problem on principle, refusing to move on, while three easy Matrices questions worth the same total marks sat untouched. We stopped him from attempting anything he couldn't solve in under 3 minutes during practice, no exceptions, for two weeks. His accuracy on easy-to-medium questions went from 60% to 91%, and his Maths score jumped 22 points without him getting any \"smarter\" at all.",
-takeaway: "Lesson for you: JEE gives the same marks for an easy question and a hard one. Chasing the hard ones to prove something is costing you marks you could get for free.",
- },
+      takeaway: "Lesson for you: JEE gives the same marks for an easy question and a hard one. Chasing the hard ones to prove something is costing you marks you could get for free.",
+    },
   },
 };
 
@@ -225,15 +200,11 @@ function getSubjectContent(subject, idx) {
   return { isAffirmation: false, ...(cs || CASE_STUDIES[subject][1]) };
 }
 
-// Cross-subject "compensation" detection: is this subject a clear weak
-// outlier relative to the other two? Uses ESTIMATED MARKS (not raw
-// option index), since e.g. Physics "Comfort Trap" is actually a high
-// mark despite being option index 3.
 function detectCompensation(subject, marksBySubject) {
   const others = Object.keys(marksBySubject).filter((k) => k !== subject);
   const otherAvg = others.reduce((sum, k) => sum + marksBySubject[k], 0) / others.length;
   const gap = otherAvg - marksBySubject[subject];
-  if (gap < 20) return null; // not a meaningful imbalance
+  if (gap < 20) return null;
 
   const strongerSubject = others.reduce((a, b) => (marksBySubject[a] > marksBySubject[b] ? a : b));
   return {
@@ -243,9 +214,6 @@ function detectCompensation(subject, marksBySubject) {
   };
 }
 
-// Accurate (fact-checked) tie-break insight — NTA JEE Main 2025 tie-break
-// order is Maths, then Physics, then Chemistry, then accuracy ratio, then
-// age, when candidates land on the same total score.
 function buildTieBreakInsight(subject) {
   if (subject === "maths") {
     return `Because thousands of aspirants land on near-identical total scores every year, ties are common. When they happen, NTA resolves them using <b>Maths score first</b>, before Physics or Chemistry are even considered. A weak Maths score doesn't just cost you marks directly, it also puts you at a real disadvantage against equally-scored peers when final ranks get assigned.`;
@@ -271,10 +239,7 @@ function buildCombinedStandGauge(marks, subjectLabel) {
       <div style="position: relative; margin-top: 24px; margin-bottom: 20px;">
         <!-- Gradient Track -->
         <div style="height: 12px; border-radius: 6px; background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 25%, #eab308 55%, #f97316 80%, #ef4444 100%); position: relative; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
-          <!-- Benchmark Tick: Typical Aspirant -->
           <div style="position: absolute; left: ${avgPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
-          
-          <!-- Benchmark Tick: Top 1% IITians -->
           <div style="position: absolute; left: ${topPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
         </div>
 
@@ -366,7 +331,7 @@ async function generatePDF(data) {
     p4: getAsset("page4_mapping_2028.png"),
     p5: getAsset("page5_peer.png"),
     p6: getAsset("page6_ref.png"),
-    p6b: getAsset("page6b_mindset_systems.png"), // NEW: enlarged Mindset page
+    p6b: getAsset("page6b_mindset_systems.png"),
     p7: getAsset("page7_health.png"),
     p8: getAsset("page8_exec.png"),
     p9: getAsset("page9_parents.png"),
@@ -374,7 +339,7 @@ async function generatePDF(data) {
     p11: getAsset("page11_conclusion.png"),
     p12: getAsset("page12_habit.png"),
     p13: getAsset("page13_mock.png"),
-    p14: getAsset("page14_mock_analysis_guide.png"), // NEW: final page, fully static
+    p14: getAsset("page14_mock_analysis_guide.png"),
     sundayTracker: getAsset("sunday_tracker.png"),
     mentorshipPromo: getAsset("mentorship_promo.png"),
     physics: getAsset(`physics_${prevYearChapters}.png`),
@@ -425,22 +390,14 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 /* Global Text Styles */
 .dynamic-text { position: absolute; font-size: 17px; font-weight: 700; color: #222; }
 
-/* PAGE 1: COVER (Cleaned up coordinates) */
+/* PAGE 1: COVER */
 .p1-name{ top: 733px; left: 187px; font-size: 20px; font-weight: 700; }
 .p1-target{ top: 773px; left: 191px; font-size: 18px; font-weight: 700; }
 .p1-score{ top: 813px; left: 331px; font-size: 18px; font-weight: 700; }
 
-/* PAGE 2: DIAGNOSTICS (Cleaned up graph) */
+/* PAGE 2: DIAGNOSTICS */
 .p2-score { top: 82px; left: 65px; font-size: 24px; color: #a40000; font-weight: 800; }
 .p2-gap { top: 158px; left: 116px; font-size: 25px; color: #a40000; }
-
-/* PAGE 2: RANK DEGRADATION WARNING (moved here from page 1 per request)
-   Sits between the Score/Readiness-Gap box above and the Founder's Note
-   box below. Lifted up from 360px to 300px since it was overlapping the
-   Founder's Note box below it. You mentioned also lifting the JSS
-   score/gap section up on your end, so this will likely need another
-   pass once both moves settle, send an updated screenshot and I'll
-   recalibrate. */
 .p2-rank-warning {
   position: absolute; top: 260px; left: 40px; width: 713px;
   padding: 16px 20px; border-radius: 12px; box-sizing: border-box;
@@ -448,129 +405,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   border: 1.5px solid ${rankWarning.atRisk ? "#f3b4b4" : "#bbf7d0"};
 }
 
-/* PAGES 3a/3b/3c: SUBJECT DEEP-DIVES (Physics / Chemistry / Maths)
-   One shared template, positioned identically on all 3 pages (assuming
-   you design all 3 background images with matching layout, easiest for
-   consistency). PLACEHOLDER coordinates — these are brand-new pages, so
-   send me the actual designs and I'll calibrate exactly. */
-.subj-content { position: absolute; top: 180px; left: 55px; width: 683px; }
-.subj-gauge-label { font-size: 14px; font-weight: 800; color: #222; margin-bottom: 4px; }
-.subj-peer-label { font-size: 14px; font-weight: 800; color: #222; margin-top: 22px; margin-bottom: 4px; }
-.subj-compensation {
-  margin-top: 22px; padding: 14px 16px; border-radius: 10px;
-  background: #fff7ed; border: 1px solid #fed7aa;
-  font-size: 13.5px; line-height: 1.55; color: #7c2d12;
-}
-.subj-tiebreak {
-  margin-top: 16px; font-size: 13px; line-height: 1.55; color: #444;
-  padding: 12px 14px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;
-}
-.subj-target {
-  margin-top: 14px; font-size: 13.5px; line-height: 1.55; color: #14532d;
-  padding: 12px 14px; background: #f0fdf4; border-radius: 10px; border: 1px solid #bbf7d0;
-}
-.subj-affirmation {
-  margin-top: 20px; font-size: 15px; line-height: 1.6; color: #333; font-style: italic;
-}
-.subj-case-study { margin-top: 20px; }
-.subj-case-story { font-size: 13.5px; line-height: 1.6; color: #333; margin-bottom: 8px; }
-.subj-case-takeaway { font-size: 13.5px; line-height: 1.55; color: #4a0402; font-weight: 700; }
-
-/* PAGE 5: PEER COMPARISON */
-.p5-score-top { top: 164px; left: 466px; font-size: 22px; color: #a40000; }
-
-/* PAGE 6: R.E.F & BARRIER */
-.p6-ref { top: 230px; left: 90px; width: 610px; line-height: 1.7; color: #4a0402; }
-.p6-barrier { top: 780px; left: 90px; width: 610px; line-height: 1.7; color: #4a0402; }
-
-/* PAGE 6b (NEW — needs page6b_mindset_systems.png): no dynamic CSS needed
-   here, all text/checkboxes/writing-lines are static, baked into the image. */
-
-/* PAGE 7: HEALTH */
-.health-item { position: absolute; left: 90px; width: 610px; line-height: 1.6; color: #4a0402; font-size: 16px; }
-.h-item1 { top: 195px; }
-.h-item2 { top: 405px; }
-.h-item3 { top: 625px; }
-.h-item4 { top: 835px; }
-
-/* PAGE 8: EXECUTION PLAN
-   Shifted up ~43px from the original (292→249, etc.) to match the
-   updated page8_exec.png, same 113px spacing between steps as before.
-   Step 8 now has its own numeral graphic in the image, so it uses the
-   same .exec-item styling as 1-7 instead of the old plain-text fallback. */
-.exec-item { position: absolute; left: 140px; width: 550px; font-size: 15px; line-height: 1.5; color: #4a0402; font-weight: 600; }
-.ex1 { top: 231px; }
-.ex2 { top: 344px; }
-.ex3 { top: 457px; }
-.ex4 { top: 570px; }
-.ex5 { top: 683px; }
-.ex6 { top: 796px; }
-.ex7 { top: 909px; }
-.ex8 { top: 1022px; }
-
-/* PAGE 9: NOTE TO PARENTS — the new parents line is static text baked
-   directly into page9_parents.png (see instructions), no CSS needed here. */
-
-/* PAGE 11: CONCLUSION */
-.p11-conc { top: 390px; left: 140px; width: 520px; font-size: 20px; line-height: 1.8; color: #5c1a1a; }
-
-/* PAGE 13: MOCK TRACKER — the mentor-review footer line is now static
-   text baked directly into page13_mock.png, no CSS needed here. */
-
-/* =========================================
-   THE MASKING ENGINE (used only for the subject-year black box)
-   ========================================= */
-.black-mask { 
-  position: absolute; background: #000; color: #ffd700; font-weight: 900; 
-  text-align: center; font-size: 32px; z-index: 20; top: 57px; left: 141px; 
-  width: 130px; height: 45px; line-height: 45px; border-radius: 8px;
-}
-
-/* PAGE 12/13 (printables): Name/Target overlay.
-   Previously drew a solid white rectangle to cover a placeholder and put
-   text inside it, that's why it never lined up with your actual design.
-   Removed the cover-up entirely — this now just places plain text
-   directly, meant to sit INSIDE the pre-designed bordered box (like your
-   Harshita reference), not replace/cover anything. No Expected/Potential
-   percentile, just Name + Target, per your note.
-   PLACEHOLDER coordinates — send me the updated page12/13 images (or
-   just where the box sits) and I'll line this up exactly. */
-.printable-header {
-  position: absolute; font-size: 15px; font-weight: 700; color: #222;
-}
-.p12-header { top: 108px; left: 60px; }
-.p13-header { top: 108px; left: 60px; }
-
-/* PAGE 14: Mock Analysis Guide — name goes on the blank "Name:" line.
-   PLACEHOLDER coordinates, estimated from your screenshot, not measured
-   exactly. Send a render and I'll true it up to sit right on the line. */
-.p14-name { top: 151px; left: 90px; font-size: 15px; font-weight: 700; }
-</style>
-</head>
-<body>
-
-<div class="page">
-  <img src="${images.p1}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <div class="dynamic-text p1-name">${studentName}</div>
-    <div class="dynamic-text p1-target">JEE ${attemptType}</div>
-    <div class="dynamic-text p1-score">${score}</div>
-  </div>
-</div>
-
-<div class="page">
-  <img src="${images.p2}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <div class="dynamic-text p2-score">${score}</div>
-    <div class="dynamic-text p2-gap">${readinessGap}</div>
-    <div class="p2-rank-warning">${rankWarning.html}</div>
-  </div>
-</div>
-
-/* =========================================
-   PAGES 3a/3b/3c: SUBJECT DEEP-DIVES (Physics, Chem, Maths)
-   Aligned to fit the two background yellow boxes cleanly
-   ========================================= */
+/* PAGES 3a/3b/3c: SUBJECT DEEP-DIVES (Physics, Chem, Maths) */
 .subj-content {
   position: absolute;
   top: 170px;
@@ -578,7 +413,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   width: 681px;
 }
 
-/* TOP YELLOW BOX (Tie-break & compensation) */
 .subj-box-1 {
   height: 125px;
   padding: 16px 22px;
@@ -594,7 +428,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   color: #1e293b;
 }
 
-/* BOTTOM YELLOW BOX (Case study + Takeaway) */
 .subj-box-2 {
   margin-top: 36px;
   height: 255px;
@@ -629,12 +462,101 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   padding: 20px;
 }
 
+/* PAGE 5: PEER COMPARISON */
+.p5-score-top { top: 164px; left: 466px; font-size: 22px; color: #a40000; }
+
+/* PAGE 6: R.E.F & BARRIER */
+.p6-ref { top: 230px; left: 90px; width: 610px; line-height: 1.7; color: #4a0402; }
+.p6-barrier { top: 780px; left: 90px; width: 610px; line-height: 1.7; color: #4a0402; }
+
+/* PAGE 7: HEALTH */
+.health-item { position: absolute; left: 90px; width: 610px; line-height: 1.6; color: #4a0402; font-size: 16px; }
+.h-item1 { top: 195px; }
+.h-item2 { top: 405px; }
+.h-item3 { top: 625px; }
+.h-item4 { top: 835px; }
+
+/* PAGE 8: EXECUTION PLAN */
+.exec-item { position: absolute; left: 140px; width: 550px; font-size: 15px; line-height: 1.5; color: #4a0402; font-weight: 600; }
+.ex1 { top: 231px; }
+.ex2 { top: 344px; }
+.ex3 { top: 457px; }
+.ex4 { top: 570px; }
+.ex5 { top: 683px; }
+.ex6 { top: 796px; }
+.ex7 { top: 909px; }
+.ex8 { top: 1022px; }
+
+/* PAGE 11: CONCLUSION */
+.p11-conc { top: 390px; left: 140px; width: 520px; font-size: 20px; line-height: 1.8; color: #5c1a1a; }
+
+/* MASKING ENGINE */
+.black-mask { 
+  position: absolute; background: #000; color: #ffd700; font-weight: 900; 
+  text-align: center; font-size: 32px; z-index: 20; top: 57px; left: 141px; 
+  width: 130px; height: 45px; line-height: 45px; border-radius: 8px;
+}
+
+/* PRINTABLES HEADER */
+.printable-header { position: absolute; font-size: 15px; font-weight: 700; color: #222; }
+.p12-header { top: 108px; left: 60px; }
+.p13-header { top: 108px; left: 60px; }
+.p14-name { top: 151px; left: 90px; font-size: 15px; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER -->
+<div class="page">
+  <img src="${images.p1}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <div class="dynamic-text p1-name">${studentName}</div>
+    <div class="dynamic-text p1-target">JEE ${attemptType}</div>
+    <div class="dynamic-text p1-score">${score}</div>
+  </div>
+</div>
+
+<!-- PAGE 2: DIAGNOSTICS -->
+<div class="page">
+  <img src="${images.p2}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <div class="dynamic-text p2-score">${score}</div>
+    <div class="dynamic-text p2-gap">${readinessGap}</div>
+    <div class="p2-rank-warning">${rankWarning.html}</div>
+  </div>
+</div>
+
+<!-- PAGE 3a: PHYSICS DEEP DIVE -->
+<div class="page">
+  <img src="${images.p3a}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <div class="subj-content">${buildSubjectPageHTML("physics", data, marksBySubject)}</div>
+  </div>
+</div>
+
+<!-- PAGE 3b: CHEMISTRY DEEP DIVE -->
+<div class="page">
+  <img src="${images.p3b}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <div class="subj-content">${buildSubjectPageHTML("chemistry", data, marksBySubject)}</div>
+  </div>
+</div>
+
+<!-- PAGE 3c: MATHS DEEP DIVE -->
+<div class="page">
+  <img src="${images.p3c}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <div class="subj-content">${buildSubjectPageHTML("maths", data, marksBySubject)}</div>
+  </div>
+</div>
+
 ${attemptType === "2028" ? `
 <div class="page">
   <img src="${images.p4}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 ` : ""}
 
+<!-- PAGE 6: R.E.F & BARRIER -->
 <div class="page">
   <img src="${images.p6}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -650,6 +572,7 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
+<!-- PAGE 7: HEALTH -->
 <div class="page">
   <img src="${images.p7}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -660,6 +583,7 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
+<!-- PAGE 8: EXECUTION PLAN -->
 <div class="page">
   <img src="${images.p8}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -692,6 +616,7 @@ ${images.maths ? `
   ${attemptType === "2027" ? `<div class="black-mask bm-physics">${attemptType}</div>` : ""}
 </div>` : ""}
 
+<!-- PAGE 9: NOTE TO PARENTS -->
 <div class="page">
   <img src="${images.p9}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
@@ -702,6 +627,7 @@ ${attemptType === "2028" ? `
 </div>
 ` : ""}
 
+<!-- PAGE 11: CONCLUSION -->
 <div class="page">
   <img src="${images.p11}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -714,6 +640,7 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
+<!-- PAGE 12: 90-DAY HABIT GRID PRINTABLE -->
 <div class="page">
   <img src="${images.p12}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -723,6 +650,7 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
+<!-- PAGE 13: MOCK TRACKER PRINTABLE -->
 <div class="page">
   <img src="${images.p13}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -732,9 +660,7 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
-<!-- PAGE 14: MOCK ANALYSIS GUIDE (NEW, final page) — only the Name is
-     dynamic (goes on the blank "Name: ____" line), everything else on
-     this page is static, same idea as pages 12/13's header. -->
+<!-- PAGE 14: MOCK ANALYSIS GUIDE -->
 <div class="page">
   <img src="${images.p14}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -742,19 +668,17 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
-<!-- PAGE 15: SUNDAY TRACKER (NEW STATIC PAGE) -->
+<!-- PAGE 15: SUNDAY TRACKER -->
 <div class="page">
   <img src="${images.sundayTracker}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 
-<!-- PAGE 6b: ENLARGED MINDSET SECTION (NEW) — all text, checkboxes, and
-     writing lines are static, baked directly into page6b_mindset_systems.png.
-     No dynamic overlay needed, matches how page9 (Note to Parents) works. -->
+<!-- PAGE 6b: ENLARGED MINDSET SECTION -->
 <div class="page">
   <img src="${images.p6b}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 
-<!-- MENTORSHIP PROMO PAGE -->
+<!-- PAGE: MENTORSHIP PROMO -->
 <div class="page">
   <img src="${images.mentorshipPromo}" class="bg-img" onerror="this.style.display='none'"/>
 </div>

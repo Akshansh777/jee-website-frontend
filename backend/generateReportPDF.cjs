@@ -231,12 +231,12 @@ function buildCombinedStandGauge(marks, subjectLabel) {
   const topPct = 90;
 
   return `
-    <div style="margin-bottom: 24px;">
+    <div style="margin-bottom: 0px;">
       <div style="font-size: 16px; font-weight: 800; color: #111; margin-bottom: 12px; letter-spacing: -0.2px;">
         Where You Stand: ${subjectLabel}
       </div>
       
-      <div style="position: relative; margin-top: 24px; margin-bottom: 20px;">
+      <div style="position: relative; margin-top: 24px; margin-bottom: 10px;">
         <!-- Gradient Track -->
         <div style="height: 12px; border-radius: 6px; background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 25%, #eab308 55%, #f97316 80%, #ef4444 100%); position: relative; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
           <div style="position: absolute; left: ${avgPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
@@ -405,17 +405,22 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   border: 1.5px solid ${rankWarning.atRisk ? "#f3b4b4" : "#bbf7d0"};
 }
 
-/* PAGES 3a/3b/3c: SUBJECT DEEP-DIVES (Physics, Chem, Maths) */
+/* =========================================
+   PAGES 3a/3b/3c: SUBJECT DEEP-DIVES (Physics, Chem, Maths)
+   Calibrated exact offsets for both background yellow boxes
+   ========================================= */
 .subj-content {
   position: absolute;
-  top: 170px;
+  top: 175px;
   left: 56px;
   width: 681px;
 }
 
+/* TOP YELLOW BOX (Tie-break & compensation) */
 .subj-box-1 {
-  height: 125px;
-  padding: 16px 22px;
+  margin-top: 40px; /* Pushes text directly into the 1st yellow box */
+  height: 135px;
+  padding: 14px 24px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -423,14 +428,15 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 }
 
 .subj-tiebreak-text {
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 14.5px;
+  line-height: 1.55;
   color: #1e293b;
 }
 
+/* BOTTOM YELLOW BOX (Case study + Takeaway) */
 .subj-box-2 {
-  margin-top: 36px;
-  height: 255px;
+  margin-top: 24px; /* Aligns cleanly with the 2nd yellow box */
+  height: 275px;
   padding: 18px 24px;
   box-sizing: border-box;
   display: flex;
@@ -439,27 +445,27 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 }
 
 .subj-case-story {
-  font-size: 14.5px;
-  line-height: 1.6;
+  font-size: 13.8px;
+  line-height: 1.55;
   color: #334155;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .subj-case-takeaway {
-  font-size: 15px;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 1.5;
   color: #7a1010;
   font-weight: 800;
 }
 
 .subj-affirmation {
-  font-size: 17px;
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 1.65;
   color: #1e293b;
   font-weight: 700;
   font-style: italic;
   text-align: center;
-  padding: 20px;
+  padding: 10px;
 }
 
 /* PAGE 5: PEER COMPARISON */

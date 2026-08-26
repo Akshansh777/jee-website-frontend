@@ -262,7 +262,6 @@ function buildCombinedStandGauge(marks, subjectLabel) {
   `;
 }
 
-// Builds the full content-layer HTML for one subject's deep-dive page.
 function buildSubjectPageHTML(subject, data, marksBySubject) {
   const qKey = SUBJECT_QUESTION_KEY[subject];
   const idx = Number(data.answers?.[qKey]);
@@ -271,7 +270,7 @@ function buildSubjectPageHTML(subject, data, marksBySubject) {
   const compensation = detectCompensation(subject, marksBySubject);
 
   const compensationBlock = compensation ? `
-    <div style="margin-bottom: 8px; font-weight: 700; color: #9a3412;">
+    <div style="margin-bottom: 10px; font-size: 15px; font-weight: 800; color: #9a3412;">
       ⚠️ Score Imbalance: Your ${compensation.strongerLabel} is outperforming your ${compensation.weakerLabel} by ~${compensation.gap} marks. Compensating across subjects does not work under JEE aggregate ranking.
     </div>
   ` : "";
@@ -284,16 +283,16 @@ function buildSubjectPageHTML(subject, data, marksBySubject) {
   `;
 
   return `
-    <!-- Top: Combined Where You Stand Bar -->
+    <!-- Combined Where You Stand Bar -->
     ${buildCombinedStandGauge(marks, SUBJECT_LABEL[subject])}
 
-    <!-- Box 1 (Top Yellow Box): Tie-break & Core Subject Insight -->
+    <!-- Dynamic Box 1: Tie-Break & Imbalance -->
     <div class="subj-box-1">
       ${compensationBlock}
       <div class="subj-tiebreak-text">${buildTieBreakInsight(subject)}</div>
     </div>
 
-    <!-- Box 2 (Bottom Yellow Box): Case Study & Actionable Takeaway -->
+    <!-- Dynamic Box 2: Case Study Narrative & Takeaway -->
     <div class="subj-box-2">
       ${caseStudyBlock}
     </div>
@@ -407,60 +406,58 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 
 /* =========================================
    PAGES 3a/3b/3c: SUBJECT DEEP-DIVES (Physics, Chem, Maths)
-   Calibrated exact offsets for both background yellow boxes
+   Self-contained #FFFAE5 dynamic auto-adjusting cards
    ========================================= */
 .subj-content {
   position: absolute;
   top: 175px;
-  left: 56px;
-  width: 681px;
+  left: 50px;
+  width: 693px;
 }
 
-/* TOP YELLOW BOX (Tie-break & compensation) */
+/* BOX 1: Tie-break & Compensation Card */
 .subj-box-1 {
-  margin-top: 40px; /* Pushes text directly into the 1st yellow box */
-  height: 135px;
-  padding: 14px 24px;
+  background: #FFFAE5;
+  border: 1.5px solid #fed7aa;
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-top: 16px;
+  margin-bottom: 18px;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .subj-tiebreak-text {
-  font-size: 14.5px;
-  line-height: 1.55;
+  font-size: 16px; /* 👈 Enlarged font */
+  line-height: 1.65;
   color: #1e293b;
 }
 
-/* BOTTOM YELLOW BOX (Case study + Takeaway) */
+/* BOX 2: Case Study & Takeaway Card */
 .subj-box-2 {
-  margin-top: 24px; /* Aligns cleanly with the 2nd yellow box */
-  height: 275px;
-  padding: 18px 24px;
+  background: #FFFAE5;
+  border: 1.5px solid #fed7aa;
+  border-radius: 14px;
+  padding: 22px 24px;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .subj-case-story {
-  font-size: 13.8px;
-  line-height: 1.55;
+  font-size: 15.5px; /* 👈 Enlarged font */
+  line-height: 1.65;
   color: #334155;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .subj-case-takeaway {
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 16px; /* 👈 Enlarged font */
+  line-height: 1.6;
   color: #7a1010;
   font-weight: 800;
 }
 
 .subj-affirmation {
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 18px;
+  line-height: 1.7;
   color: #1e293b;
   font-weight: 700;
   font-style: italic;

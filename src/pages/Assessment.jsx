@@ -2292,43 +2292,39 @@ const handleStartNewAssessment = () => {
     try {
       const response = await fetch("https://backend-final-510329279046.asia-south1.run.app/send-dynamic-report", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        mode: "cors",
+        headers: {
+          "Accept": "application/pdf, application/json",
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify(reportPayload) 
       });
       
       if (!response.ok) {
-        throw new Error(`Server status ${response.status}: Failed to generate PDF`);
+        throw new Error(`Server returned status ${response.status}`);
       }
 
-      // Convert response into an explicit PDF Blob
       const blob = await response.blob();
       const pdfBlob = new Blob([blob], { type: "application/pdf" });
       const url = window.URL.createObjectURL(pdfBlob);
       const studentName = (answers["name"] || "Student").replace(/\s+/g, '_');
       const filename = `JEEsociety_Report_${studentName}.pdf`;
 
-      // Mobile Safari / iOS Fallback
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-      if (isIOS) {
-        window.location.href = url;
-      } else {
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", filename);
-        link.target = "_self";
-        document.body.appendChild(link);
-        link.click();
-        
-        // Cleanup with safe delay for mobile OS download managers
-        setTimeout(() => {
-          if (link.parentNode) link.parentNode.removeChild(link);
-          window.URL.revokeObjectURL(url);
-        }, 15000); // 👈 15s delay ensures mobile OS receives the stream
-      }
+      // Trigger Mobile & Desktop Download
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      
+      setTimeout(() => {
+        if (link.parentNode) link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 20000);
 
     } catch (err) {
-      console.error("PDF Download error:", err);
-      alert(`Error generating report: ${err.message || "Please check your network and try again."}`);
+      console.error("PDF generation failed:", err);
+      alert("Server is preparing your report. If on mobile data, please retry in 5 seconds.");
     } finally {
       setIsGenerating(false);
     }

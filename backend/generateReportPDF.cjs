@@ -31,99 +31,6 @@ function joinMentorNotes(keys, data) {
     .join("<br><br>");
 }
 
-// ---------- NEW: mentorship-pressure helpers ----------
-const Q2_BASE_HOURS = [6.5, 5, 2, 1.5];
-const Q19_ACTIVE_MULTIPLIER = [0.3, 0.5, 0.8, 1.0];
-const TOPPER_BENCHMARK_HOURS = 6.0;
-const BAR_SCALE_MAX = 8;
-
-function buildRankDegradationWarning(data) {
-  const q2Idx = Number(data.answers?.q2);
-  const q19Idx = Number(data.answers?.q19);
-
-  const baseHours = Q2_BASE_HOURS[q2Idx] !== undefined ? Q2_BASE_HOURS[q2Idx] : 3.5;
-  const activeMultiplier = Q19_ACTIVE_MULTIPLIER[q19Idx] !== undefined ? Q19_ACTIVE_MULTIPLIER[q19Idx] : 0.6;
-  const effectiveHours = Math.round(baseHours * activeMultiplier * 10) / 10;
-  const deficit = Math.max(0, Math.round((TOPPER_BENCHMARK_HOURS - effectiveHours) * 10) / 10);
-  const atRisk = deficit >= 1.5;
-
-  const youBarWidth = Math.min(100, Math.round((effectiveHours / BAR_SCALE_MAX) * 100));
-  const benchmarkBarWidth = Math.min(100, Math.round((TOPPER_BENCHMARK_HOURS / BAR_SCALE_MAX) * 100));
-
-  const warnIcon = `
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;">
-      <path d="M12 3L2 20h20L12 3z" fill="${atRisk ? "#dc2626" : "#16a34a"}" opacity="0.15"/>
-      <path d="M12 3L2 20h20L12 3z" stroke="${atRisk ? "#dc2626" : "#16a34a"}" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
-      ${atRisk
-        ? `<line x1="12" y1="10" x2="12" y2="15" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
-           <circle cx="12" cy="17.3" r="1.1" fill="#dc2626"/>`
-        : `<path d="M9 12.5l2 2 4-4.5" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`
-      }
-    </svg>
-  `;
-
-  const bars = `
-    <div style="margin-top:10px;">
-      <div style="display:flex; align-items:center; gap:8px; margin-bottom:5px;">
-        <div style="width:120px; font-size:11.5px; font-weight:700; color:#4a0402;">You (effective)</div>
-        <div style="flex:1; height:10px; background:#f1f1f1; border-radius:5px; overflow:hidden;">
-          <div style="height:100%; width:${youBarWidth}%; background:${atRisk ? "#dc2626" : "#16a34a"}; border-radius:5px;"></div>
-        </div>
-        <div style="width:60px; font-size:11.5px; font-weight:800; color:#4a0402; text-align:right;">${effectiveHours}h/day</div>
-      </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <div style="width:120px; font-size:11.5px; font-weight:700; color:#4a0402;">Topper Benchmark</div>
-        <div style="flex:1; height:10px; background:#f1f1f1; border-radius:5px; overflow:hidden;">
-          <div style="height:100%; width:${benchmarkBarWidth}%; background:#94a3b8; border-radius:5px;"></div>
-        </div>
-        <div style="width:60px; font-size:11.5px; font-weight:800; color:#4a0402; text-align:right;">${TOPPER_BENCHMARK_HOURS}h/day</div>
-      </div>
-    </div>
-  `;
-
-  if (atRisk) {
-    return {
-      atRisk: true,
-      html: `
-        <div style="display:flex; align-items:flex-start; gap:10px;">
-          ${warnIcon}
-          <div style="flex:1;">
-            <div style="font-weight:900; font-size:14px; letter-spacing:0.5px; color:#7a1010;">
-              RANK DEGRADATION WARNING
-            </div>
-            <div style="font-size:13px; line-height:1.5; color:#4a0402; margin-top:4px;">
-              At an estimated <b>${effectiveHours} effective hours/day</b>, you're running
-              <b>${deficit}h/day below</b> the pace top scorers typically sustain. That's a small daily
-              gap, but it compounds fast, most students who close it start seeing movement within
-              2-3 weeks of fixing just this one pattern.
-            </div>
-            ${bars}
-          </div>
-        </div>
-      `,
-    };
-  }
-
-  return {
-    atRisk: false,
-    html: `
-      <div style="display:flex; align-items:flex-start; gap:10px;">
-        ${warnIcon}
-        <div style="flex:1;">
-          <div style="font-weight:900; font-size:14px; letter-spacing:0.5px; color:#14532d;">
-            EXECUTION SIGNAL: STABLE
-          </div>
-          <div style="font-size:13px; line-height:1.5; color:#14532d; margin-top:4px;">
-            At an estimated <b>${effectiveHours} effective hours/day</b>, you're already close to the pace
-            top scorers sustain. Protect this, it's one of your strongest signals right now.
-          </div>
-          ${bars}
-        </div>
-      </div>
-    `,
-  };
-}
-
 // =========================================================
 // SUBJECT DEEP-DIVE PAGES (Physics / Chemistry / Maths)
 // =========================================================
@@ -224,26 +131,24 @@ function buildTieBreakInsight(subject) {
   return `Chemistry is checked last in NTA's tie-break order (after Maths, then Physics), but with lakhs of aspirants landing on similar totals, even a "last resort" tie-breaker resolves real ranks every single year.`;
 }
 
-// --- Single Combined Gauge: "Where You Stand" + "Peer Reference" ---
+// --- Combined "Where You Stand" + "Peer Reference" Gauge ---
 function buildCombinedStandGauge(marks, subjectLabel) {
   const pct = Math.max(6, Math.min(94, marks));
   const avgPct = 45;
   const topPct = 90;
 
   return `
-    <div style="margin-bottom: 0px;">
+    <div style="margin-bottom: 20px;">
       <div style="font-size: 16px; font-weight: 800; color: #111; margin-bottom: 12px; letter-spacing: -0.2px;">
         Where You Stand: ${subjectLabel}
       </div>
       
-      <div style="position: relative; margin-top: 24px; margin-bottom: 10px;">
-        <!-- Gradient Track -->
+      <div style="position: relative; margin-top: 24px; margin-bottom: 12px;">
         <div style="height: 12px; border-radius: 6px; background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 25%, #eab308 55%, #f97316 80%, #ef4444 100%); position: relative; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
           <div style="position: absolute; left: ${avgPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
           <div style="position: absolute; left: ${topPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
         </div>
 
-        <!-- Dynamic "You" Pointer -->
         <div style="position: absolute; top: -26px; left: ${pct}%; transform: translateX(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center;">
           <div style="background: #c62828; color: white; font-size: 11px; font-weight: 900; padding: 2px 8px; border-radius: 4px; white-space: nowrap; box-shadow: 0 2px 6px rgba(198,40,40,0.35);">
             You
@@ -251,7 +156,6 @@ function buildCombinedStandGauge(marks, subjectLabel) {
           <div style="width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #c62828;"></div>
         </div>
 
-        <!-- Reference Labels Below Bar -->
         <div style="position: relative; height: 16px; margin-top: 6px; font-size: 11.5px; font-weight: 700;">
           <span style="position: absolute; left: 0; color: #94a3b8;">Baseline</span>
           <span style="position: absolute; left: ${avgPct}%; transform: translateX(-50%); color: #475569;">Typical Aspirant</span>
@@ -270,7 +174,7 @@ function buildSubjectPageHTML(subject, data, marksBySubject) {
   const compensation = detectCompensation(subject, marksBySubject);
 
   const compensationBlock = compensation ? `
-    <div style="margin-bottom: 10px; font-size: 15px; font-weight: 800; color: #9a3412;">
+    <div style="margin-bottom: 10px; font-size: 14.5px; font-weight: 800; color: #9a3412;">
       ⚠️ Score Imbalance: Your ${compensation.strongerLabel} is outperforming your ${compensation.weakerLabel} by ~${compensation.gap} marks. Compensating across subjects does not work under JEE aggregate ranking.
     </div>
   ` : "";
@@ -283,16 +187,13 @@ function buildSubjectPageHTML(subject, data, marksBySubject) {
   `;
 
   return `
-    <!-- Combined Where You Stand Bar -->
     ${buildCombinedStandGauge(marks, SUBJECT_LABEL[subject])}
 
-    <!-- Dynamic Box 1: Tie-Break & Imbalance -->
     <div class="subj-box-1">
       ${compensationBlock}
       <div class="subj-tiebreak-text">${buildTieBreakInsight(subject)}</div>
     </div>
 
-    <!-- Dynamic Box 2: Case Study Narrative & Takeaway -->
     <div class="subj-box-2">
       ${caseStudyBlock}
     </div>
@@ -301,15 +202,12 @@ function buildSubjectPageHTML(subject, data, marksBySubject) {
 
 // ---------- main ----------
 async function generatePDF(data) {
-
   const attemptType = data.target_attempt && data.target_attempt.includes("2028") ? "2028" : "2027";
   const prevYearChapters = attemptType === "2028" ? "2027" : "2026"; 
 
   const score = parseInt(data.jee_society_score) || 60;
   const readinessGap = 100 - score;
   const studentName = data.name || "Student";
-
-  const rankWarning = buildRankDegradationWarning(data);
 
   const marksBySubject = {
     physics: estimateMarks("physics", Number(data.answers?.q4)),
@@ -327,14 +225,12 @@ async function generatePDF(data) {
     p3a: getAsset("page3a_physics.png"),
     p3b: getAsset("page3b_chemistry.png"),
     p3c: getAsset("page3c_maths.png"),
-    p4: getAsset("page4_mapping_2028.png"),
     p5: getAsset("page5_peer.png"),
     p6: getAsset("page6_ref.png"),
     p6b: getAsset("page6b_mindset_systems.png"),
     p7: getAsset("page7_health.png"),
     p8: getAsset("page8_exec.png"),
     p9: getAsset("page9_parents.png"),
-    p10: getAsset("page10_roadmap_2028.png"),
     p11: getAsset("page11_conclusion.png"),
     p12: getAsset("page12_habit.png"),
     p13: getAsset("page13_mock.png"),
@@ -347,8 +243,13 @@ async function generatePDF(data) {
   };
 
   const browser = await puppeteer.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    headless: "new",
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu"
+    ]
   });
   const page = await browser.newPage();
 
@@ -397,17 +298,8 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 /* PAGE 2: DIAGNOSTICS */
 .p2-score { top: 82px; left: 65px; font-size: 24px; color: #a40000; font-weight: 800; }
 .p2-gap { top: 158px; left: 116px; font-size: 25px; color: #a40000; }
-.p2-rank-warning {
-  position: absolute; top: 260px; left: 40px; width: 713px;
-  padding: 16px 20px; border-radius: 12px; box-sizing: border-box;
-  background: ${rankWarning.atRisk ? "#fff1f1" : "#f0fdf4"};
-  border: 1.5px solid ${rankWarning.atRisk ? "#f3b4b4" : "#bbf7d0"};
-}
 
-/* =========================================
-   PAGES 3a/3b/3c: SUBJECT DEEP-DIVES (Physics, Chem, Maths)
-   Self-contained #FFFAE5 dynamic auto-adjusting cards
-   ========================================= */
+/* PAGES 3a/3b/3c: SUBJECT DEEP-DIVES */
 .subj-content {
   position: absolute;
   top: 175px;
@@ -415,7 +307,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   width: 693px;
 }
 
-/* BOX 1: Tie-break & Compensation Card */
 .subj-box-1 {
   background: #FFFAE5;
   border: 1.5px solid #fed7aa;
@@ -427,30 +318,29 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 }
 
 .subj-tiebreak-text {
-  font-size: 16px; /* 👈 Enlarged font */
+  font-size: 15.5px;
   line-height: 1.65;
   color: #1e293b;
 }
 
-/* BOX 2: Case Study & Takeaway Card */
 .subj-box-2 {
   background: #FFFAE5;
   border: 1.5px solid #fed7aa;
   border-radius: 14px;
-  padding: 22px 24px;
+  padding: 20px 24px;
   box-sizing: border-box;
 }
 
 .subj-case-story {
-  font-size: 15.5px; /* 👈 Enlarged font */
-  line-height: 1.65;
+  font-size: 15px;
+  line-height: 1.6;
   color: #334155;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .subj-case-takeaway {
-  font-size: 16px; /* 👈 Enlarged font */
-  line-height: 1.6;
+  font-size: 15.5px;
+  line-height: 1.55;
   color: #7a1010;
   font-weight: 800;
 }
@@ -509,7 +399,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 </head>
 <body>
 
-<!-- PAGE 1: COVER -->
 <div class="page">
   <img src="${images.p1}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -519,17 +408,14 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-<!-- PAGE 2: DIAGNOSTICS -->
 <div class="page">
   <img src="${images.p2}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
     <div class="dynamic-text p2-score">${score}</div>
     <div class="dynamic-text p2-gap">${readinessGap}</div>
-    <div class="p2-rank-warning">${rankWarning.html}</div>
   </div>
 </div>
 
-<!-- PAGE 3a: PHYSICS DEEP DIVE -->
 <div class="page">
   <img src="${images.p3a}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -537,7 +423,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-<!-- PAGE 3b: CHEMISTRY DEEP DIVE -->
 <div class="page">
   <img src="${images.p3b}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -545,7 +430,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-<!-- PAGE 3c: MATHS DEEP DIVE -->
 <div class="page">
   <img src="${images.p3c}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -553,13 +437,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-${attemptType === "2028" ? `
-<div class="page">
-  <img src="${images.p4}" class="bg-img" onerror="this.style.display='none'"/>
-</div>
-` : ""}
-
-<!-- PAGE 6: R.E.F & BARRIER -->
 <div class="page">
   <img src="${images.p6}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -575,7 +452,6 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
-<!-- PAGE 7: HEALTH -->
 <div class="page">
   <img src="${images.p7}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -586,7 +462,6 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
-<!-- PAGE 8: EXECUTION PLAN -->
 <div class="page">
   <img src="${images.p8}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -619,18 +494,10 @@ ${images.maths ? `
   ${attemptType === "2027" ? `<div class="black-mask bm-physics">${attemptType}</div>` : ""}
 </div>` : ""}
 
-<!-- PAGE 9: NOTE TO PARENTS -->
 <div class="page">
   <img src="${images.p9}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 
-${attemptType === "2028" ? `
-<div class="page">
-  <img src="${images.p10}" class="bg-img" onerror="this.style.display='none'"/>
-</div>
-` : ""}
-
-<!-- PAGE 11: CONCLUSION -->
 <div class="page">
   <img src="${images.p11}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -643,7 +510,6 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
-<!-- PAGE 12: 90-DAY HABIT GRID PRINTABLE -->
 <div class="page">
   <img src="${images.p12}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -653,7 +519,6 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
-<!-- PAGE 13: MOCK TRACKER PRINTABLE -->
 <div class="page">
   <img src="${images.p13}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -663,7 +528,6 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
-<!-- PAGE 14: MOCK ANALYSIS GUIDE -->
 <div class="page">
   <img src="${images.p14}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -671,17 +535,14 @@ ${attemptType === "2028" ? `
   </div>
 </div>
 
-<!-- PAGE 15: SUNDAY TRACKER -->
 <div class="page">
   <img src="${images.sundayTracker}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 
-<!-- PAGE 6b: ENLARGED MINDSET SECTION -->
 <div class="page">
   <img src="${images.p6b}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 
-<!-- PAGE: MENTORSHIP PROMO -->
 <div class="page">
   <img src="${images.mentorshipPromo}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
@@ -690,7 +551,7 @@ ${attemptType === "2028" ? `
 </html>
   `;
 
-  await page.setContent(html, { waitUntil: "load", timeout: 60000 });
+  await page.setContent(html, { waitUntil: "domcontentloaded", timeout: 45000 });
   const pdf = await page.pdf({ format: "A4", printBackground: true });
   await browser.close();
   return pdf;

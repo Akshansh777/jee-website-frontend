@@ -196,7 +196,7 @@ const Landing = () => {
             IS JEE <br/>
             <span className="hero-highlight">STILL POSSIBLE?</span>
           </h1>
-          <h2 className="hero-subtitle">In just 5 minutes, get a data-backed roadmap that shows your real standing, hidden score leaks, exact plan, and what exactly you are doing wrong</h2>
+          <h2 className="hero-subtitle">In just 4 minutes, get a data-backed report that shows your true JEE standing, what's going wrong and how exactly to fix it!</h2>
           
           
           <button onClick={() => navigate("/assessment")} className="cta-main">
@@ -204,8 +204,7 @@ const Landing = () => {
           </button>
           
           <div style={{ marginTop: "20px", fontSize: "14px", color: "#888", display: "flex", alignItems: "center", gap: "8px" }}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Takes only 5 minutes
+            ⚡ Easy and Accurate
           </div>
         </div>
 

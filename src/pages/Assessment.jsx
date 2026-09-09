@@ -1663,10 +1663,7 @@ const PercentileCard = ({ percentile, jss, color }) => {
     </span>
   </div>
       <p style={{ fontSize: "15px", color: "#64748b", marginTop: "10px", marginBottom: "0", lineHeight: "1.65" }}>
-        Most aspirants haven't fixed their execution gaps yet, so you're already ahead of the pack. Top-1%
-        IITians are still <strong>{gap} points of readiness</strong> ahead of where you are today, and that gap is
-        realistically <strong style={{ color: "#16a34a" }}>closeable in about {weeksToClose} weeks</strong> with
-        the right plan.
+        Most aspirants haven't fixed their execution gaps yet, so you're already ahead of the pack.
       </p>
       <PercentileMeter percentile={percentile} color={color} />
       <div
@@ -1786,10 +1783,10 @@ const FounderVideoBlock = () => (
 // /sample-report.pdf as the concrete preview until the real per-student
 // sample is provided.
 const REPORT_SPEC_ITEMS = [
-  { Icon: IconPie, label: "Full JSS Breakdown", desc: "All 5 categories, scored & diagnosed" },
+  { Icon: IconPie, label: "REF Analysis", desc: "Review . Evaluate . Focus" },
   { Icon: IconTarget, label: "SWOT Deep-Dive", desc: "Strength, Weakness, Opportunity, Threat" },
   { Icon: IconClipboard, label: "14-Day Action Plan", desc: "Specific daily fixes, not generic advice" },
-  { Icon: IconTrendUp, label: "Percentile Prediction", desc: "Expected vs potential JEE percentile" },
+  { Icon: IconTrendUp, label: "Important Chapters", desc: "Key topics to focus on for maximum impact" },
   { Icon: IconBars, label: "Subject Weak-Zone Map", desc: "Physics / Chemistry / Maths breakdown" },
   { Icon: IconDocument, label: "Printable Materials", desc: "90-day habit grid + mock test tracker" },
 ];
@@ -2336,12 +2333,12 @@ const handleStartNewAssessment = () => {
     const { jee_society_score } = scores;
 
     const attemptIndex = answers["q17"];
-    const attemptLabel = QUESTIONS.find(q => q.id === "q17").options[attemptIndex] || "JEE Main";
+    const attemptLabel = (QUESTIONS.find(q => q.id === "q17")?.options || [])[attemptIndex] || "JEE Main";
 
-    const weakestCategory = scores.breakdown.reduce(
-      (worst, item) => (item.ratio < worst.ratio ? item : worst),
-      scores.breakdown[0]
-    );
+    // Readiness gap & closeable weeks calculation
+    const numScore = Number(jee_society_score) || 0;
+    const readinessGap = (100 - numScore).toFixed(2).replace(/\.00$/, "");
+    const closeableWeeks = Math.max(3, Math.round((100 - numScore) / 3.5));
 
     const rowStyle = {
       display: "flex", flexWrap: "wrap", alignItems: "center",
@@ -2357,7 +2354,7 @@ const handleStartNewAssessment = () => {
     return (
       <div className="assessment-wrapper swot-container" style={{ maxWidth: "760px", margin: "0 auto", fontFamily: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" }}>
         
-        {/* Top Header: Greeting + Top-Right WhatsApp Channel Button */}
+        {/* Top Header: Greeting + WhatsApp Button */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
           <div>
             {studentName ? (
@@ -2405,8 +2402,8 @@ const handleStartNewAssessment = () => {
           Target: <strong>{attemptLabel}</strong>
         </div>
 
-        {/* 1. BIG JAS SCORE REVEAL */}
-        <div style={{ ...rowStyle, gap: "35px", marginTop: "10px", marginBottom: "20px" }}>
+        {/* 1. JAS SCORE REVEAL & IITian GAP */}
+        <div style={{ ...rowStyle, gap: "35px", marginTop: "10px", marginBottom: "26px" }}>
            <div style={{ flex: "0 0 auto", transform: "scale(1.12)", transformOrigin: "center", zIndex: 1 }}>
               <CircularScore value={jee_society_score} color="#6a11cb" title="JAS" rangeText={jee_society_score} />
            </div>
@@ -2417,87 +2414,31 @@ const handleStartNewAssessment = () => {
              borderLeft: "7px solid #6a11cb"
            }}>
              <h3 style={{ margin: "0 0 8px 0", color: "#6a11cb", fontSize: "22px" }}>JAS (JEE Audit Score)</h3>
-             <p style={{ margin: 0, fontSize: "15.5px", color: "#333", lineHeight: "1.65" }}>
+             <p style={{ margin: "0 0 10px 0", fontSize: "15px", color: "#333", lineHeight: "1.65" }}>
                You are currently at <b>{jee_society_score}%</b> out of your 100% potential readiness. Unlike a standard mock test that only checks rote knowledge, JAS accounts for your Consistency, Focus Depth, Revision Quality, and Active Problem Solving.
+             </p>
+             <p style={{ margin: 0, fontSize: "15px", color: "#1e293b", lineHeight: "1.65" }}>
+               Top-1% IITians are still <b>{readinessGap} points of readiness ahead</b> of where you are today, and that gap is realistically closeable in about <b>{closeableWeeks} weeks</b> with the right plan.
              </p>
            </div>
         </div>
 
-        {/* Framing Banner */}
-        <div style={{
-          display: "flex", alignItems: "center", gap: "12px",
-          background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: "14px",
-          padding: "14px 18px", marginBottom: "26px",
-        }}>
-          <LockIcon size={26} color="#9a3412" />
-          <p style={{ margin: 0, fontSize: "14.5px", color: "#9a3412", fontWeight: "600", lineHeight: "1.55" }}>
-            This score is your free instant snapshot. The full diagnosis, your complete SWOT, and your
-            personalized day-by-day action plan only exist inside your report.
-          </p>
-        </div>
-
-        {/* 2. GRAPH / PERCENTILE CARD (Above Breakdown) */}
+        {/* 2. GRAPH / PERCENTILE CARD */}
         <div style={{ marginBottom: "26px" }}>
           <PercentileCard percentile={scores.percentile_vs_aspirants} jss={jee_society_score} color="#c62828" />
         </div>
 
-        {/* DOWNLOAD CTA #1 (Directly Below Graph) */}
+        {/* DOWNLOAD CTA #1 */}
         <div style={{ marginBottom: "36px" }}>
           <DownloadCTAButton
             onClick={handleDownloadReport}
             isGenerating={isGenerating}
             label="Unlock My Full Report"
-            sublabel="See your complete SWOT, action plan & percentile prediction"
+            sublabel="See your complete SWOT, action plan & diagnostic blueprint"
           />
         </div>
 
-{/* --- LIMITED BONUS CALLOUT --- */}
-<div style={{
-  background: "linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)",
-  border: "1px solid rgba(129, 140, 248, 0.3)",
-  borderRadius: "16px",
-  padding: "20px 22px",
-  marginBottom: "30px",
-  textAlign: "left",
-  color: "#ffffff"
-}}>
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px", flexWrap: "wrap", gap: "8px" }}>
-    <span style={{
-      background: "#ef4444",
-      color: "#fff",
-      fontSize: "11px",
-      fontWeight: "900",
-      padding: "3px 10px",
-      borderRadius: "20px",
-      letterSpacing: "0.5px"
-    }}>
-      FREE BONUS • FIRST 500 ONLY
-    </span>
-  </div>
-
-  <h4 style={{ margin: "0 0 6px 0", fontSize: "17px", fontWeight: "800", color: "#fff" }}>
-    🎁 Unlocked: The Weekly JEE Dispatch (1 Year Free Access)
-  </h4>
-  <p style={{ margin: 0, fontSize: "14px", color: "#cbd5e1", lineHeight: "1.5" }}>
-    Get high-yield problem walkthroughs, revision frameworks, and unreleased exam hacks delivered straight to your inbox every Sunday by top IIT rankers.
-  </p>
-</div>
-
-        {/* 3. QUALITATIVE JAS BREAKDOWN */}
-        <div style={{ marginBottom: "28px" }}>
-          <JASBreakdownCard breakdown={scores.breakdown} />
-        </div>
-
-        {/* 4. WHAT TOP STUDENTS DO DIFFERENTLY */}
-        <div style={{ marginBottom: "34px" }}>
-          <TopStudentsCallout
-            weakestLabel={weakestCategory.label}
-            weakestKey={weakestCategory.key}
-            color={BREAKDOWN_COLORS[weakestCategory.key] || "#c62828"}
-          />
-        </div>
-
-        {/* 5. SWOT SECTION */}
+        {/* 3. SWOT SECTION */}
         <h2 style={{ marginTop: "10px" }}>Your Strength & Weakness</h2>
         <div className="swot-card-white">
           <span className="swot-pill-badge strength-badge">STRENGTH</span>
@@ -2508,7 +2449,7 @@ const handleStartNewAssessment = () => {
           <p className="swot-text">{finalSWOT.W}</p>
         </div>
 
-        {/* 6. FOUNDER VIDEO */}
+        {/* 4. FOUNDER VIDEO */}
         <div style={{ marginTop: "44px", marginBottom: "40px" }}>
           <h3 style={{ textAlign: "center", fontSize: "20px", fontWeight: "800", color: "#0f172a", marginBottom: "10px" }}>
             Hear It Straight From The Founder
@@ -2525,7 +2466,7 @@ const handleStartNewAssessment = () => {
           <FounderVideoBlock />
         </div>
 
-        {/* 7. PRODUCT SPEC CHART */}
+        {/* 5. PRODUCT SPEC CHART */}
         <div style={{ marginBottom: "56px" }}>
           <ReportSpecChart />
         </div>
@@ -2540,12 +2481,12 @@ const handleStartNewAssessment = () => {
           />
         </div>
 
-        {/* 8. TESTIMONIALS */}
+        {/* 6. TESTIMONIALS */}
         <div style={{ marginBottom: "44px" }}>
           <TestimonialsGrid />
         </div>
 
-        {/* DOWNLOAD CTA #3 (Final Close) */}
+        {/* DOWNLOAD CTA #3 */}
         <div style={{
           background: "linear-gradient(135deg, #0b0f19, #1e1330)",
           borderRadius: "20px", padding: "34px 24px", textAlign: "center", marginBottom: "40px",
@@ -2563,9 +2504,8 @@ const handleStartNewAssessment = () => {
           />
         </div>
 
-        {/* BOTTOM BUTTONS (WhatsApp & YouTube Matching Style) */}
+        {/* BOTTOM ACTION BUTTONS */}
         <div style={{ display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap", marginTop: "10px" }}>
-          
           <a
             href="https://whatsapp.com/channel/0029VbDZ6FnGE56sPOiSVL0a"
             target="_blank"
@@ -2627,30 +2567,30 @@ const handleStartNewAssessment = () => {
               The JEEsociety YouTube
             </button>
           </a>
-
         </div>
 
         {/* Start New Assessment */}
         <div style={{ marginTop: "40px", textAlign: "center", paddingBottom: "20px" }}>
           <button
-  onClick={handleStartNewAssessment}
-  style={{
-    background: "transparent", border: "2px solid #e0e0e0",
-    padding: "10px 25px", borderRadius: "50px", color: "#666",
-    fontWeight: "600", cursor: "pointer", transition: "all 0.2s"
-  }}
-  onMouseEnter={(e) => {
-    e.target.style.borderColor = "#c62828";
-    e.target.style.color = "#c62828";
-  }}
-  onMouseLeave={(e) => {
-    e.target.style.borderColor = "#e0e0e0";
-    e.target.style.color = "#666";
-  }}
->
-  + Start New Assessment
-</button>
+            onClick={handleStartNewAssessment}
+            style={{
+              background: "transparent", border: "2px solid #e0e0e0",
+              padding: "10px 25px", borderRadius: "50px", color: "#666",
+              fontWeight: "600", cursor: "pointer", transition: "all 0.2s"
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.borderColor = "#c62828";
+              e.target.style.color = "#c62828";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.borderColor = "#e0e0e0";
+              e.target.style.color = "#666";
+            }}
+          >
+            + Start New Assessment
+          </button>
         </div>
+
       </div>
     );
   }
@@ -2754,20 +2694,25 @@ const handleStartNewAssessment = () => {
 
     {/* Instructions for Step 0 (Name Question) */}
     {q.id === "name" && (
-      <div style={{
-        marginTop: "22px", padding: "5px 15px", background: "#f8fafc",
-        border: "1px solid #e2e8f0", borderRadius: "14px", textAlign: "left"
-      }}>
-        <div style={{ fontSize: "14.5px", fontWeight: "800", color: "#0f172a", marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>
-          📋 Instructions Before You Begin:
-        </div>
-        <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "13.5px", color: "#475569", lineHeight: "1.65", display: "flex", flexDirection: "column", gap: "6px" }}>
-          <li><strong>20 Real Questions:</strong> Covers your daily consistency, focus depth, backlogs, and actual exam habits.</li>
-          <li><strong>Takes Just 5 Minutes:</strong> Quick, single-choice diagnostic with zero complex calculations.</li>
-          <li><strong>Be 100% Brutally Honest:</strong> No sugarcoating. Accurate inputs produce your true predicted baseline.</li>
-          <li><strong>Personalized PDF Report:</strong> Only serious aspirants will get the full diagnostic breakdown and action plan.</li>
-        </ul>
-      </div>
+      <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "14px", padding: "18px 20px", marginTop: "20px", textAlign: "left" }}>
+  <div style={{ fontWeight: "800", fontSize: "15px", color: "#0f172a", marginBottom: "12px" }}>
+    📋 Instructions Before You Begin:
+  </div>
+  <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "13.5px", color: "#475569", lineHeight: "1.65" }}>
+    <li style={{ marginBottom: "8px" }}>
+      <strong>20 Real Questions:</strong> Deep questions related to your JEE preparation. Students love answering!
+    </li>
+    <li style={{ marginBottom: "8px" }}>
+      <strong>Takes Just 5 Minutes:</strong> Quick, single-choice diagnostic with zero complex calculations.
+    </li>
+    <li style={{ marginBottom: "8px" }}>
+      <strong>Be 100% Brutally Honest:</strong> No sugarcoating. Accurate inputs produce your true predicted results.
+    </li>
+    <li>
+      <strong>Personalized PDF Report:</strong> This report simply changes life of every JEE aspirant.
+    </li>
+  </ul>
+</div>
     )}
   </div>
 ) : (

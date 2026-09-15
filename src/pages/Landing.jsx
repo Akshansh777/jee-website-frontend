@@ -192,19 +192,42 @@ const Landing = () => {
       {/* --- HERO SECTION --- */}
       <section className="hero-section">
         <div className="hero-content">
+{/* JEE Reality Check Box */}
+<div style={{
+  display: "inline-flex",
+  alignItems: "center",
+  padding: "8px 18px",
+  background: "#ffffff",
+  border: "2px solid #0f172a",
+  borderRadius: "8px",
+  boxShadow: "3px 3px 0px #0f172a",
+  marginBottom: "22px"
+}}>
+  <span style={{
+    fontFamily: "'Outfit', 'Inter', -apple-system, sans-serif",
+    fontSize: "17px",
+    fontWeight: "900",
+    letterSpacing: "1px",
+    textTransform: "uppercase",
+    color: "#0f172a"
+  }}>
+    JEE REALITY <span style={{ color: "#dc2626" }}>CHECK</span>
+  </span>
+</div>
+          
           <h1 className="hero-title">
-            IS JEE <br/>
-            <span className="hero-highlight">STILL POSSIBLE?</span>
+            IS MY <br/>
+            <span className="hero-highlight">PREPARATION ENOUGH?</span>
           </h1>
           <h2 className="hero-subtitle">In just 4 minutes, get a data-backed report that shows your true JEE standing, what's going wrong and how exactly to fix it!</h2>
           
           
           <button onClick={() => navigate("/assessment")} className="cta-main">
-            Check Your Probability &rarr;
+            See Your Reality &rarr;
           </button>
           
           <div style={{ marginTop: "20px", fontSize: "14px", color: "#888", display: "flex", alignItems: "center", gap: "8px" }}>
-            ⚡ Easy and Accurate
+           The only tool in India which shows the reality
           </div>
         </div>
 

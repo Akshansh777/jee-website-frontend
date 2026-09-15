@@ -23,7 +23,7 @@ const QUESTIONS = [
     id: "q1",
     swot: "S",
     impact: "primary",
-    question: "Q1. Your Consistency Meter",
+    question: "Q1. How consistent is your daily JEE study routine?",
     options: [
       "The Machine: I study every single day without fail, hitting all my targets.",
       "The Weekend Warrior: I have 3-4 good days, but I waste 2-3 days feeling unmotivated.",
@@ -37,7 +37,7 @@ const QUESTIONS = [
     id: "q2",
     swot: "S",
     impact: "secondary",
-    question: "Q2. Your \"Deep Work\" Reality",
+    question: "Q2. Which best describes your actual self-study routine on a typical day?",
     options: [
       "Deep Focus: 6+ hours of pure, phone-free study (excluding lectures).",
       "Standard Grind: 4-6 hours of self-study, but I take frequent breaks.",
@@ -137,7 +137,7 @@ const QUESTIONS = [
   // Q10 (Standard)
   {
     id: "q10",
-    question: "Q10. The \"Error Pattern\" (Why do you generally lose marks?)",
+    question: "Q10. When you analyze your mock test mistakes, where do most of your lost marks go?",
     options: [
       "Conceptual: I honestly didn't know the theory/logic. ",
       "Silly/Calculation: I knew it, but made a silly mistake or read the question wrong. ",
@@ -2700,16 +2700,10 @@ const handleStartNewAssessment = () => {
   </div>
   <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "13.5px", color: "#475569", lineHeight: "1.65" }}>
     <li style={{ marginBottom: "8px" }}>
-      <strong>20 Real Questions:</strong> Deep questions related to your JEE preparation. Students love answering!
+      You'll be asked 20 questions about your JEE Preparation. Be 100% real with yourself.
     </li>
     <li style={{ marginBottom: "8px" }}>
-      <strong>Takes Just 5 Minutes:</strong> Quick, single-choice diagnostic with zero complex calculations.
-    </li>
-    <li style={{ marginBottom: "8px" }}>
-      <strong>Be 100% Brutally Honest:</strong> No sugarcoating. Accurate inputs produce your true predicted results.
-    </li>
-    <li>
-      <strong>Personalized PDF Report:</strong> This report simply changes life of every JEE aspirant.
+      At the end you will get a report, print it, and follow it like words of god.
     </li>
   </ul>
 </div>

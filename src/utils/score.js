@@ -1,31 +1,48 @@
 /**
  * JEE SOCIETY AI — FINAL MODEL SPEC (PRODUCTION - UPDATED FOR 27/28)
  * Implements strict time-weighted scoring logic for JEE 2027 and JEE 2028.
+ * Fully supports both single-select numbers and multi-select arrays.
  */
 
 // --- 1. HELPERS & NORMALIZATION ---
 
 function normalize(answerIndex) {
+  if (answerIndex === undefined || answerIndex === null || answerIndex === "") return 0;
+
+  const map = [1.0, 0.66, 0.33, 0.0];
+
+  // Case A: Multi-Select Array
+  if (Array.isArray(answerIndex)) {
+    if (answerIndex.length === 0) return 0;
+    // If only 1 option was picked: returns EXACT original weight
+    // If multiple options were picked: returns the clean arithmetic mean
+    const sum = answerIndex.reduce((acc, curr) => {
+      const idx = Number(curr);
+      return acc + (!isNaN(idx) && map[idx] !== undefined ? map[idx] : 0);
+    }, 0);
+    return sum / answerIndex.length;
+  }
+
+  // Case B: Standard Single-Select Number or String
   const idx = Number(answerIndex);
   if (isNaN(idx)) return 0;
-  const map = [1.0, 0.66, 0.33, 0.0];
   return map[idx] !== undefined ? map[idx] : 0;
 }
 
-// Q19 (active vs passive study ratio) uses its own explicit multiplier
-// scale rather than the generic normalize() mapping above, since these
-// were given as specific target values (0.3 / 0.5 / 0.8 / 1.0), not the
-// standard 1.0/0.66/0.33/0 ladder the other questions use.
 const Q19_MULTIPLIER = [0.3, 0.5, 0.8, 1.0];
 function getQ19Multiplier(responses) {
-  const idx = Number(responses["q19"]);
+  const val = Array.isArray(responses["q19"]) ? responses["q19"][0] : responses["q19"];
+  const idx = Number(val);
   return Q19_MULTIPLIER[idx] !== undefined ? Q19_MULTIPLIER[idx] : 0.5;
 }
 
 function getEpsilon(responses) {
   const keys = Object.keys(responses).sort();
   let str = "";
-  keys.forEach(k => str += responses[k]);
+  keys.forEach((k) => {
+    const val = responses[k];
+    str += Array.isArray(val) ? val.join("") : String(val);
+  });
   
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -33,7 +50,7 @@ function getEpsilon(responses) {
     hash |= 0; 
   }
   
-  const seed = Math.abs(hash) % 1000 / 1000; 
+  const seed = (Math.abs(hash) % 1000) / 1000; 
   return 0.12 + (seed * (0.47 - 0.12)); 
 }
 
@@ -41,17 +58,7 @@ function clamp(val, min, max) {
   return Math.min(Math.max(val, min), max);
 }
 
-// --- 1b. PERCENTILE-VS-ASPIRANTS ---
-// A *deterministic* function of the student's own JSS — not random. Models
-// the realistic spread of aspirants who take this diagnostic (mean ~38,
-// std ~16 — most self-selecting into a "reality check" quiz are still
-// mid-prep, not toppers), so a moderate JSS can honestly rank well against
-// this specific population even while still being far from elite JEE
-// readiness (a separate, stricter comparison already captured by
-// expected/potential percentile above). Clamped to [3, 97] so it never
-// claims an absolute "everyone" or "no one".
 function erf(x) {
-  // Abramowitz-Stegun approximation (accurate to ~1.5e-7)
   const sign = x < 0 ? -1 : 1;
   x = Math.abs(x);
   const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741,
@@ -72,10 +79,6 @@ function computePercentileVsAspirants(jss) {
   return clamp(raw, 3, 97);
 }
 
-// --- 1c. DIAGNOSED-STATUS COPY PER BREAKDOWN CATEGORY ---
-// Short, specific-sounding diagnostic text per category, tiered by how
-// much of that category's max points were earned — mirrors the tone of
-// "56% Covered (Needs Core Focus)" style labels.
 function diagnoseStatus(categoryKey, ratio) {
   const tiers = {
     consistency_execution: [
@@ -114,33 +117,24 @@ function diagnoseStatus(categoryKey, ratio) {
 // --- 2. MAIN COMPUTE FUNCTION ---
 
 export function computeScores(responses) {
-  
-  // A. INPUTS & INDICES
   const getQ = (qid) => normalize(responses[qid]);
 
-  // EI internally reweighted to fold in Q19 (active vs passive study
-  // ratio) as a real signal — EI's own 30% share of the overall JSS
-  // formula below is unchanged, only its internal composition shifted:
-  // was 0.35*q1 + 0.35*q8 + 0.15*q2 + 0.15*q9 (summed to 1.0),
-  // now includes q19 at 0.20 with the others proportionally trimmed,
-  // still summing to 1.0.
   const EI = 0.30 * getQ("q1") + 0.25 * getQ("q8") + 0.10 * getQ("q2") + 0.15 * getQ("q9") + 0.20 * getQ19Multiplier(responses);
   const avgPCM = (getQ("q4") + getQ("q5") + getQ("q6")) / 3;
   const CI = 0.4 * getQ("q3") + 0.2 * avgPCM;
   const REI = 0.6 * getQ("q7") + 0.4 * getQ("q10");
   const SI = (getQ("q11") + getQ("q13") + getQ("q14") + getQ("q15") + getQ("q16")) / 5;
 
-  // B. BASELINE PERCENTILE (P_base)
   const pBaseMap = [98.2, 93.4, 82.6, 63.8];
-  const q18Idx = Number(responses["q18"] || 3);
+  const q18Val = Array.isArray(responses["q18"]) ? responses["q18"][0] : responses["q18"];
+  const q18Idx = Number(q18Val || 3);
   const P_base = pBaseMap[q18Idx] !== undefined ? pBaseMap[q18Idx] : 63.8;
 
-  // C. JEE SOCIETY SCORE (JSS)
   let JSS = 100 * (0.30 * EI + 0.25 * CI + 0.20 * REI + 0.15 * (P_base / 100) + 0.10 * SI);
   JSS = clamp(JSS, 0, 100);
 
-  // D. TIME PATH SPLIT (Q17: 0 -> JEE 2027, 1 -> JEE 2028)
-  const q17Idx = Number(responses["q17"] || 0);
+  const q17Val = Array.isArray(responses["q17"]) ? responses["q17"][0] : responses["q17"];
+  const q17Idx = Number(q17Val || 0);
   const attemptType = q17Idx === 0 ? "2027" : "2028";
   
   const epsilon = getEpsilon(responses);
@@ -151,12 +145,8 @@ export function computeScores(responses) {
   let Potential_Range = [0, 0];
 
   if (attemptType === "2027") {
-    // === CASE A: JEE 2027 (~10 Months Left) ===
-    // Syllabus (CI) and Errors (REI) hold significant weight now.
-    
-    // 5. Expected
-    const F_27 = 0.40*EI + 0.35*CI + 0.15*REI + 0.10*SI;
-    const DeltaE_27 = 14 * F_27; // Moderate growth multiplier
+    const F_27 = 0.40 * EI + 0.35 * CI + 0.15 * REI + 0.10 * SI;
+    const DeltaE_27 = 14 * F_27;
     
     if (P_base < 95) {
       P_expected = Math.min(95.5, P_base + DeltaE_27) + epsilon;
@@ -166,34 +156,26 @@ export function computeScores(responses) {
     
     Expected_Range = [P_expected - 2.0, P_expected + 2.0];
 
-    // 6. Potential
-    const G_27 = 0.50*EI + 0.35*CI + 0.15*REI;
-    const P_raw_27 = 98.2 + 1.4*G_27 + 0.04*(P_base - 70);
+    const G_27 = 0.50 * EI + 0.35 * CI + 0.15 * REI;
+    const P_raw_27 = 98.2 + 1.4 * G_27 + 0.04 * (P_base - 70);
     P_potential = clamp(P_raw_27 + epsilon, 97.5, 99.6);
     
     Potential_Range = [P_potential - 1.4, P_potential + 1.4];
 
   } else {
-    // === CASE B: JEE 2028 (~22 Months Left) ===
-    // Syllabus (CI) matters less since they just started. Daily habits (EI) and Stability (SI) dominate.
-    
-    // 7. Expected
-    const F_28 = 0.50*EI + 0.15*CI + 0.15*REI + 0.20*SI; 
-    const DeltaE_28 = 22 * F_28; // Massive time runway allows for huge potential growth
+    const F_28 = 0.50 * EI + 0.15 * CI + 0.15 * REI + 0.20 * SI; 
+    const DeltaE_28 = 22 * F_28;
     
     P_expected = Math.min(97.8, P_base + DeltaE_28) + epsilon;
-    Expected_Range = [P_expected - 2.8, P_expected + 2.8]; // Wider range because 2 years is unpredictable
+    Expected_Range = [P_expected - 2.8, P_expected + 2.8];
 
-    // 8. Potential
-    // If they fix habits now, they can practically hit the ceiling.
-    const G_28 = 0.60*EI + 0.10*CI + 0.15*REI + 0.15*SI;
-    const P_raw_28 = 98.5 + 1.4*G_28 + 0.02*(P_base - 50);
-    P_potential = clamp(P_raw_28 + epsilon, 98.8, 99.9); // Cap raised to 99.9
+    const G_28 = 0.60 * EI + 0.10 * CI + 0.15 * REI + 0.15 * SI;
+    const P_raw_28 = 98.5 + 1.4 * G_28 + 0.02 * (P_base - 50);
+    P_potential = clamp(P_raw_28 + epsilon, 98.8, 99.9);
     
     Potential_Range = [P_potential - 1.0, P_potential + 1.0];
   }
 
-  // 9. GLOBAL SAFETY CONSTRAINTS
   const format = (n) => Number(n.toFixed(2));
   
   if (P_expected > P_potential) {
@@ -201,15 +183,26 @@ export function computeScores(responses) {
     P_expected = P_potential - 0.1;
   }
 
-  // MANIFEST KEY MAPPING
-  function mapAnswersToManifest(responses) {
+  // --- MANIFEST KEY MAPPING (Internal Fallback) ---
+  function mapAnswersToManifest(resp) {
     const out = {};
-    Object.keys(responses).forEach(k => {
+    const letters = ["A", "B", "C", "D", "E"];
+    Object.keys(resp).forEach((k) => {
       if (k.startsWith("q")) {
         const qNum = k.substring(1);
-        const idx = Number(responses[k]);
-        const letter = ["A","B","C","D"][idx] || "D";
-        out[k] = `Q${qNum}_${letter}`;
+        const val = resp[k];
+        if (Array.isArray(val)) {
+          if (val.length === 1) {
+            const idx = Number(val[0]);
+            out[k] = `Q${qNum}_${letters[idx] || "D"}`;
+          } else {
+            out[k] = val.map((v) => `Q${qNum}_${letters[Number(v)] || "D"}`);
+          }
+        } else {
+          const idx = Number(val);
+          const letter = letters[idx] || "D";
+          out[k] = `Q${qNum}_${letter}`;
+        }
       }
     });
     return out;
@@ -217,8 +210,6 @@ export function computeScores(responses) {
 
   const manifestKeys = mapAnswersToManifest(responses);
 
-  // --- BREAKDOWN: the 5 weighted terms above, expressed as earned/max
-  // points that ALWAYS sum to JSS exactly (30+25+20+15+10 = 100). ---
   const breakdownRaw = [
     { key: "consistency_execution", label: "Consistency & Execution", max: 30, earnedRatio: EI },
     { key: "syllabus_coverage", label: "Syllabus Coverage", max: 25, earnedRatio: CI },

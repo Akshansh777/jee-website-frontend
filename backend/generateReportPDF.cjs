@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const solutionManifest = require("./solutionManifest.json");
 
-// ---------- helpers ----------
+// ---------- helpers (UPDATED FOR MULTI-SELECT ARRAYS) ----------
 function imgToBase64(imgPath) {
   try {
     if (fs.existsSync(imgPath)) {
@@ -21,12 +21,32 @@ function get(qKey, data) {
     return { mentor_note: data.dynamicText[qKey] };
   }
   const code = data.manifestKeys?.[qKey];
+
+  // Handle Multi-Select Arrays (Q10, Q11, Q12, Q13, Q15)
+  if (Array.isArray(code)) {
+    if (code.length === 0) return {};
+    const notes = code
+      .map((c) => solutionManifest[c]?.mentor_note)
+      .filter(Boolean)
+      .join("<br><br>");
+    const oneLines = code
+      .map((c) => solutionManifest[c]?.one_line)
+      .filter(Boolean)
+      .join(" • ");
+
+    return { 
+      mentor_note: notes,
+      one_line: oneLines 
+    };
+  }
+
+  // Handle Standard Single Choice String
   return solutionManifest[code] || {};
 }
 
 function joinMentorNotes(keys, data) {
   return keys
-    .map(k => get(k, data)?.mentor_note || "")
+    .map((k) => get(k, data)?.mentor_note || "")
     .filter(Boolean)
     .join("<br><br>");
 }
@@ -174,7 +194,7 @@ function buildSubjectPageHTML(subject, data, marksBySubject) {
   const compensation = detectCompensation(subject, marksBySubject);
 
   const compensationBlock = compensation ? `
-    <div style="margin-bottom: 10px; font-size: 14.5px; font-weight: 800; color: #9a3412;">
+    <div style="margin-bottom: 14px; font-size: 16px; font-weight: 900; color: #9a3412; line-height: 1.45;">
       ⚠️ Score Imbalance: Your ${compensation.strongerLabel} is outperforming your ${compensation.weakerLabel} by ~${compensation.gap} marks. Compensating across subjects does not work under JEE aggregate ranking.
     </div>
   ` : "";
@@ -187,7 +207,9 @@ function buildSubjectPageHTML(subject, data, marksBySubject) {
   `;
 
   return `
-    ${buildCombinedStandGauge(marks, SUBJECT_LABEL[subject])}
+    <div class="subj-stand-wrap">
+      ${buildCombinedStandGauge(marks, SUBJECT_LABEL[subject])}
+    </div>
 
     <div class="subj-box-1">
       ${compensationBlock}
@@ -232,6 +254,7 @@ async function generatePDF(data) {
     p8: getAsset("page8_exec.png"),
     p9: getAsset("page9_parents.png"),
     p11: getAsset("page11_conclusion.png"),
+    taskSubmission: getAsset("task_submission.png"),
     p12: getAsset("page12_habit.png"),
     p13: getAsset("page13_mock.png"),
     p14: getAsset("page14_mock_analysis_guide.png"),
@@ -257,23 +280,74 @@ async function generatePDF(data) {
   const priorityKeys = ["q11", "q10", "q2", "q3", "q4", "q1", "q9"];
 
   for (let key of priorityKeys) {
-    const code = data.manifestKeys?.[key];
-    if (code && solutionManifest[code] && solutionManifest[code].action_24h) {
-      customSteps.push(solutionManifest[code].action_24h);
-    }
-  }
-  
-  if (customSteps.length < 7) {
-    for (let key of priorityKeys) {
-      const code = data.manifestKeys?.[key];
-      if (code && solutionManifest[code] && solutionManifest[code].action_7d) {
-        customSteps.push(solutionManifest[code].action_7d);
+    const rawCode = data.manifestKeys?.[key];
+    const codes = Array.isArray(rawCode) ? rawCode : [rawCode];
+    for (let code of codes) {
+      if (code && solutionManifest[code] && solutionManifest[code].action_24h) {
+        if (!customSteps.includes(solutionManifest[code].action_24h)) {
+          customSteps.push(solutionManifest[code].action_24h);
+        }
       }
     }
   }
+
+  if (customSteps.length < 7) {
+    for (let key of priorityKeys) {
+      const rawCode = data.manifestKeys?.[key];
+      const codes = Array.isArray(rawCode) ? rawCode : [rawCode];
+      for (let code of codes) {
+        if (code && solutionManifest[code] && solutionManifest[code].action_7d) {
+          if (!customSteps.includes(solutionManifest[code].action_7d)) {
+            customSteps.push(solutionManifest[code].action_7d);
+          }
+        }
+      }
+    }
+  }
+
+  while (customSteps.length < 7) { 
+    customSteps.push("Stay consistent and review your error log daily."); 
+  }
+
+  // Exact 8 items: 7 diagnostic points + 1 mentor closing
+  const executionPoints = [
+    ...customSteps.slice(0, 7),
+    "Share this exact list with your mentor and ask them to check in on it in 7 days. Accountability from someone outside your own head changes follow-through more than willpower does."
+  ];
   
-  while (customSteps.length < 7) { customSteps.push("Stay consistent and review your error log daily."); }
-  
+// --- PAGE 6 DYNAMIC TEXT & BIGGER FONT ENGINE ---
+  const refNotes = joinMentorNotes(["q7", "q8", "q10"], data);
+  const barrierNotes = get("q11", data)?.mentor_note || "Focus on eliminating your core barrier with dedicated daily practice.";
+  const totalP6Length = (refNotes + barrierNotes).length;
+
+  // Base tier: Large, bold, commanding font
+  let p6FontSize = "18px";
+  let p6LineHeight = "1.58";
+  let p6Padding = "24px 28px";
+  let p6TitleMargin = "20px 0 16px";
+  let p6TitleSize = "26px";
+
+  // Graceful scaling steps if multiple multi-select options are selected
+  if (totalP6Length > 2200) {
+    p6FontSize = "14px";
+    p6LineHeight = "1.40";
+    p6Padding = "16px 22px";
+    p6TitleMargin = "12px 0 10px";
+    p6TitleSize = "22px";
+  } else if (totalP6Length > 1650) {
+    p6FontSize = "15.5px";
+    p6LineHeight = "1.46";
+    p6Padding = "18px 24px";
+    p6TitleMargin = "15px 0 12px";
+    p6TitleSize = "23px";
+  } else if (totalP6Length > 1150) {
+    p6FontSize = "16.8px";
+    p6LineHeight = "1.52";
+    p6Padding = "20px 26px";
+    p6TitleMargin = "18px 0 14px";
+    p6TitleSize = "24.5px";
+  }
+
   const html = `
 <!DOCTYPE html>
 <html>
@@ -299,86 +373,301 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 .p2-score { top: 82px; left: 65px; font-size: 24px; color: #a40000; font-weight: 800; }
 .p2-gap { top: 158px; left: 116px; font-size: 25px; color: #a40000; }
 
-/* PAGES 3a/3b/3c: SUBJECT DEEP-DIVES */
-.subj-content {
+/* ========================================================= */
+/* CLICKABLE WEBSITE & BADGE OVERLAYS                        */
+/* ========================================================= */
+/* Standard Top-Left Pill (Pages 2, 6, 7, 8, 9, 11, 6b) */
+.pill-link-standard {
   position: absolute;
-  top: 175px;
-  left: 50px;
-  width: 693px;
+  top: 14px;
+  left: 16px;
+  width: 195px;
+  height: 42px;
+  z-index: 100;
+  display: block;
+  cursor: pointer;
+  background: transparent;
 }
 
+/* Page 2 Top-Right Pill Overlay */
+.pill-link-top-right {
+  position: absolute;
+  top: 14px;
+  right: 80px;
+  width: 195px;
+  height: 42px;
+  z-index: 100;
+  display: block;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* Subject Deep-Dive Pill (Pages 3a, 3b, 3c - offset for the left doodle) */
+.pill-link-subject {
+  position: absolute;
+  top: 14px;
+  left: 134px;
+  width: 195px;
+  height: 42px;
+  z-index: 100;
+  display: block;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* Mentorship Promo Button Overlay (Page 20) */
+.promo-btn-link {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 520px;
+  height: 80px;
+  z-index: 100;
+  display: block;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* ========================================================= */
+/* PAGES 3a/3b/3c: NATURAL-FIT, HIGH-LEGIBILITY SUBJECT CARDS*/
+/* ========================================================= */
+.subj-content {
+  position: absolute;
+  top: 170px;
+  left: 50px;
+  width: 693px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Clean proportional gap between gauge and boxes */
+  box-sizing: border-box;
+}
+
+.subj-stand-wrap {
+  width: 100%;
+}
+
+/* Box 1: Hugs text naturally with high-contrast text */
 .subj-box-1 {
   background: #FFFAE5;
-  border: 1.5px solid #fed7aa;
-  border-radius: 14px;
-  padding: 18px 22px;
-  margin-top: 16px;
-  margin-bottom: 18px;
+  border: 2px solid #fed7aa;
+  border-radius: 22px;
+  padding: 22px 28px;
   box-sizing: border-box;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
 }
 
 .subj-tiebreak-text {
-  font-size: 15.5px;
-  line-height: 1.65;
+  font-size: 19px;
+  line-height: 1.58;
   color: #1e293b;
-}
-
-.subj-box-2 {
-  background: #FFFAE5;
-  border: 1.5px solid #fed7aa;
-  border-radius: 14px;
-  padding: 20px 24px;
-  box-sizing: border-box;
-}
-
-.subj-case-story {
-  font-size: 15px;
-  line-height: 1.6;
-  color: #334155;
-  margin-bottom: 12px;
-}
-
-.subj-case-takeaway {
-  font-size: 15.5px;
-  line-height: 1.55;
-  color: #7a1010;
   font-weight: 800;
 }
 
-.subj-affirmation {
+/* Box 2: Hugs story & takeaway with commanding bold font */
+.subj-box-2 {
+  background: #FFFAE5;
+  border: 2px solid #fed7aa;
+  border-radius: 22px;
+  padding: 26px 30px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+}
+
+.subj-case-story {
   font-size: 18px;
-  line-height: 1.7;
-  color: #1e293b;
+  line-height: 1.62;
+  color: #334155;
+  margin-bottom: 16px;
   font-weight: 700;
+}
+
+.subj-case-takeaway {
+  font-size: 19px;
+  line-height: 1.52;
+  color: #7a1010;
+  font-weight: 900;
+}
+
+/* Option A Affirmation Layout */
+.subj-affirmation {
+  font-size: 22px;
+  line-height: 1.6;
+  color: #1e293b;
+  font-weight: 900;
   font-style: italic;
   text-align: center;
-  padding: 10px;
+  padding: 12px 10px;
 }
 
 /* PAGE 5: PEER COMPARISON */
 .p5-score-top { top: 164px; left: 466px; font-size: 22px; color: #a40000; }
 
-/* PAGE 6: R.E.F & BARRIER */
-.p6-ref { top: 230px; left: 90px; width: 610px; line-height: 1.7; color: #4a0402; }
-.p6-barrier { top: 780px; left: 90px; width: 610px; line-height: 1.7; color: #4a0402; }
+/* ========================================================= */
+/* PAGE 6: FULL-HEIGHT BALANCED R.E.F & BARRIER LAYOUT       */
+/* ========================================================= */
+.p6-flow-wrap {
+  position: absolute;
+  top: 198px;
+  left: 52px;
+  width: 689px;
+  /* Anchors from 198px down to 1033px, leaving an 87px bottom safety margin */
+  height: 835px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
 
-/* PAGE 7: HEALTH */
-.health-item { position: absolute; left: 90px; width: 610px; line-height: 1.6; color: #4a0402; font-size: 16px; }
-.h-item1 { top: 195px; }
-.h-item2 { top: 405px; }
-.h-item3 { top: 625px; }
-.h-item4 { top: 835px; }
+/* Card 1: R.E.F. Analysis (Allocated 58% of card height) */
+.p6-card-ref {
+  flex: 1.4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #FFFAE5;
+  border: 2px solid #fed7aa;
+  border-radius: 26px;
+  box-sizing: border-box;
+  color: #4a0402;
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
 
-/* PAGE 8: EXECUTION PLAN */
-.exec-item { position: absolute; left: 140px; width: 550px; font-size: 15px; line-height: 1.5; color: #4a0402; font-weight: 600; }
-.ex1 { top: 231px; }
-.ex2 { top: 344px; }
-.ex3 { top: 457px; }
-.ex4 { top: 570px; }
-.ex5 { top: 683px; }
-.ex6 { top: 796px; }
-.ex7 { top: 909px; }
-.ex8 { top: 1022px; }
+/* Dynamic Section Heading between the boxes */
+.p6-section-title {
+  text-align: center;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #111111;
+  text-transform: uppercase;
+  font-family: 'Nunito', sans-serif;
+  flex-shrink: 0;
+}
+
+/* Card 2: Biggest Barrier & Mindset (Allocated 42% of card height) */
+.p6-card-barrier {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #FFFAE5;
+  border: 2px solid #fed7aa;
+  border-radius: 26px;
+  box-sizing: border-box;
+  color: #4a0402;
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+.p6-closing-note {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1.5px dashed rgba(74, 4, 2, 0.22);
+  font-weight: 800;
+  color: #7a1010;
+}
+
+/* ========================================================= */
+/* PAGE 7: AUTO-DISTRIBUTED HEALTH TREE (BOTTOM ANCHORED)   */
+/* ========================================================= */
+.health-tree-wrap {
+  position: absolute;
+  top: 140px;
+  left: 24px;
+  width: 742px;
+  /* Fixed vertical span reaching near the bottom (140px + 885px = 1025px) */
+  height: 885px;
+  display: flex;
+  flex-direction: column;
+}
+
+.health-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1; /* Automatically sets equal vertical spacing across all boxes */
+}
+
+/* Seamless Continuous Trunk Line */
+.health-row::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  bottom: 0;
+  width: 2.5px;
+  background: #1e1e1e;
+}
+
+/* Line starts at Row 1 branch and terminates at Row 4 branch */
+.health-row:first-child::before {
+  top: 50%;
+}
+.health-row:last-child::before {
+  bottom: 50%;
+}
+
+/* Horizontal Prong Connecting Trunk to Card */
+.health-branch {
+  width: 28px;
+  height: 2.5px;
+  background: #1e1e1e;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+/* Bigger, Bolder Dynamic Box */
+.health-box {
+  flex: 1;
+  background: #FFFAE5;
+  border: 2px solid #1e1e1e;
+  border-radius: 28px;
+  padding: 18px 26px;
+  box-sizing: border-box;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.48;
+  color: #4a0402;
+}
+
+/* ========================================================= */
+/* PAGE 8: DYNAMIC EXECUTION PLAN (SERIAL NUMBERS + TEXT)   */
+/* ========================================================= */
+.exec-list {
+  position: absolute;
+  top: 220px;
+  left: 80px;
+  width: 635px;
+  height: 825px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.exec-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.exec-num {
+  font-size: 26px;
+  font-weight: 900;
+  color: #111111;
+  line-height: 1.1;
+  min-width: 32px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.exec-text {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: #4a0402;
+  line-height: 1.44;
+  flex: 1;
+}
 
 /* PAGE 11: CONCLUSION */
 .p11-conc { top: 390px; left: 140px; width: 520px; font-size: 20px; line-height: 1.8; color: #5c1a1a; }
@@ -399,6 +688,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 </head>
 <body>
 
+<!-- PAGE 1: COVER -->
 <div class="page">
   <img src="${images.p1}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -408,74 +698,191 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
+<!-- PAGE 2: DIAGNOSTICS & FOUNDER NOTE -->
 <div class="page">
   <img src="${images.p2}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
+    <!-- Clickable overlay on top-right Canva badge -->
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-top-right"></a>
     <div class="dynamic-text p2-score">${score}</div>
     <div class="dynamic-text p2-gap">${readinessGap}</div>
   </div>
 </div>
 
+<!-- PAGE 3a: PHYSICS DEEP DIVE -->
 <div class="page">
   <img src="${images.p3a}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-subject"></a>
     <div class="subj-content">${buildSubjectPageHTML("physics", data, marksBySubject)}</div>
   </div>
 </div>
 
+<!-- PAGE 3b: CHEMISTRY DEEP DIVE -->
 <div class="page">
   <img src="${images.p3b}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-subject"></a>
     <div class="subj-content">${buildSubjectPageHTML("chemistry", data, marksBySubject)}</div>
   </div>
 </div>
 
+<!-- PAGE 3c: MATHS DEEP DIVE -->
 <div class="page">
   <img src="${images.p3c}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-subject"></a>
     <div class="subj-content">${buildSubjectPageHTML("maths", data, marksBySubject)}</div>
   </div>
 </div>
 
+<!-- PAGE 6: R.E.F & BARRIER -->
 <div class="page">
   <img src="${images.p6}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
-    <div class="dynamic-text p6-ref">
-      ${joinMentorNotes(["q7","q8","q10"], data)}
-      <br><br>
-      This is a discipline issue, not a knowledge issue, and it's exactly the kind of pattern a mentor
-      spots before you do, because you can't see your own blind spots from inside them.
-    </div>
-    <div class="dynamic-text p6-barrier">
-      ${get("q11", data)?.mentor_note || "Barrier notes..."}
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
+    <div class="p6-flow-wrap">
+      
+      <!-- 1. Top Card: R.E.F Analysis -->
+      <div 
+        class="p6-card-ref" 
+        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height:${p6LineHeight};"
+      >
+        <div>${refNotes}</div>
+        <div class="p6-closing-note" style="font-size: ${p6FontSize};">
+          This is a discipline issue, not a knowledge issue, and it's exactly the kind of pattern a mentor spots before you do, because you can't see your own blind spots from inside them.
+        </div>
+      </div>
+
+      <!-- 2. Section Heading -->
+      <div 
+        class="p6-section-title" 
+        style="margin: ${p6TitleMargin}; font-size:${p6TitleSize};"
+      >
+        BIGGEST BARRIER & MINDSET
+      </div>
+
+      <!-- 3. Bottom Card: Barrier & Mindset -->
+      <div 
+        class="p6-card-barrier" 
+        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height:${p6LineHeight};"
+      >
+        <div>${barrierNotes}</div>
+      </div>
+
     </div>
   </div>
 </div>
 
+<!-- PAGE 7: HEALTH, ENERGY & ENVIRONMENT -->
 <div class="page">
   <img src="${images.p7}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
-    <div class="health-item h-item1">${get("q13", data)?.mentor_note || ""}</div>
-    <div class="health-item h-item2">${get("q14", data)?.mentor_note || ""}</div>
-    <div class="health-item h-item3">${get("q15", data)?.mentor_note || ""}</div>
-    <div class="health-item h-item4">${get("q16", data)?.mentor_note || ""}</div>
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
+    <div class="health-tree-wrap">
+      <div class="health-row">
+        <div class="health-branch"></div>
+        <div class="health-box">${get("q13", data)?.mentor_note || ""}</div>
+      </div>
+      <div class="health-row">
+        <div class="health-branch"></div>
+        <div class="health-box">${get("q14", data)?.mentor_note || ""}</div>
+      </div>
+      <div class="health-row">
+        <div class="health-branch"></div>
+        <div class="health-box">${get("q15", data)?.mentor_note || ""}</div>
+      </div>
+      <div class="health-row">
+        <div class="health-branch"></div>
+        <div class="health-box">${get("q16", data)?.mentor_note || ""}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 8: EXECUTION PLAN -->
+<div class="page">
+  <img src="${images.p8}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
+    <div class="exec-list">
+      ${executionPoints.map((pt, idx) => `
+        <div class="exec-row">
+          <div class="exec-num">${idx + 1}.</div>
+          <div class="exec-text">${pt}</div>
+        </div>
+      `).join("")}
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 9: NOTE TO PARENTS -->
+<div class="page">
+  <img src="${images.p9}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
+  </div>
+</div>
+
+<!-- PAGE 11: CONCLUSION -->
+<div class="page">
+  <img src="${images.p11}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
+    <div class="dynamic-text p11-conc">
+      <span style="font-size: 22px; font-weight: 900; color: #a40000;">
+        ${get("q18", data)?.one_line || "Final Verdict"}
+      </span><br><br>
+      ${get("q18", data)?.mentor_note || "Focus on your barriers and execute the plan consistently."}
+    </div>
+  </div>
+</div>
+
+<!-- TASK SUBMISSION -->
+${images.taskSubmission ? `
+<div class="page">
+  <img src="${images.taskSubmission}" class="bg-img" onerror="this.style.display='none'"/>
+</div>` : ""}
+
+<!-- PRINTABLES -->
+<div class="page">
+  <img src="${images.p12}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <div class="printable-header p12-header">
+      Name: ${studentName} &nbsp;&nbsp;&nbsp; Target:${attemptType}
+    </div>
   </div>
 </div>
 
 <div class="page">
-  <img src="${images.p8}" class="bg-img" onerror="this.style.display='none'"/>
+  <img src="${images.p13}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
-    <div class="exec-item ex1">${customSteps[0]}</div>
-    <div class="exec-item ex2">${customSteps[1]}</div>
-    <div class="exec-item ex3">${customSteps[2]}</div>
-    <div class="exec-item ex4">${customSteps[3]}</div>
-    <div class="exec-item ex5">${customSteps[4]}</div>
-    <div class="exec-item ex6">${customSteps[5]}</div>
-    <div class="exec-item ex7">${customSteps[6]}</div>
-    <div class="exec-item ex8">Share this exact list with your mentor and ask them to check in on it in 7 days. Accountability from someone outside your own head changes follow-through more than willpower does.</div>
+    <div class="printable-header p13-header">
+      Name: ${studentName} &nbsp;&nbsp;&nbsp; Target:${attemptType}
+    </div>
   </div>
 </div>
 
+<div class="page">
+  <img src="${images.p14}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <div class="printable-header p14-name">${studentName}</div>
+  </div>
+</div>
+
+<div class="page">
+  <img src="${images.sundayTracker}" class="bg-img" onerror="this.style.display='none'"/>
+</div>
+
+<!-- MINDSET SYSTEMS -->
+<div class="page">
+  <img src="${images.p6b}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
+  </div>
+</div>
+
+<!-- CHAPTER PREREQUISITES (END OF DOCUMENT) -->
 ${images.physics ? `
 <div class="page">
   <img src="${images.physics}" class="bg-img"/>
@@ -494,57 +901,12 @@ ${images.maths ? `
   ${attemptType === "2027" ? `<div class="black-mask bm-physics">${attemptType}</div>` : ""}
 </div>` : ""}
 
-<div class="page">
-  <img src="${images.p9}" class="bg-img" onerror="this.style.display='none'"/>
-</div>
-
-<div class="page">
-  <img src="${images.p11}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <div class="dynamic-text p11-conc">
-      <span style="font-size: 22px; font-weight: 900; color: #a40000;">
-        ${get("q18", data)?.one_line || "Final Verdict"}
-      </span><br><br>
-      ${get("q18", data)?.mentor_note || "Focus on your barriers and execute the plan consistently."}
-    </div>
-  </div>
-</div>
-
-<div class="page">
-  <img src="${images.p12}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <div class="printable-header p12-header">
-      Name: ${studentName} &nbsp;&nbsp;&nbsp; Target: ${attemptType}
-    </div>
-  </div>
-</div>
-
-<div class="page">
-  <img src="${images.p13}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <div class="printable-header p13-header">
-      Name: ${studentName} &nbsp;&nbsp;&nbsp; Target: ${attemptType}
-    </div>
-  </div>
-</div>
-
-<div class="page">
-  <img src="${images.p14}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <div class="printable-header p14-name">${studentName}</div>
-  </div>
-</div>
-
-<div class="page">
-  <img src="${images.sundayTracker}" class="bg-img" onerror="this.style.display='none'"/>
-</div>
-
-<div class="page">
-  <img src="${images.p6b}" class="bg-img" onerror="this.style.display='none'"/>
-</div>
-
+<!-- MENTORSHIP PROMO -->
 <div class="page">
   <img src="${images.mentorshipPromo}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="promo-btn-link"></a>
+  </div>
 </div>
 
 </body>

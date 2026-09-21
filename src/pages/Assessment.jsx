@@ -134,22 +134,42 @@ const QUESTIONS = [
     ],
     weights: [10, 7, 3, 0]
   },
-  // Q10 (Standard)
+  // Q10 (MULTI-SELECT: Mock Test Mistake Patterns)
   {
     id: "q10",
     question: "Q10. When you analyze your mock test mistakes, where do most of your lost marks go?",
+    multi: true,
+    maxSelect: 3,
     options: [
-      "Conceptual: I honestly didn't know the theory/logic. ",
-      "Silly/Calculation: I knew it, but made a silly mistake or read the question wrong. ",
-      "Ego/Time: I got stuck on one hard question and wasted 10 minutes, ruining the paper. ",
-      "Fear/Skipping: I skipped easy questions because the chapter \"looked\" scary. "
+      "Conceptual: I honestly didn't know the theory/logic.",
+      "Silly/Calculation: I knew it, but made a silly mistake or read the question wrong.",
+      "Ego/Time: I got stuck on one hard question and wasted 10 minutes, ruining the paper.",
+      "Fear/Skipping: I skipped easy questions because the chapter \"looked\" scary."
     ],
     weights: [0, 0, 0, 0]
   },
-  // Q12 (Standard)
+
+  // Q11 (MULTI-SELECT: Core Root Cause Barriers)
+  {
+    id: "q11",
+    question: "Q11. Reflect on your inner self. What are your biggest barriers right now?",
+    multi: true,
+    maxSelect: 2,
+    options: [
+      "The Collector: I have TBs of lectures/PDFs, but I don't solve questions.",
+      "The Fear: I am scared of getting questions wrong, so I keep re-reading theory.",
+      "The Dopamine Addict: Phone, Social Media, and YouTube Shorts are destroying my day.",
+      "The Mountain: My backlog is so huge I don't know where to start, so I don't start at all."
+    ],
+    weights: [0, 0, 0, 0]
+  },
+
+  // Q12
   {
     id: "q12",
-    question: "Q12. This is a special question. You need to be utmost sincere while answering this. How is your mindset currently:",
+    question: "Q12. How is your mindset currently:",
+    multi: true,
+    maxSelect: 2,
     options: [
       "Warrior: \"I will crack JEE, no matter what. I just need the plan.\"",
       "Hopeful: \"I think I can get a good IIT/NIT, but I am sometimes uncertain.\"",
@@ -158,57 +178,51 @@ const QUESTIONS = [
     ],
     weights: [10, 7, 4, 0]
   },
-  // Q11 (Standard)
-  {
-    id: "q11",
-    question: "Q11. Reflect on your inner self. Which among these is your \"Single Biggest Barrier\" (The Root Cause)",
-    options: [
-      "The Collector: I have TBs of lectures/PDFs, but I don't solve questions. ",
-      "The Fear: I am scared of getting questions wrong, so I keep re-reading theory. ",
-      "The Dopamine Addict: Phone, Social Media, and YouTube Shorts are destroying my day. ",
-      "The Mountain: My backlog is so huge I don't know where to start, so I don't start at all. "
-    ],
-    weights: [0, 0, 0, 0]
-  },
-  // Q13 -> Opportunity (Primary)
+
+  // Q13
   {
     id: "q13",
     swot: "O",
     impact: "primary",
     question: "Q13. Tell us about your Energy Levels:",
+    multi: true,
+    maxSelect: 2,
     options: [
-      "High Voltage: I feel energetic all day; I exercise/walk specifically to stay fit. ",
-      "Afternoon Crash: I start well, but after 2 PM I feel sleepy and lethargic. ",
-      "Zombie Mode: I study long hours but feel exhausted and \"foggy\" the whole time. ",
-      "Night Owl: I stay awake till 4 AM, but wake up tired and waste the morning. "
+      "High Voltage: I feel energetic all day; I exercise/walk specifically to stay fit.",
+      "Afternoon Crash: I start well, but after 2 PM I feel sleepy and lethargic.",
+      "Zombie Mode: I study long hours but feel exhausted and \"foggy\" the whole time.",
+      "Night Owl: I stay awake till 4 AM, but wake up tired and waste the morning."
     ],
     weights: [10, 6, 3, 4]
   },
-  // Q14 -> Opportunity (Secondary)
+  // Q14 -> Opportunity Secondary (Single Select)
   {
     id: "q14",
     swot: "O",
     impact: "secondary",
     question: "Q14. How is your health recently?",
     options: [
-      "I am fit and take good care of my body ",
-      "I fall ill frequently (cold, headaches) ",
-      "I have major diseases and treatments going on currently ",
-      "My body is physically not fit, but I have started taking care  "
+      "I am fit and take good care of my body",
+      "I fall ill frequently (cold, headaches)",
+      "I have major diseases and treatments going on currently",
+      "My body is physically not fit, but I have started taking care"
     ],
     weights: [10, 4, 0, 6]
   },
-  // Q15 -> Threat (Primary)
+
+  // Q15
   {
     id: "q15",
     swot: "T",
     impact: "primary",
-    question: "Q15. How is your Study Environment",
+    question: "Q15. How is your Study Environment?",
+    multi: true,
+    maxSelect: 2,
     options: [
-      "The Bunker: Private room, silence, zero distractions. ",
-      "The Library: I go out to study, which helps, but travel wastes time. ",
-      "The Living Room: I study in a noisy area; people keep disturbing me. ",
-      "The Chaos: Toxic environment/arguments at home make it hard to concentrate. "
+      "The Bunker: Private room, silence, zero distractions.",
+      "The Library: I go out to study, which helps, but travel wastes time.",
+      "The Living Room: I study in a noisy area; people keep disturbing me.",
+      "The Chaos: Toxic environment/arguments at home make it hard to concentrate."
     ],
     weights: [10, 7, 4, 0]
   },
@@ -1922,6 +1936,19 @@ const DownloadCTAButton = ({ onClick, isGenerating, label, sublabel }) => (
   </div>
 );
 
+const sanitizeAnswersForScoring = (rawAnswers) => {
+  const clean = {};
+  Object.keys(rawAnswers || {}).forEach((key) => {
+    const val = rawAnswers[key];
+    if (Array.isArray(val)) {
+      clean[key] = val.length > 0 ? Number(val[0]) : 0;
+    } else if (val !== undefined && val !== "") {
+      clean[key] = !isNaN(Number(val)) ? Number(val) : val;
+    }
+  });
+  return clean;
+};
+
 export default function StudentSwotForm() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
@@ -1929,12 +1956,12 @@ export default function StudentSwotForm() {
   const [showSWOT, setShowSWOT] = useState(false);
   const [finalSWOT, setFinalSWOT] = useState({ S: "", W: "", O: "", T: "" });
   
-const handleStartNewAssessment = () => {
+  const handleStartNewAssessment = () => {
     setStep(0);
     setAnswers({});
     setShowSWOT(false);
-    setIsPacking(false);            // 👈 Removes "Your report is ready" overlay
-    setResolvedBlocks({});          // 👈 Clears completed card blocks
+    setIsPacking(false);
+    setResolvedBlocks({});
     setShowSectionIntro(null);
     setMilestoneToast(null);
     setShowMobilePreview(false);
@@ -1942,7 +1969,6 @@ const handleStartNewAssessment = () => {
     shownMilestones.current = new Set();
   };
 
-  // --- NEW: Replaced email states with a single generating state ---
   const [isGenerating, setIsGenerating] = useState(false);
 
   // --- SECTIONING + MILESTONE STATE ---
@@ -1953,17 +1979,20 @@ const handleStartNewAssessment = () => {
   const milestoneTimeoutRef = useRef(null);
 
   // --- LIVING REPORT PREVIEW STATE ---
-  const [resolvedBlocks, setResolvedBlocks] = useState({}); // { blockIndex: colorAtResolutionTime }
+  const [resolvedBlocks, setResolvedBlocks] = useState({});
   const [isPacking, setIsPacking] = useState(false);
-  const [bursts, setBursts] = useState([]); // in-flight particle bursts
+  const [bursts, setBursts] = useState([]);
   const [isMobile, setIsMobile] = useState(typeof window !== "undefined" ? window.innerWidth < 1100 : false);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [pillPulseColor, setPillPulseColor] = useState(null);
-  const [pillPhase, setPillPhase] = useState("idle"); // idle | growing | holding | shrinking
+  const [pillPhase, setPillPhase] = useState("idle");
   const reportCardRef = useRef(null);
   const peekPillRef = useRef(null);
-  const blockRefs = useRef(Array(REPORT_BLOCKS.length + 1).fill(null)); // +1 for the quote block
-  const lastOptionPointRef = useRef({ x: typeof window !== "undefined" ? window.innerWidth - 40 : 0, y: typeof window !== "undefined" ? window.innerHeight - 100 : 0 });
+  const blockRefs = useRef(Array(REPORT_BLOCKS.length + 1).fill(null));
+  const lastOptionPointRef = useRef({ 
+    x: typeof window !== "undefined" ? window.innerWidth - 40 : 0, 
+    y: typeof window !== "undefined" ? window.innerHeight - 100 : 0 
+  });
   const pillPulseTimeoutRef = useRef(null);
   const mobilePreviewTimeoutRef = useRef(null);
   const sectionAdvanceTimeoutsRef = useRef([]);
@@ -1974,9 +2003,61 @@ const handleStartNewAssessment = () => {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // --- SOUND (on by default) — tiny synthesized tones via Web Audio, no
-  // audio files needed. A soft tick on option select, a two-note chime on
-  // section checkpoints only (kept rare so it still feels like a reward).
+useEffect(() => {
+    if (!showSWOT) return;
+
+    const handleScroll = () => {
+      if (!firstCtaRef.current || !lastCtaRef.current) return;
+
+      const firstRect = firstCtaRef.current.getBoundingClientRect();
+      const lastRect = lastCtaRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // Trigger: When CTA 1 has scrolled 60px past top of screen
+      const isPastFirstCta = firstRect.bottom < -60;
+
+      // Exit: When final CTA banner comes within 100px of entering viewport
+      const isReachingLastCta = lastRect.top <= viewportHeight - 100;
+
+      setShowStickyCta(isPastFirstCta && !isReachingLastCta);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [showSWOT]);
+
+const [showStickyCta, setShowStickyCta] = useState(false);
+  const firstCtaRef = useRef(null);
+  const lastCtaRef = useRef(null);
+
+  useEffect(() => {
+    if (!showSWOT) return;
+
+    const handleScroll = () => {
+      if (!firstCtaRef.current || !lastCtaRef.current) return;
+
+      const firstRect = firstCtaRef.current.getBoundingClientRect();
+      const lastRect = lastCtaRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      // Appears once CTA 1 scrolls out of view above the screen
+      const isPastFirstCta = firstRect.bottom < 0;
+
+      // Hides and merges back as soon as CTA 3 enters the viewport
+      const isReachingLastCta = lastRect.top <= viewportHeight - 30;
+
+      setShowStickyCta(isPastFirstCta && !isReachingLastCta);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [showSWOT]);
+
+  // --- SOUND SYNTHESIZER ---
   const [soundEnabled, setSoundEnabled] = useState(true);
   const audioCtxRef = useRef(null);
 
@@ -2008,25 +2089,21 @@ const handleStartNewAssessment = () => {
       osc.connect(gain).connect(ctx.destination);
       osc.start(now);
       osc.stop(now + duration + 0.02);
-    } catch (e) {
-      // Audio isn't critical — fail silently if the browser blocks it.
-    }
+    } catch (e) {}
   };
 
   const playSelectTick = () => playTone(720, 0.05, 0, 0.2);
   const playSectionChime = () => {
-    playTone(523.25, 0.14, 0, 0.22); // C5
-    playTone(659.25, 0.16, 0.09, 0.22); // E5
+    playTone(523.25, 0.14, 0, 0.22);
+    playTone(659.25, 0.16, 0.09, 0.22);
   };
 
-  // --- SELECTION MICRO-FEEDBACK: ripple from tap point + a quick badge
-  // pop, layered underneath the existing instant color-swap (unchanged).
+  // --- SELECTION MICRO-FEEDBACK ---
   const [ripple, setRipple] = useState(null);
   const [pulseIdx, setPulseIdx] = useState(null);
   const rippleTimeoutRef = useRef(null);
   const pulseTimeoutRef = useRef(null);
 
-  // --- NEW STORY STYLES ---
   const storyTextStyle = {
     fontFamily: "'Pinyon Script', cursive",
     fontSize: "18px",
@@ -2039,9 +2116,7 @@ const handleStartNewAssessment = () => {
     textShadow: "0px 1px 1px rgba(0,0,0,0.1)"
   };
 
-  // Progress (exclude name question)
-  // Endowed progress effect: start at 8% (not 0%) so the bar never feels
-  // like "nothing has happened yet" the moment the form opens.
+  // Progress Calculations
   const TOTAL_QUESTIONS = 20;
   const BASE_PROGRESS = 8;
   const currentQuestionIndex = Math.max(step - 1, 0); 
@@ -2054,7 +2129,6 @@ const handleStartNewAssessment = () => {
   const activeSectionIndex = activeSection ? SECTIONS.indexOf(activeSection) : -1;
   const studentName = (answers.name || "").trim();
 
-  // Show a one-time checkpoint interstitial the moment a new section begins.
   useEffect(() => {
     const section = SECTIONS.find((s) => s.startStep === step);
     if (section && !shownSectionIntros.current.has(section.key)) {
@@ -2067,10 +2141,8 @@ const handleStartNewAssessment = () => {
         mobilePreviewTimeoutRef.current = setTimeout(() => setShowMobilePreview(false), 2400);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
-  // Fire a milestone toast the first time progress crosses 25/50/75%.
   useEffect(() => {
     MILESTONES.forEach((m) => {
       if (progressPercent >= m.at && !shownMilestones.current.has(m.at)) {
@@ -2080,16 +2152,29 @@ const handleStartNewAssessment = () => {
         milestoneTimeoutRef.current = setTimeout(() => setMilestoneToast(null), 2200);
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [progressPercent]);
+
+  // Validation helper: Ensures single choice or at least 1 checkbox is picked
+  const isCurrentQuestionAnswered = () => {
+    if (step === 0) return Boolean((answers.name || "").trim());
+    const q = QUESTIONS[step];
+    if (!q) return true;
+    const val = answers[q.id];
+    if (q.multi) {
+      return Array.isArray(val) && val.length > 0;
+    }
+    return val !== undefined && val !== "";
+  };
 
   const handleChange = (value) => {
     setAnswers({ ...answers, [QUESTIONS[step].id]: value });
   };
 
-  // Wraps handleChange with the ripple + badge-pop micro-feedback and the
-  // selection tick sound. Only used for the multiple-choice options.
+  // Dual Single/Multi-Select Handler with Animation Anchors
   const selectOption = (idx, e) => {
+    const q = QUESTIONS[step];
+    if (!q) return;
+
     const rect = e.currentTarget.getBoundingClientRect();
     setRipple({ idx, x: e.clientX - rect.left, y: e.clientY - rect.top, id: Date.now() });
     clearTimeout(rippleTimeoutRef.current);
@@ -2099,28 +2184,42 @@ const handleStartNewAssessment = () => {
     clearTimeout(pulseTimeoutRef.current);
     pulseTimeoutRef.current = setTimeout(() => setPulseIdx(null), 380);
 
-    // Remember where on screen this option sat — this is the particle
-    // burst's launch point once "Next"/"Submit" is clicked.
     lastOptionPointRef.current = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
 
-    handleChange(idx);
+    const qId = q.id;
+
+    if (q.multi) {
+      setAnswers((prev) => {
+        const currentArr = Array.isArray(prev[qId])
+          ? [...prev[qId]]
+          : prev[qId] !== undefined && prev[qId] !== "" ? [Number(prev[qId])] : [];
+
+        const numIdx = Number(idx);
+        const exists = currentArr.includes(numIdx);
+
+        let updated;
+        if (exists) {
+          updated = currentArr.filter((item) => item !== numIdx);
+        } else {
+          const max = q.maxSelect || 2;
+          if (currentArr.length >= max) return prev;
+          updated = [...currentArr, numIdx];
+        }
+        return { ...prev, [qId]: updated };
+      });
+    } else {
+      setAnswers((prev) => ({ ...prev, [qId]: Number(idx) }));
+    }
+
     playSelectTick();
   };
 
-  // Fires a particle burst from the last-selected option toward the report
-  // card (desktop) or peek-pill (mobile), and resolves a skeleton block
-  // ~700ms later (roughly when the particles land) if this step maps to one.
   const fireBurst = (currentStep, blockIdxOverride) => {
     const section = getSectionForStep(currentStep);
     const color = section ? section.color : "#c62828";
     const { x: sx, y: sy } = lastOptionPointRef.current;
     const blockIdx = blockIdxOverride !== undefined ? blockIdxOverride : STEP_BLOCK_MAP[currentStep];
 
-    // On desktop, aim for the exact block that's about to resolve (so the
-    // particles visibly land on the box that will glow), not just the
-    // card's overall center. Falls back to the card/pill center when this
-    // step doesn't resolve a block, or on mobile where blocks aren't
-    // individually visible.
     let targetEl = null;
     if (!isMobile && blockIdx !== undefined && blockRefs.current[blockIdx]) {
       targetEl = blockRefs.current[blockIdx];
@@ -2154,22 +2253,15 @@ const handleStartNewAssessment = () => {
     if (step < QUESTIONS.length - 1) setStep(step + 1);
   };
 
-  // Wraps next() with the particle burst — skipped on step 0 (name), since
-  // the name already mirrors live into the card header as they type it.
-  //
-  // When the upcoming step is the START of a new section, we deliberately
-  // slow down: let the particle land, let the pill (mobile) grow to
-  // acknowledge it and fade back down, THEN advance — instead of the
-  // section checkpoint slamming in on top of a still-flying particle.
   const handleNextClick = () => {
+    if (!isCurrentQuestionAnswered()) return;
+
     const currentStep = step;
     const nextStep = currentStep + 1;
     const enteringNewSection = currentStep > 0 && SECTIONS.some((s) => s.startStep === nextStep);
 
     if (currentStep > 0) fireBurst(currentStep);
 
-    // Clear any previous pending section-advance timers (guards against
-    // rapid double-clicks stacking up multiple delayed transitions).
     sectionAdvanceTimeoutsRef.current.forEach(clearTimeout);
     sectionAdvanceTimeoutsRef.current = [];
 
@@ -2188,39 +2280,50 @@ const handleStartNewAssessment = () => {
       }, 700 + 380 + 320 + 380);
       sectionAdvanceTimeoutsRef.current = [t1, t2, t3, t4];
     } else {
-      // Desktop has no pill to grow, but still give the particle + block
-      // glow time to land before swapping in the section checkpoint.
       const t1 = setTimeout(() => next(), 1100);
       sectionAdvanceTimeoutsRef.current = [t1];
     }
   };
 
+  // Safe SWOT calculation supporting array or string choices for q13/q15
   const calculateSWOT = () => {
-    const sIndex = Number(answers["q1"] || 0);
-    const wIndex = Number(answers["q3"] || 0);
-    const oIndex = Number(answers["q13"] || 0);
-    const tIndex = Number(answers["q15"] || 0);
-
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-    const getResponse = (lib, idx) => {
-      const bucket = lib && lib[idx] ? lib[idx] : (lib ? lib[0] : ["Data missing"]);
-      return pick(bucket);
+
+    const getResponse = (lib, rawVal) => {
+      if (!lib) return "Data missing";
+      if (rawVal === undefined || rawVal === "") return pick(lib[0] || ["Data missing"]);
+
+      if (Array.isArray(rawVal)) {
+        if (rawVal.length === 0) return pick(lib[0] || ["Data missing"]);
+
+        // Exactly 1 pick: Returns the EXACT single response from the old version
+        if (rawVal.length === 1) {
+          const idx = Number(rawVal[0]);
+          return pick(lib[idx] || lib[0]);
+        }
+
+        // 2 picks: Combines both insights cleanly without breaking format
+        const first = pick(lib[Number(rawVal[0])] || lib[0]);
+        const second = pick(lib[Number(rawVal[1])] || lib[0]);
+        return `${first} Additionally: ${second}`;
+      }
+
+      // Standard number/string
+      return pick(lib[Number(rawVal)] || lib[0]);
     };
 
     setFinalSWOT({
-      S: getResponse(StrengthResponses, sIndex),
-      W: getResponse(WeaknessResponses, wIndex),
-      O: getResponse(OpportunityResponses, oIndex),
-      T: getResponse(ThreatResponses, tIndex),
+      S: getResponse(StrengthResponses, answers["q1"]),
+      W: getResponse(WeaknessResponses, answers["q3"]),
+      O: getResponse(OpportunityResponses, answers["q13"]),
+      T: getResponse(ThreatResponses, answers["q15"]),
     });
 
     setShowSWOT(true);
   };
 
-  // Final submit: fires the last particle burst (resolving the closing
-  // "quote" block), then plays the card's packing-up animation, THEN
-  // transitions to the real results page once that's had time to land.
   const handleFinalSubmit = () => {
+    if (!isCurrentQuestionAnswered()) return;
     fireBurst(step, FINAL_BLOCK_INDEX);
     setTimeout(() => {
       setIsPacking(true);
@@ -2232,16 +2335,15 @@ const handleStartNewAssessment = () => {
     }, 950 + 1500);
   };
 
-  // (submit() removed — handleFinalSubmit now drives the final transition,
-  // pairing the report-card packing animation with calculateSWOT().)
-
   // --------------------------------------------------------
-  // HANDLE DIRECT PDF DOWNLOAD (Mobile & Desktop Compatible)
+  // HANDLE DIRECT PDF DOWNLOAD (Multi-Select Aware Payload)
   // --------------------------------------------------------
   const handleDownloadReport = async () => {
     setIsGenerating(true);
 
-    const result = computeScores(answers);
+    const cleanAnswers = sanitizeAnswersForScoring(answers);
+    const result = computeScores(cleanAnswers);
+
     const { 
       jee_society_score, 
       expected_percentile_range, 
@@ -2249,21 +2351,37 @@ const handleStartNewAssessment = () => {
       breakdown,
     } = result;
 
-    const q17Obj = QUESTIONS.find(q => q.id === "q17");
+    const q17Obj = QUESTIONS.find((q) => q.id === "q17");
     const attemptIndex = answers["q17"];
     const attemptLabel = (q17Obj && q17Obj.options[attemptIndex]) ? q17Obj.options[attemptIndex] : "2028"; 
 
     const safeExpected = expected_percentile_range || [0, 0];
     const safePotential = potential_percentile_range || [0, 0];
 
-    const optionMap = ["A", "B", "C", "D"];
+    const optionMap = ["A", "B", "C", "D", "E"];
     const generatedManifestKeys = {};
 
     Object.keys(answers).forEach((key) => {
-      if (key.startsWith("q")) {
-        const answerIndex = Number(answers[key]);
-        if (!isNaN(answerIndex) && optionMap[answerIndex]) {
-          generatedManifestKeys[key] = `${key.toUpperCase()}_${optionMap[answerIndex]}`;
+      if (!key.startsWith("q")) return;
+      const val = answers[key];
+      const prefix = key.toUpperCase();
+
+      if (Array.isArray(val)) {
+        if (val.length === 1) {
+          // Unwraps single pick to plain string "Q10_A" for 100% legacy parity
+          const idx = Number(val[0]);
+          if (optionMap[idx]) generatedManifestKeys[key] = `${prefix}_${optionMap[idx]}`;
+        } else if (val.length > 1) {
+          // Sends array ["Q10_A", "Q10_B"] only when multiple options are checked
+          generatedManifestKeys[key] = val
+            .map((idx) => (optionMap[Number(idx)] ? `${prefix}_${optionMap[Number(idx)]}` : null))
+            .filter(Boolean);
+        }
+      } else {
+        // Standard single choice
+        const idx = Number(val);
+        if (!isNaN(idx) && optionMap[idx]) {
+          generatedManifestKeys[key] = `${prefix}_${optionMap[idx]}`;
         }
       }
     });
@@ -2304,10 +2422,9 @@ const handleStartNewAssessment = () => {
       const blob = await response.blob();
       const pdfBlob = new Blob([blob], { type: "application/pdf" });
       const url = window.URL.createObjectURL(pdfBlob);
-      const studentName = (answers["name"] || "Student").replace(/\s+/g, '_');
-      const filename = `JEEsociety_Report_${studentName}.pdf`;
+      const safeName = (answers["name"] || "Student").replace(/\s+/g, '_');
+      const filename = `JEEsociety_Report_${safeName}.pdf`;
 
-      // Trigger Mobile & Desktop Download
       const link = document.createElement("a");
       link.href = url;
       link.download = filename;
@@ -2329,13 +2446,13 @@ const handleStartNewAssessment = () => {
 
   // ---------------- RENDER: RESULTS PAGE (STUDENT-FACING, CONVERSION-OPTIMIZED) ----------------
   if (showSWOT) {
-    const scores = computeScores(answers);
+    const cleanAnswers = sanitizeAnswersForScoring(answers);
+    const scores = computeScores(cleanAnswers);
     const { jee_society_score } = scores;
 
-    const attemptIndex = answers["q17"];
+    const attemptIndex = cleanAnswers["q17"];
     const attemptLabel = (QUESTIONS.find(q => q.id === "q17")?.options || [])[attemptIndex] || "JEE Main";
 
-    // Readiness gap & closeable weeks calculation
     const numScore = Number(jee_society_score) || 0;
     const readinessGap = (100 - numScore).toFixed(2).replace(/\.00$/, "");
     const closeableWeeks = Math.max(3, Math.round((100 - numScore) / 3.5));
@@ -2350,6 +2467,29 @@ const handleStartNewAssessment = () => {
       padding: "20px", borderRadius: "12px", borderLeft: `6px solid ${color}`,
       boxShadow: "0 4px 15px rgba(0,0,0,0.05)"
     });
+
+    const reportBulletItems = [
+      {
+        title: "Complete SWOT Analysis",
+        desc: "Hidden threats & high-yield score opportunities"
+      },
+      {
+        title: "Subject Scoring Blueprint",
+        desc: "Tactical roadmaps for Physics, Chem & Maths"
+      },
+      {
+        title: "R.E.F Diagnostic",
+        desc: "Recall • Error • Focus system to stop mark leaks"
+      },
+      {
+        title: "Personalized Action Plan",
+        desc: "Immediate 24-hour & 7-day tactical fixes"
+      },
+      {
+        title: "Desk Printables",
+        desc: "90-day habit grid, mock test tracker, & more"
+      }
+    ];
 
     return (
       <div className="assessment-wrapper swot-container" style={{ maxWidth: "760px", margin: "0 auto", fontFamily: "'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif" }}>
@@ -2402,7 +2542,7 @@ const handleStartNewAssessment = () => {
           Target: <strong>{attemptLabel}</strong>
         </div>
 
-        {/* 1. JAS SCORE REVEAL & IITian GAP */}
+        {/* 1. JAS SCORE REVEAL */}
         <div style={{ ...rowStyle, gap: "35px", marginTop: "10px", marginBottom: "26px" }}>
            <div style={{ flex: "0 0 auto", transform: "scale(1.12)", transformOrigin: "center", zIndex: 1 }}>
               <CircularScore value={jee_society_score} color="#6a11cb" title="JAS" rangeText={jee_society_score} />
@@ -2417,7 +2557,7 @@ const handleStartNewAssessment = () => {
              <p style={{ margin: "0 0 10px 0", fontSize: "15px", color: "#333", lineHeight: "1.65" }}>
                You are currently at <b>{jee_society_score}%</b> out of your 100% potential readiness. Unlike a standard mock test that only checks rote knowledge, JAS accounts for your Consistency, Focus Depth, Revision Quality, and Active Problem Solving.
              </p>
-             <p style={{ margin: 0, fontSize: "15px", color: "#1e293b", lineHeight: "1.65" }}>
+             <p style={{ margin: 0, fontSize: "15px", color: "#1e293b", lineHeight: "1.65", fontWeight: "600" }}>
                Top-1% IITians are still <b>{readinessGap} points of readiness ahead</b> of where you are today, and that gap is realistically closeable in about <b>{closeableWeeks} weeks</b> with the right plan.
              </p>
            </div>
@@ -2428,29 +2568,131 @@ const handleStartNewAssessment = () => {
           <PercentileCard percentile={scores.percentile_vs_aspirants} jss={jee_society_score} color="#c62828" />
         </div>
 
-        {/* DOWNLOAD CTA #1 */}
-        <div style={{ marginBottom: "36px" }}>
+        {/* ========================================================= */}
+        {/* 1. FIRST CTA (Triggers Sticky Bar When Scrolled Past)     */}
+        {/* ========================================================= */}
+        <div ref={firstCtaRef} style={{ marginBottom: "36px" }}>
           <DownloadCTAButton
             onClick={handleDownloadReport}
             isGenerating={isGenerating}
             label="Unlock My Full Report"
-            sublabel="See your complete SWOT, action plan & diagnostic blueprint"
+            sublabel="Get your full diagnosis, personalized SWOT & action blueprint"
           />
         </div>
 
-        {/* 3. SWOT SECTION */}
-        <h2 style={{ marginTop: "10px" }}>Your Strength & Weakness</h2>
-        <div className="swot-card-white">
-          <span className="swot-pill-badge strength-badge">STRENGTH</span>
-          <p className="swot-text">{finalSWOT.S}</p>
-        </div>
-        <div className="swot-card-white">
-          <span className="swot-pill-badge weakness-badge">WEAKNESS</span>
-          <p className="swot-text">{finalSWOT.W}</p>
+        {/* 3. COMBINED: YOUR STRENGTH & WEAKNESS + WHAT'S INSIDE YOUR REPORT */}
+        <div style={{
+          background: "#ffffff",
+          borderRadius: "20px",
+          padding: "30px 24px",
+          border: "1px solid #e2e8f0",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.04)",
+          marginBottom: "44px"
+        }}>
+          {/* Strength & Weakness Sub-section */}
+          <h2 style={{ marginTop: 0, marginBottom: "18px", fontSize: "24px", color: "#0f172a" }}>
+            Your Strength & Weakness
+          </h2>
+          
+          <div className="swot-card-white" style={{ marginBottom: "14px" }}>
+            <span className="swot-pill-badge strength-badge">STRENGTH</span>
+            <p className="swot-text">{finalSWOT.S}</p>
+          </div>
+
+          <div className="swot-card-white" style={{ marginBottom: "28px" }}>
+            <span className="swot-pill-badge weakness-badge">WEAKNESS</span>
+            <p className="swot-text">{finalSWOT.W}</p>
+          </div>
+
+          {/* Divider */}
+          <div style={{ height: "1px", background: "#e2e8f0", margin: "28px 0 24px" }} />
+
+          {/* What's Inside Your Full Report in Bullet Points */}
+          <div style={{ textAlign: "left" }}>
+            <h3 style={{ fontSize: "19px", fontWeight: "800", color: "#0f172a", marginBottom: "4px" }}>
+              What's Inside Your Full PDF Report
+            </h3>
+            <p style={{ fontSize: "13.5px", color: "#64748b", marginBottom: "14px" }}>
+              A 15+ page data-backed dossier built specifically from your responses:
+            </p>
+
+            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+              {reportBulletItems.map((item, idx) => (
+                <li
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    padding: "7px 0",
+                    borderBottom: "1px dashed #f1f5f9"
+                  }}
+                >
+                  <span style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minWidth: "20px",
+                    height: "20px",
+                    borderRadius: "50%",
+                    background: "#ecfdf5",
+                    color: "#059669",
+                    fontWeight: "900",
+                    fontSize: "12px",
+                    flexShrink: 0
+                  }}>
+                    ✓
+                  </span>
+                  <div style={{ fontSize: "14px", lineHeight: "1.4" }}>
+                    <strong style={{ color: "#1e293b" }}>{item.title}:</strong>{" "}
+                    <span style={{ color: "#64748b" }}>{item.desc}</span>
+                  </div>
+                </li>
+              ))}
+
+              {/* Subtle grey teaser item */}
+              <li style={{
+                paddingTop: "10px",
+                paddingLeft: "30px",
+                fontSize: "13.5px",
+                fontWeight: "600",
+                color: "#94a3b8",
+                fontStyle: "italic",
+                letterSpacing: "0.2px"
+              }}>
+                + and many more...
+              </li>
+            </ul>
+
+            {/* --- SAMPLE REPORT LINK --- */}
+            <div style={{ textAlign: "center", marginTop: "22px", paddingTop: "14px", borderTop: "1px solid #f1f5f9" }}>
+              <a
+                href="/sample-report.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: "#6a11cb",
+                  fontWeight: "700",
+                  fontSize: "14.5px",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  transition: "color 0.2s ease"
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "#4a0082")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "#6a11cb")}
+              >
+                See what a finished report looks like →
+              </a>
+            </div>
+
+          </div>
         </div>
 
-        {/* 4. FOUNDER VIDEO */}
-        <div style={{ marginTop: "44px", marginBottom: "40px" }}>
+        {/* 4. FOUNDER VIDEO (Now positioned directly below the combined section) */}
+        <div style={{ marginTop: "10px", marginBottom: "40px" }}>
           <h3 style={{ textAlign: "center", fontSize: "20px", fontWeight: "800", color: "#0f172a", marginBottom: "10px" }}>
             Hear It Straight From The Founder
           </h3>
@@ -2466,31 +2708,26 @@ const handleStartNewAssessment = () => {
           <FounderVideoBlock />
         </div>
 
-        {/* 5. PRODUCT SPEC CHART */}
-        <div style={{ marginBottom: "56px" }}>
-          <ReportSpecChart />
-        </div>
+        
 
-        {/* DOWNLOAD CTA #2 */}
-        <div style={{ marginBottom: "46px" }}>
-          <DownloadCTAButton
-            onClick={handleDownloadReport}
-            isGenerating={isGenerating}
-            label="Get Your Report Now"
-            sublabel="Ready in seconds. Don't lose this insight."
-          />
-        </div>
-
-        {/* 6. TESTIMONIALS */}
+        {/* 5. TESTIMONIALS */}
         <div style={{ marginBottom: "44px" }}>
           <TestimonialsGrid />
         </div>
 
-        {/* DOWNLOAD CTA #3 */}
-        <div style={{
-          background: "linear-gradient(135deg, #0b0f19, #1e1330)",
-          borderRadius: "20px", padding: "34px 24px", textAlign: "center", marginBottom: "40px",
-        }}>
+        {/* ========================================================= */}
+        {/* 6. FINAL CTA BANNER (Sticky Bar Merges Back In Here)       */}
+        {/* ========================================================= */}
+        <div
+          ref={lastCtaRef}
+          style={{
+            background: "linear-gradient(135deg, #0b0f19, #1e1330)",
+            borderRadius: "20px",
+            padding: "34px 24px",
+            textAlign: "center",
+            marginBottom: "40px",
+          }}
+        >
           <div style={{ fontSize: "21px", fontWeight: "800", color: "#fff", marginBottom: "8px" }}>
             Don't waste another week guessing.
           </div>
@@ -2500,11 +2737,11 @@ const handleStartNewAssessment = () => {
           <DownloadCTAButton
             onClick={handleDownloadReport}
             isGenerating={isGenerating}
-            label="Claim My Report Now"
+            label="Unlock My Full Report"
           />
         </div>
 
-        {/* BOTTOM ACTION BUTTONS */}
+        {/* BOTTOM CHANNELS / ACTION BUTTONS */}
         <div style={{ display: "flex", justifyContent: "center", gap: "16px", flexWrap: "wrap", marginTop: "10px" }}>
           <a
             href="https://whatsapp.com/channel/0029VbDZ6FnGE56sPOiSVL0a"
@@ -2569,7 +2806,7 @@ const handleStartNewAssessment = () => {
           </a>
         </div>
 
-        {/* Start New Assessment */}
+        {/* Start New Assessment Button */}
         <div style={{ marginTop: "40px", textAlign: "center", paddingBottom: "20px" }}>
           <button
             onClick={handleStartNewAssessment}
@@ -2590,6 +2827,176 @@ const handleStartNewAssessment = () => {
             + Start New Assessment
           </button>
         </div>
+
+{/* ========================================================= */}
+{/* FLOATING DYNAMIC DOCK (Theme-Matched to Original CTA)     */}
+{/* ========================================================= */}
+<div
+  style={{
+    position: "fixed",
+    bottom: "22px",
+    left: "50%",
+    zIndex: 9999,
+    width: "calc(100% - 32px)",
+    maxWidth: "560px",
+    transform: showStickyCta
+      ? "translateX(-50%) translateY(0) scale(1)"
+      : "translateX(-50%) translateY(80px) scale(0.92)",
+    opacity: showStickyCta ? 1 : 0,
+    filter: showStickyCta ? "blur(0px)" : "blur(8px)",
+    pointerEvents: showStickyCta ? "auto" : "none",
+    transition: "transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1), opacity 0.3s ease, filter 0.3s ease",
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: "14px",
+      padding: "8px 10px 8px 18px",
+      background: "rgba(15, 23, 42, 0.92)", // Obsidian glass
+      backdropFilter: "blur(20px)",
+      WebkitBackdropFilter: "blur(20px)",
+      borderRadius: "9999px",
+      border: "1px solid rgba(255, 255, 255, 0.14)",
+      animation: showStickyCta ? "cta-dock-glow 3.5s infinite ease-in-out" : "none",
+    }}
+  >
+    {/* Left Side: Live Ready Status */}
+    <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
+      <div
+        style={{
+          width: "9px",
+          height: "9px",
+          borderRadius: "50%",
+          background: "#22c55e",
+          flexShrink: 0,
+          animation: "live-pulse-dot 2s infinite"
+        }}
+      />
+      <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
+        <span style={{
+          color: "#ffffff",
+          fontSize: "13px",
+          fontWeight: "800",
+          letterSpacing: "0.2px",
+          whiteSpace: "nowrap"
+        }}>
+          Report Ready
+        </span>
+        <span style={{
+          color: "#94a3b8",
+          fontSize: "11px",
+          fontWeight: "500",
+          whiteSpace: "nowrap"
+        }}>
+          15+ Pages • Customized
+        </span>
+      </div>
+    </div>
+
+   {/* Right Side: Exact Gradient Button with Interactive Unlocking Padlock */}
+    <button
+      className="sticky-unlock-btn"
+      onClick={handleDownloadReport}
+      disabled={isGenerating}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "9px",
+        padding: "12px 24px",
+        borderRadius: "9999px",
+        background: "linear-gradient(135deg, #2b59ff 0%, #7d3bf9 100%)",
+        border: "none",
+        color: "#ffffff",
+        fontSize: "14px",
+        fontWeight: "800",
+        letterSpacing: "0.2px",
+        cursor: isGenerating ? "wait" : "pointer",
+        boxShadow: "0 4px 18px rgba(109, 40, 217, 0.48), 0 2px 6px rgba(0, 0, 0, 0.15)",
+        flexShrink: 0,
+        transition: "all 0.22s ease"
+      }}
+      onMouseEnter={(e) => {
+        if (!isGenerating) {
+          e.currentTarget.style.transform = "translateY(-1px) scale(1.02)";
+          e.currentTarget.style.boxShadow = "0 6px 24px rgba(125, 59, 249, 0.65)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isGenerating) {
+          e.currentTarget.style.transform = "translateY(0) scale(1)";
+          e.currentTarget.style.boxShadow = "0 4px 18px rgba(109, 40, 217, 0.48), 0 2px 6px rgba(0, 0, 0, 0.15)";
+        }
+      }}
+    >
+      {isGenerating ? (
+        <>
+          <svg
+            style={{ animation: "spin 1s linear infinite", width: "16px", height: "16px" }}
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25" />
+            <path fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+          </svg>
+          Generating...
+        </>
+      ) : (
+        <>
+          {/* Animated SVG Padlock */}
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            style={{ flexShrink: 0, overflow: "visible", marginBottom: "1px" }}
+          >
+            {/* Shackle: Pivots from the left socket when button is hovered */}
+            <path
+              className="lock-shackle"
+              d="M7.5 10V6.2a4.5 4.5 0 0 1 9 0V10"
+              stroke="#ffffff"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              style={{
+                transformOrigin: "7.5px 10px",
+                transition: "transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1)",
+              }}
+            />
+            {/* Lock Body */}
+            <rect x="5" y="9.5" width="14" height="11.5" rx="2.8" fill="#ffffff" />
+            
+            {/* Embedded Keyhole */}
+            <circle cx="12" cy="14.2" r="1.2" fill="#5835e8" />
+            <polygon points="11.3,14.5 12.7,14.5 12.9,17.2 11.1,17.2" fill="#5835e8" />
+          </svg>
+
+          Unlock My Full Report
+        </>
+      )}
+    </button>
+  </div>
+</div>
+
+        <style>{`
+  @keyframes cta-dock-glow {
+    0%, 100% { box-shadow: 0 14px 35px -8px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.12); }
+    50% { box-shadow: 0 18px 45px -6px rgba(109, 40, 217, 0.38), 0 0 0 1.5px rgba(167, 139, 250, 0.45); }
+  }
+  @keyframes live-pulse-dot {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  }
+
+  /* Mechanical padlock unlock animation on hover */
+  .sticky-unlock-btn:hover .lock-shackle {
+    transform: translateY(-3px) rotate(-26deg) !important;
+  }
+`}</style>
 
       </div>
     );
@@ -2670,14 +3077,86 @@ const handleStartNewAssessment = () => {
             />
           ) : (
             <>
-              {/* Question label (progress itself is shown by the section mini-map above + the % in the header) */}
-              <div style={{ fontSize: "14px", color: "#777", marginBottom: "20px" }}>
-                {activeSection ? `${activeSection.title} · ` : ""}
-                Question {Math.min(currentQuestionIndex + 1, TOTAL_QUESTIONS)} of {TOTAL_QUESTIONS}
-              </div>
+              {/* Question Header & Multi-Select Tag Bar */}
+<div style={{
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  marginBottom: "16px",
+  flexWrap: "wrap",
+  gap: "8px"
+}}>
+  {/* Left: Section name & Question Counter */}
+  <div style={{ fontSize: "14px", color: "#777", fontWeight: "600" }}>
+    {activeSection ? `${activeSection.title} · ` : ""}
+    Question {Math.min(currentQuestionIndex + 1, TOTAL_QUESTIONS)} of {TOTAL_QUESTIONS}
+  </div>
 
-              <h2 style={{ fontSize: "20px", fontWeight: "600", marginBottom: "20px" }}>{q.question}</h2>
+  {/* Right: Dynamic Multi-Select Badge (Only displays on multi-select questions) */}
+  {q.multi && (
+  <div style={{
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "4px 10px 4px 6px",
+    borderRadius: "6px",
+    background: "#f8fafc",
+    border: "1px solid #e2e8f0",
+    boxShadow: "0 1px 2px rgba(15, 23, 42, 0.04)"
+  }}>
+    {/* Clean Geometric Checkbox Icon */}
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "17px",
+      height: "17px",
+      borderRadius: "4px",
+      background: "#0f172a",
+      color: "#ffffff"
+    }}>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </div>
 
+    {/* Section Label */}
+    <span style={{
+      fontSize: "11px",
+      fontWeight: "800",
+      letterSpacing: "0.06em",
+      textTransform: "uppercase",
+      color: "#0f172a"
+    }}>
+      Multi-Select
+    </span>
+
+    <span style={{ color: "#cbd5e1", fontSize: "11px" }}>•</span>
+
+    {/* Counter Spec */}
+    <span style={{
+      fontSize: "12px",
+      fontWeight: "500",
+      color: "#64748b"
+    }}>
+      Pick up to <strong style={{ color: "#0f172a", fontWeight: "700" }}>{q.maxSelect || 2}</strong>
+    </span>
+  </div>
+)}
+</div>
+
+{/* Question Title */}
+<h2 style={{
+  fontSize: "20px",
+  fontWeight: "700",
+  marginBottom: "20px",
+  color: "#0f172a",
+  lineHeight: "1.4"
+}}>
+  {q.question}
+</h2>
+
+{/* INPUTS */}
               {/* INPUTS */}
 {q.type === "text" ? (
   <div>
@@ -2722,66 +3201,114 @@ const handleStartNewAssessment = () => {
                       100% { transform: scale(1); }
                     }
                   `}</style>
+                  
                   {q.options.map((opt, idx) => {
-                    const isSelected = answers[q.id] == idx;
-                    return (
-                      <div
-                        key={idx}
-                        onClick={(e) => selectOption(idx, e)}
-                        style={{
-                          position: "relative", overflow: "hidden",
-                          display: "flex", alignItems: "center", gap: "14px",
-                          padding: "18px 20px", borderRadius: "14px", cursor: "pointer",
-                          border: isSelected ? "2px solid #c62828" : "1px solid #e0e0e0",
-                          background: isSelected ? "#c62828" : "#fff",
-                          color: isSelected ? "white" : "#000",
-                          transition: "all 0.25s ease"
-                        }}
-                        onMouseEnter={(e) => { if (!isSelected) e.currentTarget.style.background = "#f8eaea"; }}
-                        onMouseLeave={(e) => { if (!isSelected) e.currentTarget.style.background = "#fff"; }}
-                      >
-                        {ripple && ripple.idx === idx && (
-                          <span
-                            key={ripple.id}
-                            style={{
-                              position: "absolute",
-                              left: ripple.x,
-                              top: ripple.y,
-                              width: "10px",
-                              height: "10px",
-                              marginLeft: "-5px",
-                              marginTop: "-5px",
-                              borderRadius: "50%",
-                              background: isSelected ? "rgba(255,255,255,0.5)" : "rgba(198,40,40,0.3)",
-                              pointerEvents: "none",
-                              animation: "option-ripple 0.5s ease-out forwards",
-                            }}
-                          />
-                        )}
-                        <div style={{
-                          position: "relative",
-                          minWidth: "24px", minHeight: "24px", width: "24px", height: "24px",
-                          flexShrink: 0, borderRadius: "50%",
-                          border: `2px solid ${isSelected ? "white" : "#bbb"}`,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          fontWeight: "900", fontSize: "14px", fontFamily: "Arial", lineHeight: "1",
-                          animation: pulseIdx === idx ? "badge-pop 0.35s ease" : "none",
-                        }}>
-                          {String.fromCharCode(65 + idx)}
-                        </div>
-                        <div style={{ position: "relative", fontSize: "16px", lineHeight: "1.45" }}>{opt}</div>
-                      </div>
-                    );
-                  })}
+  const isMulti = Boolean(q.multi);
+  const isSelected = isMulti
+    ? Array.isArray(answers[q.id]) && (answers[q.id].includes(String(idx)) || answers[q.id].includes(idx))
+    : answers[q.id] == idx;
+
+  return (
+    <div
+      key={idx}
+      onClick={(e) => selectOption(idx, e)}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        gap: "14px",
+        padding: "18px 20px",
+        borderRadius: "14px",
+        cursor: "pointer",
+        border: isSelected ? "2px solid #c62828" : "1px solid #e0e0e0",
+        background: isSelected ? "#c62828" : "#fff",
+        color: isSelected ? "white" : "#000",
+        transition: "all 0.25s ease"
+      }}
+      onMouseEnter={(e) => {
+        if (!isSelected) e.currentTarget.style.background = "#f8eaea";
+      }}
+      onMouseLeave={(e) => {
+        if (!isSelected) e.currentTarget.style.background = "#fff";
+      }}
+    >
+      {/* Ripple Animation */}
+      {ripple && ripple.idx === idx && (
+        <span
+          key={ripple.id}
+          style={{
+            position: "absolute",
+            left: ripple.x,
+            top: ripple.y,
+            width: "10px",
+            height: "10px",
+            marginLeft: "-5px",
+            marginTop: "-5px",
+            borderRadius: "50%",
+            background: isSelected ? "rgba(255,255,255,0.5)" : "rgba(198,40,40,0.3)",
+            pointerEvents: "none",
+            animation: "option-ripple 0.5s ease-out forwards",
+          }}
+        />
+      )}
+
+      {/* Option Badge: Circle for Single-Select, Rounded Checkbox for Multi-Select */}
+      <div
+        style={{
+          position: "relative",
+          minWidth: "24px",
+          minHeight: "24px",
+          width: "24px",
+          height: "24px",
+          flexShrink: 0,
+          borderRadius: isMulti ? "6px" : "50%",
+          border: `2px solid ${isSelected ? "white" : "#bbb"}`,
+          background: isSelected && isMulti ? "rgba(255,255,255,0.2)" : "transparent",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontWeight: "900",
+          fontSize: isMulti && isSelected ? "15px" : "14px",
+          fontFamily: "Arial",
+          lineHeight: "1",
+          animation: pulseIdx === idx ? "badge-pop 0.35s ease" : "none",
+        }}
+      >
+        {isMulti && isSelected ? "✓" : String.fromCharCode(65 + idx)}
+      </div>
+
+      <div style={{ position: "relative", fontSize: "16px", lineHeight: "1.45" }}>
+        {opt}
+      </div>
+    </div>
+  );
+})}
                 </div>
               )}
 
-              {/* ✅ ADDED: Disclaimer Text (Task 1) */}
-              {q.id !== "name" && (
-                <p style={{ fontSize: "12px", color: "#888", marginTop: "15px", textAlign: "center", fontStyle: "italic" }}>
-                  If more than one  option feels 100% correct, choose the closest one - the model is designed to adjust for that.
-                </p>
-              )}
+              {/* Place this right after the closing </div> of q.options.map */}
+{!q.multi ? (
+  <p style={{
+    fontSize: "12.5px",
+    color: "#94a3b8",
+    marginTop: "16px",
+    fontStyle: "italic",
+    textAlign: "center"
+  }}>
+    If more than one option feels 100% correct, choose the closest one — the model is designed to adjust for that.
+  </p>
+) : (
+  <p style={{
+    fontSize: "12.5px",
+    color: "#b91c1c",
+    marginTop: "16px",
+    fontWeight: "600",
+    textAlign: "center"
+  }}>
+    Select up to {q.maxSelect || 2} options that genuinely describe your situation.
+  </p>
+)}
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "35px", gap: "16px" }}>
                 {step > 0 && (
                   <button

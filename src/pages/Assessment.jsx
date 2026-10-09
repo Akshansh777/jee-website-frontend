@@ -2796,7 +2796,7 @@ const top1Score = 96; // Top 1% cutoff
       <strong style={{ color: "#92400e", display: "block", fontSize: "14.5px", marginBottom: "2px" }}>
         You're not the only one downloading this audit today.
       </strong>
-      Over <strong>5,350+ aspirants</strong> have run this diagnostic. Last year, <strong>140+ Class 12th & dropper students</strong> used this exact 15-page strategy blueprint to stop silly mistakes, fix volatile chemistry retention, and secure admissions into top IITs & NITs.
+    Last year, <strong>340+ Class 12th & dropper students</strong> used this exact 15-page strategy blueprint to stop silly mistakes, fix volatile chemistry retention, and secure admissions into top IITs & NITs.
     </div>
   </div>
 

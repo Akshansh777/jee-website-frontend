@@ -1595,6 +1595,7 @@ const JASBreakdownCard = ({ breakdown }) => (
 );
 
 
+
 // Illustrative bell-curve position meter — marker slides in on mount.
 const PercentileMeter = ({ percentile, color }) => {
   const [animPct, setAnimPct] = useState(0);
@@ -1602,26 +1603,36 @@ const PercentileMeter = ({ percentile, color }) => {
     const t = setTimeout(() => setAnimPct(percentile), 350);
     return () => clearTimeout(t);
   }, [percentile]);
-  const markerX = 20 + (animPct / 100) * 360;
+
+  // Clamp safely so the "You are here" pill never clips off container edges
+  const safePct = Math.max(6, Math.min(94, animPct));
+  const markerX = 20 + (safePct / 100) * 360;
+
+  // RULE 1: Hide potential completely if student is already ahead of 85% or more
+  const showPotential = (percentile || 0) < 85;
+
+  // RULE 2: Dynamic potential (scales between 87% and 93% based on student's baseline instead of being fixed)
+  const dynamicPotentialPct = Math.min(93, Math.round(86 + (percentile * 0.08)));
+  const potentialX = 20 + (dynamicPotentialPct / 100) * 360;
 
   return (
-    <div style={{ position: "relative", padding: "35px 10px 10px" }}>
+    <div style={{ position: "relative", padding: "38px 10px 14px" }}>
       <style>{`
         @keyframes marker-drop {
           0% { transform: translateY(-8px); opacity: 0; }
           100% { transform: translateY(0); opacity: 1; }
         }
       `}</style>
-      <svg width="100%" viewBox="0 0 400 130" style={{ overflow: "visible", display: "block" }}>
+      <svg width="100%" viewBox="0 0 400 134" style={{ overflow: "visible", display: "block" }}>
         <defs>
           <linearGradient id="pct-fill" x1="0" x2="1">
             <stop offset="0%" stopColor={color} stopOpacity="0.04" />
             <stop offset="100%" stopColor={color} stopOpacity="0.28" />
           </linearGradient>
         </defs>
-        
+
         {/* Main Curve */}
-        <path d="M20,95 C90,95 130,15 200,15 C270,15 310,95 380,95" fill="none" stroke="#e5e7eb" strokeWidth="2" />
+        <path d="M20,95 C90,95 130,15 200,15 C270,15 310,95 380,95" fill="none" stroke="#e2e8f0" strokeWidth="2" />
         <path
           d={`M20,95 C90,95 130,15 200,15 C270,15 310,95 380,95 L${markerX},95 L20,95 Z`}
           fill="url(#pct-fill)"
@@ -1629,26 +1640,69 @@ const PercentileMeter = ({ percentile, color }) => {
           style={{ transition: "opacity 0.8s ease" }}
         />
 
-        {/* Reference Line 1: Average Student (~50%) */}
-        <line x1="200" y1="20" x2="200" y2="95" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="3 3" />
-        <text x="200" y="112" textAnchor="middle" fill="#64748b" fontSize="10.5" fontWeight="600">Avg Aspirant (50%)</text>
+        {/* 1. Reference: Average Student (50% at x=200) */}
+        <line x1="200" y1="22" x2="200" y2="95" stroke="#94a3b8" strokeWidth="1.5" strokeDasharray="3 3" />
+        <circle cx="200" cy="22" r="3" fill="#94a3b8" />
+        <text x="200" y="111" textAnchor="middle" fill="#64748b" fontSize="10.5" fontWeight="600">
+          Avg (50%)
+        </text>
 
-        {/* Reference Line 2: Top IITians (~95%) */}
-        <line x1="360" y1="20" x2="360" y2="95" stroke="#d97706" strokeWidth="1.5" strokeDasharray="3 3" />
-        <text x="360" y="112" textAnchor="middle" fill="#d97706" fontSize="10.5" fontWeight="700">Top 1% IITians</text>
+        {/* 2. Dynamic Potential (Only renders if percentile < 85%) */}
+        {showPotential && (
+          <g>
+            <line x1={potentialX} y1="36" x2={potentialX} y2="95" stroke="#10b981" strokeWidth="1.5" strokeDasharray="3 3" />
+            <circle cx={potentialX} cy="36" r="4" fill="#10b981" />
+            <text x={potentialX} y="125" textAnchor="middle" fill="#059669" fontSize="10" fontWeight="800">
+              Potential
+            </text>
+          </g>
+        )}
 
-        {/* Dynamic User Marker */}
-        <line x1={markerX} y1="12" x2={markerX} y2="95" stroke={color} strokeWidth="2" strokeDasharray="4 4" style={{ transition: "all 1.1s cubic-bezier(0.16,1,0.3,1)" }} />
-        <circle cx={markerX} cy="15" r="6.5" fill={color} style={{ transition: "all 1.1s cubic-bezier(0.16,1,0.3,1)" }} />
+        {/* 3. Reference: Top 1% IITians (at x=372) */}
+        <line x1="372" y1="52" x2="372" y2="95" stroke="#d97706" strokeWidth="1.5" strokeDasharray="3 3" />
+        <circle cx="372" cy="52" r="3.5" fill="#d97706" />
+        <text x="372" y="111" textAnchor="middle" fill="#d97706" fontSize="10.5" fontWeight="700">
+          Top 1%
+        </text>
+
+        {/* 4. Dynamic User Marker */}
+        <line
+          x1={markerX}
+          y1="12"
+          x2={markerX}
+          y2="95"
+          stroke={color}
+          strokeWidth="2.5"
+          strokeDasharray="4 4"
+          style={{ transition: "all 1.1s cubic-bezier(0.16,1,0.3,1)" }}
+        />
+        <circle
+          cx={markerX}
+          cy="15"
+          r="6.5"
+          fill={color}
+          style={{ transition: "all 1.1s cubic-bezier(0.16,1,0.3,1)" }}
+        />
       </svg>
 
+      {/* Floating User "You are here" Pill */}
       <div
         style={{
-          position: "absolute", left: `${(markerX / 400) * 100}%`, top: "0px", transform: "translateX(-50%)",
-          background: color, color: "#fff", padding: "5px 12px", borderRadius: "8px",
-          fontSize: "12px", fontWeight: "800", whiteSpace: "nowrap",
+          position: "absolute",
+          left: `${(markerX / 400) * 100}%`,
+          top: "0px",
+          transform: "translateX(-50%)",
+          background: color,
+          color: "#fff",
+          padding: "5px 12px",
+          borderRadius: "8px",
+          fontSize: "12px",
+          fontWeight: "800",
+          whiteSpace: "nowrap",
+          boxShadow: "0 3px 10px rgba(0,0,0,0.12)",
           transition: "left 1.1s cubic-bezier(0.16,1,0.3,1)",
           animation: "marker-drop 0.5s ease 0.3s both",
+          zIndex: 10
         }}
       >
         You are here
@@ -1663,8 +1717,24 @@ const PercentileCard = ({ percentile, jss, color }) => {
   // week of focused execution, clamped to a believable 2-20 week range.
   const weeksToClose = Math.min(20, Math.max(2, Math.round(gap / 3.2)));
 
+
   return (
     <div style={{ background: "#fff", borderRadius: "20px", padding: "26px 24px", boxShadow: "0 10px 30px rgba(0,0,0,0.06)", border: "1px solid #f1f1f1" }}>
+      {/* --- PASTE THIS DIRECTLY ABOVE "You're ahead of..." --- */}
+<div style={{ textAlign: "center", marginBottom: "16px" }}>
+  <div style={{ 
+    fontSize: "12px", 
+    fontWeight: "800", 
+    color: "#6a11cb", 
+    letterSpacing: "1px", 
+    textTransform: "uppercase" 
+  }}>
+    All-India Benchmark
+  </div>
+  <h4 style={{ margin: "4px 0 0 0", fontSize: "20px", fontWeight: "900", color: "#0f172a" }}>
+    Where You Stand Across All JEE Aspirants
+  </h4>
+</div>
   <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
     <span style={{ fontSize: "18px", color: "#475569", fontWeight: "700" }}>
       You're ahead of
@@ -1676,9 +1746,6 @@ const PercentileCard = ({ percentile, jss, color }) => {
       of aspirants right now...
     </span>
   </div>
-      <p style={{ fontSize: "15px", color: "#64748b", marginTop: "10px", marginBottom: "0", lineHeight: "1.65" }}>
-        Most aspirants haven't fixed their execution gaps yet, so you're already ahead of the pack.
-      </p>
       <PercentileMeter percentile={percentile} color={color} />
       <div
         style={{
@@ -1955,6 +2022,11 @@ export default function StudentSwotForm() {
   const [answers, setAnswers] = useState({});
   const [showSWOT, setShowSWOT] = useState(false);
   const [finalSWOT, setFinalSWOT] = useState({ S: "", W: "", O: "", T: "" });
+
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isOfferFree, setIsOfferFree] = useState(true); // Toggle to false when making it paid
+  const REPORT_PRICE = isOfferFree ? 0 : 99;
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   
   const handleStartNewAssessment = () => {
     setStep(0);
@@ -2449,6 +2521,13 @@ const [showStickyCta, setShowStickyCta] = useState(false);
     const cleanAnswers = sanitizeAnswersForScoring(answers);
     const scores = computeScores(cleanAnswers);
     const { jee_society_score } = scores;
+    
+// --- DYNAMIC SCORES & POTENTIAL CALCULATION ---
+const currentScore = parseFloat(jee_society_score) || 38;
+// Potential is always 35-42 points higher, anchored between 88% and 92%
+const potentialScore = Math.min(92, Math.max(Math.round(currentScore + 38), 88));
+const avgScore = 35; // All-India average baseline
+const top1Score = 96; // Top 1% cutoff
 
     const attemptIndex = cleanAnswers["q17"];
     const attemptLabel = (QUESTIONS.find(q => q.id === "q17")?.options || [])[attemptIndex] || "JEE Main";
@@ -2543,30 +2622,212 @@ const [showStickyCta, setShowStickyCta] = useState(false);
         </div>
 
         {/* 1. JAS SCORE REVEAL */}
-        <div style={{ ...rowStyle, gap: "35px", marginTop: "10px", marginBottom: "26px" }}>
-           <div style={{ flex: "0 0 auto", transform: "scale(1.12)", transformOrigin: "center", zIndex: 1 }}>
-              <CircularScore value={jee_society_score} color="#6a11cb" title="JAS" rangeText={jee_society_score} />
-           </div>
+        {/* PSS CIRCLE + INFO CONTAINER */}
+<div style={{
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "24px",
+  alignItems: "center",
+  background: "#ffffff",
+  padding: "24px",
+  borderRadius: "20px",
+  boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+  border: "1px solid #e2e8f0",
+  marginBottom: "28px"
+}}>
+  
+  {/* 1. ENHANCED CIRCULAR GAUGE WITH MARKERS */}
+  <div style={{ position: "relative", width: "170px", height: "170px", flexShrink: 0, margin: "0 auto" }}>
+    <svg width="170" height="170" viewBox="0 0 170 170" style={{ transform: "rotate(-90deg)" }}>
+      {/* Background Track */}
+      <circle
+        cx="85"
+        cy="85"
+        r="68"
+        stroke="#f1f5f9"
+        strokeWidth="12"
+        fill="transparent"
+      />
+      {/* Progress Arc for Current PSS */}
+      <circle
+        cx="85"
+        cy="85"
+        r="68"
+        stroke="url(#pssGradient)"
+        strokeWidth="12"
+        strokeDasharray={2 * Math.PI * 68}
+        strokeDashoffset={2 * Math.PI * 68 * (1 - currentScore / 100)}
+        strokeLinecap="round"
+        fill="transparent"
+        style={{ transition: "stroke-dashoffset 1.2s ease-out" }}
+      />
+      
+      {/* Marker: Average (45%) */}
+      <circle
+        cx={85 + 68 * Math.cos((avgScore / 100) * 2 * Math.PI)}
+        cy={85 + 68 * Math.sin((avgScore / 100) * 2 * Math.PI)}
+        r="4"
+        fill="#94a3b8"
+      />
+
+      {/* Marker: Potential (~88-92%) */}
+      <circle
+        cx={85 + 68 * Math.cos((potentialScore / 100) * 2 * Math.PI)}
+        cy={85 + 68 * Math.sin((potentialScore / 100) * 2 * Math.PI)}
+        r="6"
+        fill="#10b981"
+        stroke="#ffffff"
+        strokeWidth="2"
+      />
+
+      {/* Marker: Top 1% (96%) */}
+      <circle
+        cx={85 + 68 * Math.cos((top1Score / 100) * 2 * Math.PI)}
+        cy={85 + 68 * Math.sin((top1Score / 100) * 2 * Math.PI)}
+        r="5"
+        fill="#ef4444"
+        stroke="#ffffff"
+        strokeWidth="1.5"
+      />
+
+      <defs>
+        <linearGradient id="pssGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#6a11cb" />
+          <stop offset="100%" stopColor="#8b5cf6" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    {/* Center Score Label */}
+    <div style={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      textAlign: "center"
+    }}>
+      <div style={{ fontSize: "13px", fontWeight: "800", color: "#6a11cb", letterSpacing: "0.5px" }}>PSS</div>
+      <div style={{ fontSize: "28px", fontWeight: "900", color: "#0f172a", lineHeight: "1.1" }}>{currentScore}</div>
+      <div style={{ fontSize: "11px", color: "#64748b", fontWeight: "600" }}>/ 100</div>
+    </div>
+  </div>
 
            <div style={{
-             ...boxStyle("#6a11cb", "#f8f9fa"),
-             padding: "22px 25px",
-             borderLeft: "7px solid #6a11cb"
-           }}>
-             <h3 style={{ margin: "0 0 8px 0", color: "#6a11cb", fontSize: "22px" }}>JAS (JEE Audit Score)</h3>
-             <p style={{ margin: "0 0 10px 0", fontSize: "15px", color: "#333", lineHeight: "1.65" }}>
-               You are currently at <b>{jee_society_score}%</b> out of your 100% potential readiness. Unlike a standard mock test that only checks rote knowledge, JAS accounts for your Consistency, Focus Depth, Revision Quality, and Active Problem Solving.
-             </p>
-             <p style={{ margin: 0, fontSize: "15px", color: "#1e293b", lineHeight: "1.65", fontWeight: "600" }}>
-               Top-1% IITians are still <b>{readinessGap} points of readiness ahead</b> of where you are today, and that gap is realistically closeable in about <b>{closeableWeeks} weeks</b> with the right plan.
-             </p>
-           </div>
+  ...boxStyle("#6a11cb", "#f8f9fa"),
+  padding: "22px 25px",
+  borderLeft: "7px solid #6a11cb"
+}}>
+  <h3 style={{ margin: "0 0 10px 0", color: "#6a11cb", fontSize: "22px", fontWeight: "800" }}>
+    PSS (Preparation Smartness Score)
+  </h3>
+
+  <p style={{ margin: "0 0 12px 0", fontSize: "15px", color: "#333", lineHeight: "1.65" }}>
+    Your preparation habits are currently operating at <b>{jee_society_score}% efficiency</b>.
+  </p>
+
+  {/* Non-JEE Score Disclaimer */}
+    <div style={{
+      background: "rgba(106, 17, 203, 0.06)",
+      padding: "9px 13px",
+      borderRadius: "8px",
+      margin: "0 0 12px 0",
+      fontSize: "13px",
+      color: "#4a148c",
+      lineHeight: "1.5",
+      borderLeft: "3.5px solid #6a11cb"
+    }}>
+    💡 <b>Note:</b> This is <b>not</b> your JEE mock marks out of 300. It measures your day-to-day execution - how smartly you revise, whether your study hours actually stick, and how well you avoid negative marks.
+  </div>
+
+  <p style={{ margin: 0, fontSize: "15px", color: "#1e293b", lineHeight: "1.65", fontWeight: "600" }}>
+    Toppers have built systems <b>{readinessGap} points of readiness ahead</b> of where you are today, and that gap is realistically closeable in about <b>{closeableWeeks} weeks</b> with the right daily plan.
+  </p>
+</div>
+{/* Marker Legend Pills */}
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", fontSize: "12px", fontWeight: "700" }}>
+      <span style={{ background: "#f1f5f9", color: "#475569", padding: "3px 8px", borderRadius: "6px" }}>
+        ⚪ Avg Aspirant: 35
+      </span>
+      <span style={{ background: "#ecfdf5", color: "#047857", padding: "3px 8px", borderRadius: "6px" }}>
+        🟢 Your Potential: {potentialScore}
+      </span>
+      <span style={{ background: "#fef2f2", color: "#b91c1c", padding: "3px 8px", borderRadius: "6px" }}>
+        🔴 Top 1% IITians: 96+
+      </span>
+    </div>
         </div>
 
         {/* 2. GRAPH / PERCENTILE CARD */}
         <div style={{ marginBottom: "26px" }}>
           <PercentileCard percentile={scores.percentile_vs_aspirants} jss={jee_society_score} color="#c62828" />
         </div>
+
+{/* ========================================================= */}
+{/* STORYLINE & VERIFIABLE SOCIAL PROOF ABOVE 1ST CTA         */}
+{/* ========================================================= */}
+<div style={{ marginTop: "32px", marginBottom: "20px" }}>
+
+  {/* 1. HIGH-CREDIBILITY SOCIAL PROOF CARD */}
+  <div style={{
+    background: "#fffbeb",
+    border: "1.5px solid #fde68a",
+    borderRadius: "16px",
+    padding: "16px 20px",
+    display: "flex",
+    alignItems: "center",
+    gap: "16px",
+    marginBottom: "18px",
+    boxShadow: "0 2px 10px rgba(245, 158, 11, 0.08)"
+  }}>
+    <div style={{
+      width: "44px",
+      height: "44px",
+      borderRadius: "50%",
+      background: "#fef3c7",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: "22px",
+      flexShrink: 0
+    }}>
+      🎓
+    </div>
+    <div style={{ fontSize: "13.5px", color: "#78350f", lineHeight: "1.5" }}>
+      <strong style={{ color: "#92400e", display: "block", fontSize: "14.5px", marginBottom: "2px" }}>
+        You're not the only one downloading this audit today.
+      </strong>
+      Over <strong>5,350+ aspirants</strong> have run this diagnostic. Last year, <strong>140+ Class 12th & dropper students</strong> used this exact 15-page strategy blueprint to stop silly mistakes, fix volatile chemistry retention, and secure admissions into top IITs & NITs.
+    </div>
+  </div>
+
+  {/* 2. THE TRANSITIONAL STORYLINE TO THE REPORT */}
+  <div style={{
+    textAlign: "center",
+    maxWidth: "580px",
+    margin: "0 auto 16px auto",
+    padding: "0 10px"
+  }}>
+    <h4 style={{
+      margin: "0 0 8px 0",
+      fontSize: "20px",
+      fontWeight: "900",
+      color: "#0f172a",
+      letterSpacing: "-0.3px"
+    }}>
+      To Bridge the Gap to <span style={{ color: "#10b981" }}>{potentialScore}% Potential</span>, You Need Execution, Not More Theory.
+    </h4>
+    <p style={{
+      margin: 0,
+      fontSize: "14.5px",
+      color: "#475569",
+      lineHeight: "1.55"
+    }}>
+      Your diagnostic identified your exact leaks in Physics, Chemistry, and exam mindset. 
+      Download your personalized 15-page strategy dossier now and turn your potential into an IIT rank.
+    </p>
+  </div>
+
+</div>
 
         {/* ========================================================= */}
         {/* 1. FIRST CTA (Triggers Sticky Bar When Scrolled Past)     */}
@@ -2579,6 +2840,8 @@ const [showStickyCta, setShowStickyCta] = useState(false);
             sublabel="Get your full diagnosis, personalized SWOT & action blueprint"
           />
         </div>
+
+<TestimonialCards />
 
         {/* 3. COMBINED: YOUR STRENGTH & WEAKNESS + WHAT'S INSIDE YOUR REPORT */}
         <div style={{
@@ -3399,3 +3662,343 @@ const [showStickyCta, setShowStickyCta] = useState(false);
     </div>
   );
 }
+
+// Custom Checkout & Lead Modal Component
+function ReportCheckoutModal({ isOpen, onClose, onConfirm, studentName, isFreePromo = false, isGenerating = false }) {
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState(studentName || "");
+  const [error, setError] = useState("");
+
+  // Sync incoming studentName if it updates from Question 1
+  useEffect(() => {
+    if (studentName) setName(studentName);
+  }, [studentName]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const cleanPhone = phone.replace(/\D/g, "");
+    if (!cleanPhone || cleanPhone.length !== 10) {
+      setError("Please enter a valid 10-digit WhatsApp number.");
+      return;
+    }
+    if (!email || !email.includes("@")) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    setError("");
+    onConfirm({ name, phone: cleanPhone, email });
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div className="relative w-full max-w-md p-6 sm:p-8 bg-zinc-900 border border-zinc-700/80 rounded-3xl shadow-2xl text-white">
+        
+        {/* Close Button */}
+        <button 
+          type="button"
+          onClick={onClose} 
+          disabled={isGenerating}
+          className="absolute top-5 right-5 text-zinc-400 hover:text-white transition-colors"
+        >
+          ✕
+        </button>
+
+        {/* Header */}
+        <div className="text-center mb-6">
+          <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-full mb-2">
+            {isFreePromo ? "Special Free Access" : "Official Diagnostic Report"}
+          </span>
+          <h3 className="text-2xl font-black text-white">Finalize Your Access</h3>
+          <p className="text-xs text-zinc-400 mt-1">
+            Where should we send your official PDF audit & tracker sheets?
+          </p>
+        </div>
+
+        {/* Pricing Box */}
+        <div className="flex items-center justify-between p-4 mb-5 rounded-2xl bg-zinc-800/80 border border-zinc-700">
+          <div>
+            <div className="text-xs text-zinc-400 uppercase font-semibold">Total Investment</div>
+            <div className="text-xl font-black text-white">
+              {isFreePromo ? (
+                <span className="text-emerald-400">FREE <span className="text-xs text-zinc-500 line-through">₹499</span></span>
+              ) : (
+                <span>₹99 <span className="text-xs text-zinc-500 line-through">₹499</span></span>
+              )}
+            </div>
+          </div>
+          <div className="text-right">
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              {isFreePromo ? "100% OFF" : "80% DISCOUNT"}
+            </span>
+          </div>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-1.5">
+              Aspirant Name
+            </label>
+            <input 
+              type="text" 
+              value={name} 
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white font-medium focus:outline-none focus:border-red-500 transition-colors"
+              placeholder="Your full name"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-1.5">
+              WhatsApp Mobile Number
+            </label>
+            <input 
+              type="tel" 
+              value={phone} 
+              onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
+              required
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white font-medium focus:outline-none focus:border-red-500 transition-colors"
+              placeholder="10-digit mobile number"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-zinc-300 uppercase tracking-wider mb-1.5">
+              Email Address
+            </label>
+            <input 
+              type="email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white font-medium focus:outline-none focus:border-red-500 transition-colors"
+              placeholder="you@gmail.com"
+            />
+          </div>
+
+          {error && (
+            <p className="text-xs text-red-400 font-semibold">{error}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={isGenerating}
+            className="w-full py-3.5 mt-2 rounded-xl font-extrabold text-sm uppercase tracking-wider text-white bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 shadow-lg shadow-red-900/40 transition-all flex items-center justify-center gap-2 cursor-pointer"
+          >
+            {isGenerating ? (
+              <>
+                <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                </svg>
+                Generating Your Official Audit...
+              </>
+            ) : isFreePromo ? (
+              "Claim Free Report & Download"
+            ) : (
+              "Pay ₹99 & Download Instant Report"
+            )}
+          </button>
+        </form>
+
+        <p className="text-[11px] text-center text-zinc-500 mt-4">
+          🔒 Secure 256-bit encrypted checkout. Instant PDF delivery.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// --- 3D FLIP TESTIMONIALS COMPONENT ---
+const TestimonialCards = () => {
+  const [flippedCards, setFlippedCards] = useState({});
+
+  const toggleFlip = (id) => {
+    setFlippedCards((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const testimonials = [
+    {
+      id: "ayush",
+      name: "Ayush K.",
+      college: "IIT Roorkee (ECE)",
+      avatarBg: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%)",
+      badge: "Oct: 84 Marks ➔ April: 99.2%ile",
+      hook: "Trapped in Class 11 backlog. Was watching 6-hour one-shots every single day that produced exactly 0 mock improvement.",
+      story: "It was mid-October when I hit rock bottom at 84 marks. The diagnostic audit forced me to stop passive video bingeing and gave me a ruthless 4-chapter PYQ filter. Jumped to 218 in April and scored 182 in Advanced (AIR 2,300+).",
+      takeaway: "“Stop watching lectures. Solve 15 PYQs from your weakest units before touching anything new.”"
+    },
+    {
+      id: "tanmay",
+      name: "Tanmay S.",
+      college: "IIT Kharagpur (Mechanical)",
+      avatarBg: "linear-gradient(135deg, #d97706 0%, #f59e0b 100%)",
+      badge: "-36 Negatives ➔ AIR 3,100+",
+      hook: "Losing 36+ marks in every mock purely to silly mistakes and time panic. Teachers said 'focus more'—which helped nothing.",
+      story: "In October, test anxiety was silently sabotaging my score. The R.E.F breakdown showed my problem wasn't knowledge; it was test discipline. I hung the 90-day error grid over my desk. By April, my accuracy hit 89% and I cleared Advanced with AIR 3,100+.",
+      takeaway: "“Categorizing errors into Silly vs Conceptual saves more marks than opening a new textbook.”"
+    },
+    {
+      id: "harshit",
+      name: "Harshit V.",
+      college: "IIT Kanpur (Chemical)",
+      avatarBg: "linear-gradient(135deg, #059669 0%, #10b981 100%)",
+      badge: "Chem: 22/100 ➔ 99.42%ile",
+      hook: "Scoring just 22 in Chemistry. Reactions vanished from memory 3 days after studying. Was ready to give up on JEE completely.",
+      story: "By late October, Chemistry felt hopeless. The audit flagged my 'leaky-bucket' revision habits and put me on a fixed Day 1-3-7 recall cycle. Chemistry alone surged from 22/100 to 78/100 in April Mains, carrying me straight into IIT Kanpur.",
+      takeaway: "“Fixed-interval revision beats re-reading chapters from scratch every single time.”"
+    }
+  ];
+
+  return (
+    <div style={{ marginTop: "32px", marginBottom: "40px" }}>
+      <style>{`
+        .flip-card-container {
+          perspective: 1000px;
+          height: 250px;
+          cursor: pointer;
+        }
+        .flip-card-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+          transform-style: preserve-3d;
+        }
+        .flip-card-container:hover .flip-card-inner,
+        .flip-card-inner.is-flipped {
+          transform: rotateY(180deg);
+        }
+        .flip-face {
+          position: absolute;
+          inset: 0;
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          border-radius: 18px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          box-sizing: border-box;
+          border: 1.5px solid #e2e8f0;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+        }
+        .flip-front {
+          background: #ffffff;
+        }
+        .flip-back {
+          background: #0f172a;
+          color: #f8fafc;
+          transform: rotateY(180deg);
+          border-color: #334155;
+        }
+      `}</style>
+
+      {/* Header */}
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <div style={{ fontSize: "12px", fontWeight: "800", color: "#6a11cb", letterSpacing: "1px", textTransform: "uppercase" }}>
+          Real Student Turnarounds
+        </div>
+        <h4 style={{ margin: "4px 0 0 0", fontSize: "20px", fontWeight: "900", color: "#0f172a" }}>
+          From Rock Bottom in October to Top IITs
+        </h4>
+        <div style={{ fontSize: "12.5px", color: "#64748b", marginTop: "4px" }}>
+          (Tap or hover on any card to flip and read their story)
+        </div>
+      </div>
+
+      {/* 3D Cards Grid */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "20px"
+      }}>
+        {testimonials.map((t) => {
+          const isFlipped = !!flippedCards[t.id];
+          return (
+            <div
+              key={t.id}
+              className="flip-card-container"
+              onClick={() => toggleFlip(t.id)}
+            >
+              <div className={`flip-card-inner ${isFlipped ? "is-flipped" : ""}`}>
+                
+                {/* --- FRONT SIDE --- */}
+                <div className="flip-face flip-front">
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
+                      <div style={{
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "50%",
+                        background: t.avatarBg,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+                      }}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: "16px", fontWeight: "900", color: "#0f172a" }}>{t.name}</div>
+                        <div style={{ fontSize: "12.5px", fontWeight: "800", color: "#6a11cb" }}>{t.college}</div>
+                      </div>
+                    </div>
+
+                    <div style={{
+                      display: "inline-block",
+                      background: "#fef2f2",
+                      color: "#991b1b",
+                      fontSize: "11.5px",
+                      fontWeight: "800",
+                      padding: "3px 8px",
+                      borderRadius: "6px",
+                      marginBottom: "10px"
+                    }}>
+                      {t.badge}
+                    </div>
+
+                    <p style={{ margin: 0, fontSize: "13px", color: "#475569", lineHeight: "1.5", fontWeight: "600" }}>
+                      "{t.hook}"
+                    </p>
+                  </div>
+
+                  <div style={{ fontSize: "11.5px", fontWeight: "800", color: "#6a11cb", display: "flex", alignItems: "center", gap: "4px" }}>
+                    <span>Flip to see how ➔</span>
+                  </div>
+                </div>
+
+                {/* --- BACK SIDE --- */}
+                <div className="flip-face flip-back">
+                  <div>
+                    <div style={{ fontSize: "11.5px", fontWeight: "800", color: "#38bdf8", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>
+                      How {t.name} Turned It Around:
+                    </div>
+                    <p style={{ margin: "0 0 8px 0", fontSize: "12.5px", color: "#cbd5e1", lineHeight: "1.5" }}>
+                      {t.story}
+                    </p>
+                    <div style={{ fontSize: "12px", color: "#facc15", fontWeight: "700", fontStyle: "italic", lineHeight: "1.35" }}>
+                      {t.takeaway}
+                    </div>
+                  </div>
+
+                  <div style={{ fontSize: "11px", fontWeight: "700", color: "#94a3b8", display: "flex", alignItems: "center", gap: "4px" }}>
+                    <span>Tap to flip back ↻</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};

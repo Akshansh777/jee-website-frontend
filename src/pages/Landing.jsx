@@ -219,7 +219,7 @@ const Landing = () => {
             IS MY <br/>
             <span className="hero-highlight">PREPARATION ENOUGH?</span>
           </h1>
-          <h2 className="hero-subtitle">In just 4 minutes, get a data-backed report that shows your true JEE standing, what's going wrong and how exactly to fix it!</h2>
+          <h2 className="hero-subtitle">In just 4 minutes, uncover your hidden score leaks and get the exact plan to fix them.</h2>
           
           
           <button onClick={() => navigate("/assessment")} className="cta-main">

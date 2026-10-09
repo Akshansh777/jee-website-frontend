@@ -53,13 +53,17 @@ function joinMentorNotes(keys, data) {
 
 // =========================================================
 // SUBJECT DEEP-DIVE PAGES (Physics / Chemistry / Maths)
+// 3-Tier Persona Architecture:
+// 1. Subject Master (PhD reverence + tactical JEE leverage)
+// 2. Diagnostic Mirror (Uncanny pattern diagnosis of exam reality)
+// 3. Tactical Remedy (Actionable prescription + One Piece of Advice)
 // =========================================================
+
 const MARKS_ESTIMATE = {
   physics: [72, 52, 28, 65],
   chemistry: [75, 45, 25, 50],
   maths: [70, 40, 15, 35],
 };
-
 const SUBJECT_QUESTION_KEY = { physics: "q4", chemistry: "q5", maths: "q6" };
 const SUBJECT_LABEL = { physics: "Physics", chemistry: "Chemistry", maths: "Maths" };
 
@@ -68,102 +72,138 @@ function estimateMarks(subject, idx) {
   return arr[idx] !== undefined ? arr[idx] : 45;
 }
 
-const SUBJECT_AFFIRMATION = {
-  physics: "Physics is already your anchor. Protect it, don't let it quietly eat time that Chemistry or Maths actually needs.",
-  chemistry: "Chemistry is already working for you. Keep the revision light and consistent, don't let it slip while you focus elsewhere.",
-  maths: "You're already ahead of most aspirants in Maths. Push for 90+ instead of \"good enough\", it's the subject NTA checks first in a tie.",
+// ---------------------------------------------------------------------------
+// 1. PERSONA: THE SUBJECT MASTER & JEE STRATEGIST
+// Inspires reverence for the discipline and reveals its asymmetric JEE edge
+// ---------------------------------------------------------------------------
+const SUBJECT_EXPERT_ESSENCE = {
+  physics: `Physics is not a chore of memorizing 300 disjointed formulas; it is the mathematical language of physical reality. From the conservation of angular momentum in rotating galaxies to electron drift across semiconductor junctions, the universe runs on just a handful of unbreakable conservation laws. In JEE, Physics is your greatest tactical accelerator: the moment you realize almost every 'hard' problem is merely basic Newton's laws and energy conservation disguised in complex language, anxiety disappears and genuine solving intuition takes over.`,
+
+  chemistry: `Chemistry is the highest-leverage asymmetric asset on the entire JEE paper. While Physics and Maths demand grueling multi-step calculations, Chemistry rewards spatial visualization, thermodynamic logic, and pattern recognition. It is the atomic architecture of matter. More importantly, an average mark in Chemistry takes one-third the time to secure compared to Maths: master your reaction mechanisms and periodic trends, and you will bank 70+ marks in 40 minutes, creating the exact time cushion needed to conquer the rest of the exam.`,
+
+  maths: `Mathematics in JEE is high-intensity intellectual warfare. It is the ultimate crucible of structural thinking, endurance, and analytical grit. NTA places Maths as the primary tie-breaker for an exact reason: when thousands of aspirants land on identical total marks, your Maths score alone decides your rank and branch. Winning in Maths does not require solving the entire paper; it requires possessing the sharp tactical vision to hunt down the 12 to 14 cleanest problems and executing them with ruthless arithmetic precision.`,
 };
 
-const CASE_STUDIES = {
+// ---------------------------------------------------------------------------
+// 2. PERSONA: THE DIAGNOSTIC MIRROR ("Astrologer" Persona)
+// Hyper-accurate diagnosis of their study habits, cognitive traps, and test-hall reality
+// ---------------------------------------------------------------------------
+const SUBJECT_MIRROR_READING = {
   physics: {
+    0: `You treat Physics as your emotional comfort zone. When a study session feels overwhelming, you naturally open Physics because solving it gives you a quick feeling of productivity. In mocks, you attack Physics first to build confidence, but your ego becomes a silent trap: you will burn 8 to 10 minutes wrestling with an intricate mechanics problem just to prove you can crack it. You believe Physics is carrying your preparation, but in reality, the excessive hours you pour into it are quietly starving your aggregate score.`,
+    1: `You understand classroom lectures effortlessly and nod along with every derivation on the board. You leave class convinced the chapter is mastered. But the second a fresh mock question scrambles two concepts—like rolling motion on an inclined plane threaded with a magnetic field—your pen freezes. You stare at the blank margin, second-guessing which formula applies while 5 minutes tick away. You don't have a knowledge gap; you have a translation gap between passive theory and active execution.`,
+    2: `You have convinced yourself that you simply lack the "innate brain" for Physics. When you open a test, the wall of variables and boundary conditions triggers immediate avoidance. Here is the unvarnished reality of what is happening: you aren't bad at Physics; your foundation in Vectors, Kinematics, and basic Calculus was left shaky in month one. Trying to solve Electrostatics or Rotational Dynamics without rock-solid vector resolution is like attempting to construct a skyscraper on wet mud.`,
+    3: `Your Physics score is an erratic rollercoaster that depends entirely on the question paper's mood. When the paper tests direct formula applications in Modern Physics or Current Electricity, you feel invincible; the moment multi-concept Mechanics or Wave Optics dominates, your score collapses. You cherry-pick the chapters you enjoy and quietly skim the rest, hoping the exam paper will miraculously favor your comfort zones.`,
+  },
+  chemistry: {
+    0: `Chemistry is currently scoring well for you, but you treat it with dangerous complacency. Because the reactions feel intuitive right now, you push revision to the end of the week. What you do not see is the silent, exponential decay of memory: inorganic exception tables, reagent nuances, and physical equilibrium constants vanish without warning unless anchored by structured recall cycles. Your high score is vulnerable to the first tough paper you encounter.`,
+    1: `Your relationship with Chemistry is a cycle of rapid learning followed by rapid evaporation. You read a chapter on Tuesday, recall every reaction on Wednesday, and by the following Sunday, four distinct reagents look completely identical. Your mock marks fluctuate wildly between 30 and 65 based purely on how recently you crammed your notes. You mistake the visual comfort of re-reading notes for actual active recall under negative-marking pressure.`,
+    2: `You have written Chemistry off as a mindless memorization chore that you refuse to respect. You open Organic Chemistry, see hundreds of named reactions, and shut down. You tell yourself that you will "cram Inorganic in the final two months," carrying a persistent cloud of guilt into every study block. In mock exams, you rush through Chemistry in 20 minutes, leave half the paper blank, and pray that Maths or Physics will somehow bridge the deficit.`,
+    3: `You suffer from a severe split personality inside this single subject. You can solve Physical Chemistry numericals comfortably all day while actively avoiding Organic mechanisms—or you understand General Organic Chemistry but completely blank out on Inorganic coordination compounds. You keep grinding the 30% of Chemistry you already like while leaving the remaining 70% completely unarmored.`,
+  },
+  maths: {
+    0: `You possess genuine mathematical talent, but your pride is your greatest liability in an exam hall. When a challenging question appears in Definite Integration or Complex Numbers, you take it as an insult to your intellect. You refuse to move on, spending 12 minutes grinding through brutal algebra to force an answer. You crack the problem, but in doing so, you sacrifice 3 clean, high-yield questions waiting untouched at the back of the paper.`,
+    1: `You have constructed an artificial ceiling around your mathematical ability. You stick strictly to your safe comfort zones—Matrices, Determinants, Vectors, and 3D Geometry. The moment a question touches Permutations, Probability, or Calculus, you immediately back away. You enter every mock expecting to score around 40, and that expectation becomes reality because you refuse to attempt the calculated risks needed to reach 65+.`,
+    2: `You look at the Maths section with genuine dread. During mocks, you attempt 5 or 6 problems with a racing pulse, make 3 careless arithmetic slips, and walk away with single-digit marks. You have started quietly rationalizing that Physics and Chemistry will compensate for Maths. But under NTA's primary tie-breaking protocol, an abandoned Maths section permanently caps your percentile ceiling and guarantees you lose every single tie.`,
+    3: `Your conceptual understanding is solid, but your execution bleeds marks on every page. You conceptualize the solution accurately, write down the right first three steps, and then drop a minus sign or bungle basic quadratic arithmetic at the very end. You walk out believing you scored 60, only to discover negative marking gutted your paper down to 35. You don't have a concept deficit; you have a calculation discipline deficit.`,
+  },
+};
+
+// ---------------------------------------------------------------------------
+// 3. PERSONA: THE MENTOR REMEDY (Tactical Prescriptions & "One Piece of Advice")
+// ---------------------------------------------------------------------------
+const SUBJECT_TACTICAL_REMEDIES = {
+  physics: {
+    0: {
+      action: "Cap your Physics problem-solving to exactly 45 minutes of mixed PYQ revision every alternate day. Stop seeking comfort in your strongest subject; redirect those saved daily hours into your weakest paper.",
+      lesson: "One Piece of Advice: In JEE, having one 85-mark subject and two 35-mark subjects produces a lower percentile than a balanced 65-65-65. Never let your favorite subject cannibalize your preparation.",
+    },
     1: {
-      story: "One student from our mentorship program was in a similar spot with Physics. He was scoring consistently 45-50 out of 100 for months, he understood every concept in class, but froze the moment a question looked unfamiliar in mocks. We didn't add more theory. We had him solve 15 previous-year Physics questions daily from just 4 chapters, Rotational Motion, Electrostatics, Current Electricity, and Modern Physics, without watching a single new lecture. Three weeks later his Physics score was 68/100. He wasn't missing knowledge. He was missing exposure to how JEE actually twists standard concepts.",
-      takeaway: "Lesson for you: stop watching more lectures. You already know the theory. Solve 15 PYQs a day from your weakest 4 chapters before touching anything new.",
+      action: "Stop watching theory lectures and one-shots. You already know the theory. Pick your weakest 3 chapters and solve 15 unassisted PYQs daily with a stopwatch running. Struggle with the question for 4 minutes before checking any solution.",
+      lesson: "One Piece of Advice: Confidence in Physics is built by wrestling with problems in the rough notebook, not by watching someone else solve them on a screen.",
     },
     2: {
-      story: "I had a student last year who was convinced he \"just wasn't a Physics person.\" He was scoring under 20 out of 100. We checked his basics instead, Vectors, Units and Dimensions, Kinematics, all shaky. We stopped him from touching Modern Physics or Electrostatics for 3 weeks. Pure NCERT-level basics, nothing else. When he came back to the harder chapters, they suddenly made sense. He jumped to 44/100 in the very next mock.",
-      takeaway: "Lesson for you: you're not bad at Physics. You're missing the foundation Physics is built on. Go back to Vectors and Kinematics before anything else.",
+      action: "Implement a strict 14-day foundation reset. Do not touch Modern Physics or Magnetism yet. Master Vectors, Differentiation/Integration basics, and Kinematics until resolving components is second nature. Then tackle Units & Dimensions.",
+      lesson: "One Piece of Advice: You are not bad at Physics; you are missing the mathematical alphabet it is written in. Fix the foundation and the advanced chapters will unlock naturally.",
     },
     3: {
-      story: "One mentee of ours was already scoring 78 out of 100 in Physics and kept spending four or more hours a day on it anyway, because it felt productive and he genuinely enjoyed it. Meanwhile his Chemistry sat at 30/100. We capped his Physics time at 45 minutes a day, revision only, no new content, and moved those hours to Chemistry. His Physics score barely moved, 79 to 81. His Chemistry jumped from 30 to 58 in six weeks.",
-      takeaway: "Lesson for you: the subject you love most is probably not the one costing you the most marks. Cap your time on it and redirect the hours to whichever subject you're avoiding.",
+      action: "Build a High-Yield Master List: Modern Physics, Current Electricity, Semiconductor Devices, and Gravitation. These 4 units alone account for 35-40% of JEE Main Physics marks with minimal conceptual twist.",
+      lesson: "One Piece of Advice: Standardize your baseline first. You do not need 100% syllabus mastery to score 70+; you need 100% command over the predictable 50%.",
     },
   },
   chemistry: {
+    0: {
+      action: "Implement a daily 20-minute morning active-recall ritual. Review Inorganic trend charts and Organic reaction roadmaps on a fixed Day 1, Day 3, Day 7 schedule. Maintain your speed so Chemistry continues buying you time for Maths.",
+      lesson: "One Piece of Advice: High Chemistry scorers lose marks through silent memory decay. Treat recall as a daily maintenance habit, not an exam-week sprint.",
+    },
     1: {
-      story: "One student told us Chemistry kept slipping through his fingers. He could recall a reaction perfectly the day after studying it, and completely forget it three days later. His Chemistry score swung between 25 and 60 depending on how recently he'd revised. We put him on a strict cycle, revisit every topic on Day 1, Day 3, and Day 7 after first studying it, no exceptions. Six weeks later his lowest Chemistry mock score was 55, and it stopped swinging.",
-      takeaway: "Lesson for you: your problem isn't understanding, it's retention. Fixed-interval revision, Day 1, 3, 7, matters more than how many new topics you cover.",
+      action: "Institute the strict 1-3-7 Spaced Retrieval Rule: whenever you finish an Organic or Inorganic chapter, test yourself on blank paper on Day 1, Day 3, and Day 7. Write out reagents from memory without glancing at your notes.",
+      lesson: "One Piece of Advice: Re-reading your notes creates the illusion of learning. Forcing your brain to retrieve a reaction from a blank page is what permanently locks it into long-term memory.",
     },
     2: {
-      story: "One of our mentees avoided Chemistry almost entirely, barely opened the book, and was scoring under 15 out of 100. We didn't ask him to love it. We picked the single highest-yield, lowest-effort chapter, Chemical Bonding, gave him just the NCERT lines and 20 PYQs, nothing else. He scored 14 out of 20 on those questions on his first attempt, his first real win in Chemistry in months. That one win changed how he approached the whole subject.",
-      takeaway: "Lesson for you: you don't need to fix your relationship with Chemistry. You need one small, fast win to prove to yourself you can actually do this.",
+      action: "Do not attempt the entire syllabus. Target Chemical Bonding, Coordination Compounds, and Periodic Table first. These three chapters unlock the conceptual logic for 60% of all Inorganic and Organic chemistry questions.",
+      lesson: "One Piece of Advice: You do not need to fall in love with Chemistry. You need one fast, reliable 25-mark win in a high-yield chapter to prove to yourself that this subject is conquerable.",
     },
     3: {
-      story: "A student of ours was almost perfect in half of Chemistry, near-perfect on Mole Concept and Thermodynamics, but scored almost zero on Organic reaction mechanisms, he treated them as impossible to memorize. We reframed Organic as logic, not memory, six reaction families instead of two hundred individual reactions. Within a month his Organic-specific score went from 8 out of 40 to 26 out of 40.",
-      takeaway: "Lesson for you: your strong half is fine, don't touch it. Your weak half needs a different strategy. Most likely you're studying it the wrong way, not too little.",
+      action: "Reframe Organic Chemistry from memory into logic: group all reactions into 6 core mechanistic families rather than 200 individual reactions. For Physical Chemistry, drill 20 formula-application questions under a 90-second timer.",
+      lesson: "One Piece of Advice: Stop treating Chemistry as one uniform subject. Attack your strong half for speed, and restructure your weak half through first-principles logic.",
     },
   },
   maths: {
+    0: {
+      action: "Enforce the 3-Minute Hard Ceiling during practice: if an approach does not show clear progress within 180 seconds, flag the question and drop it immediately. Train yourself to hunt for shortest methods and alternate substitutions.",
+      lesson: "One Piece of Advice: JEE awards the exact same +4 marks for a 45-second Statistics question as it does for an 8-minute Definite Integration marathon. Leave your ego outside the exam hall.",
+    },
     1: {
-      story: "One mentee of ours only ever touched the safe chapters in Maths, Vectors, 3D Geometry, Straight Lines, and skipped everything else. He was hard-capped at 45 out of 100 no matter what. We had him add one new chapter every 10 days, starting with Permutations and Combinations. His ceiling broke for the first time in months, 45 became 58, then 64.",
-      takeaway: "Lesson for you: your safe zone has a hard ceiling. Every chapter you refuse to touch is a ceiling you've built yourself.",
+      action: "Break your mathematical ceiling by mastering 2 new chapters this fortnight: Vector-3D and Straight Lines. These chapters reward formula memorization and structured steps rather than non-routine creative flashes.",
+      lesson: "One Piece of Advice: Your ceiling exists because you only attempt questions you already know how to solve. Progress begins the moment you sit with an unfamiliar topic and work through the discomfort.",
     },
     2: {
-      story: "One student of ours was in your exact spot. Maths felt impossible, he'd scored 12 out of 100 for two straight mocks and was ready to write it off completely. We didn't ask him to love Maths. We asked him to master exactly 4 chapters, Quadratic Equations, Sets and Relations, Statistics, and Straight Lines, the most formula-based, least \"clever-thinking-required\" chapters in the syllabus. Six weeks later his Maths score was 46 out of 100. His overall percentile moved more from that than from anything he did in Physics or Chemistry that term.",
-      takeaway: "Lesson for you: stop trying to complete the full Maths syllabus. Target the 4 chapters above first, they reward formula-memorization, not genius, and they're worth real marks.",
+      action: "Abandon full-syllabus ambitions immediately. Focus 100% of your energy on mastering 4 formula-centric chapters: Quadratic Equations, Sets & Relations, Statistics, and Mathematical Reasoning/Vectors. That guarantees 25-35 marks with zero genius required.",
+      lesson: "One Piece of Advice: In JEE Maths, scoring 35 marks puts you ahead of 75% of all test-takers nationwide. Do not aim for 80; lock down 35 clean, unshakeable marks first.",
     },
     3: {
-      story: "I've seen this pattern often. A mentee would spend 25 minutes on a single hard integration problem on principle, refusing to move on, while three easy Matrices questions worth the same total marks sat untouched. We stopped him from attempting anything he couldn't solve in under 3 minutes during practice, no exceptions, for two weeks. His accuracy on easy-to-medium questions went from 60% to 91%, and his Maths score jumped 22 points without him getting any \"smarter\" at all.",
-      takeaway: "Lesson for you: JEE gives the same marks for an easy question and a hard one. Chasing the hard ones to prove something is costing you marks you could get for free.",
+      action: "Slow down your rough work by 10%. Divide your rough sheet into clean, numbered vertical columns. Write every calculation step legibly. Calculate twice before bubbling the final answer to eliminate the -1 mark unforced error drain.",
+      lesson: "One Piece of Advice: You do not need to learn more advanced mathematics to jump 20 marks; you simply need to stop donating marks to careless arithmetic slips.",
     },
   },
 };
 
-function getSubjectContent(subject, idx) {
-  if (idx === 0) {
-    return { isAffirmation: true, text: SUBJECT_AFFIRMATION[subject] };
+// ---------------------------------------------------------------------------
+// DYNAMIC CROSS-SUBJECT BALANCE & COMPENSATION ENGINE
+// ---------------------------------------------------------------------------
+function getCrossSubjectDirective(subject, marksBySubject) {
+  const currentMarks = marksBySubject[subject] || 35;
+  const otherKeys = Object.keys(marksBySubject).filter((k) => k !== subject);
+  const otherAvg = otherKeys.reduce((sum, k) => sum + (marksBySubject[k] || 35), 0) / otherKeys.length;
+  const gap = currentMarks - otherAvg;
+
+  if (gap >= 18) {
+    const weakerSubject = otherKeys.reduce((a, b) => (marksBySubject[a] < marksBySubject[b] ? a : b));
+    return `⚠️ Strategic Balance Warning: Your ${SUBJECT_LABEL[subject]} is outperforming your ${SUBJECT_LABEL[weakerSubject]} by ~${Math.round(gap)} marks. Capping practice hours here and transferring 60 daily minutes to ${SUBJECT_LABEL[weakerSubject]} will increase your aggregate JEE percentile far faster.`;
+  } else if (gap <= -18) {
+    const strongerSubject = otherKeys.reduce((a, b) => (marksBySubject[a] > marksBySubject[b] ? a : b));
+    return `🎯 Score Multiplier Opportunity: Your ${SUBJECT_LABEL[subject]} is lagging ~${Math.round(Math.abs(gap))} marks behind your ${SUBJECT_LABEL[strongerSubject]}. Raising this floor to a safe baseline is your fastest route to a 99+ percentile jump, as each additional mark here requires far less effort than squeezing extra marks out of your top subject.`;
+  } else {
+    return `⚖️ Tri-Subject Synergy: Your performance across Physics, Chemistry, and Maths is relatively balanced. Maintain this equilibrium: avoid spending more than 40% of your daily solving time on any single subject, and preserve your Chemistry speed to protect your Maths endurance.`;
   }
-  const cs = CASE_STUDIES[subject][idx];
-  return { isAffirmation: false, ...(cs || CASE_STUDIES[subject][1]) };
 }
 
-function detectCompensation(subject, marksBySubject) {
-  const others = Object.keys(marksBySubject).filter((k) => k !== subject);
-  const otherAvg = others.reduce((sum, k) => sum + marksBySubject[k], 0) / others.length;
-  const gap = otherAvg - marksBySubject[subject];
-  if (gap < 20) return null;
-
-  const strongerSubject = others.reduce((a, b) => (marksBySubject[a] > marksBySubject[b] ? a : b));
-  return {
-    gap: Math.round(gap),
-    strongerLabel: SUBJECT_LABEL[strongerSubject],
-    weakerLabel: SUBJECT_LABEL[subject],
-  };
-}
-
-function buildTieBreakInsight(subject) {
-  if (subject === "maths") {
-    return `Because thousands of aspirants land on near-identical total scores every year, ties are common. When they happen, NTA resolves them using <b>Maths score first</b>, before Physics or Chemistry are even considered. A weak Maths score doesn't just cost you marks directly, it also puts you at a real disadvantage against equally-scored peers when final ranks get assigned.`;
-  }
-  if (subject === "physics") {
-    return `If your total score ties with another aspirant's, NTA checks Maths first, then <b>Physics second</b>. Physics is your tie-break safety net, worth strengthening even beyond what your total score alone suggests.`;
-  }
-  return `Chemistry is checked last in NTA's tie-break order (after Maths, then Physics), but with lakhs of aspirants landing on similar totals, even a "last resort" tie-breaker resolves real ranks every single year.`;
-}
-
-// --- Combined "Where You Stand" + "Peer Reference" Gauge ---
+// ---------------------------------------------------------------------------
+// COMBINED "WHERE YOU STAND" + "PEER REFERENCE" GAUGE
+// ---------------------------------------------------------------------------
 function buildCombinedStandGauge(marks, subjectLabel) {
   const pct = Math.max(6, Math.min(94, marks));
   const avgPct = 45;
   const topPct = 90;
 
   return `
-    <div style="margin-bottom: 20px;">
-      <div style="font-size: 16px; font-weight: 800; color: #111; margin-bottom: 12px; letter-spacing: -0.2px;">
+    <div style="margin-bottom: 8px;">
+      <div style="font-size: 16px; font-weight: 800; color: #111; margin-bottom: 8px; letter-spacing: -0.2px;">
         Where You Stand: ${subjectLabel}
       </div>
       
-      <div style="position: relative; margin-top: 24px; margin-bottom: 12px;">
+      <div style="position: relative; margin-top: 24px; margin-bottom: 10px;">
         <div style="height: 12px; border-radius: 6px; background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 25%, #eab308 55%, #f97316 80%, #ef4444 100%); position: relative; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
           <div style="position: absolute; left: ${avgPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
           <div style="position: absolute; left: ${topPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
@@ -176,7 +216,7 @@ function buildCombinedStandGauge(marks, subjectLabel) {
           <div style="width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #c62828;"></div>
         </div>
 
-        <div style="position: relative; height: 16px; margin-top: 6px; font-size: 11.5px; font-weight: 700;">
+        <div style="position: relative; height: 16px; margin-top: 5px; font-size: 11.5px; font-weight: 700;">
           <span style="position: absolute; left: 0; color: #94a3b8;">Baseline</span>
           <span style="position: absolute; left: ${avgPct}%; transform: translateX(-50%); color: #475569;">Typical Aspirant</span>
           <span style="position: absolute; left: ${topPct}%; transform: translateX(-50%); color: #b45309;">Top 1% IITians</span>
@@ -186,38 +226,132 @@ function buildCombinedStandGauge(marks, subjectLabel) {
   `;
 }
 
+// --- CROSS-SUBJECT SCORE IMBALANCE DETECTOR ---
+function detectCompensation(subject, marksBySubject = {}) {
+  const others = Object.keys(marksBySubject).filter((k) => k !== subject);
+  if (others.length === 0) return null;
+
+  const currentMarks = marksBySubject[subject] !== undefined ? marksBySubject[subject] : 35;
+  const otherAvg = others.reduce((sum, k) => sum + (marksBySubject[k] || 35), 0) / others.length;
+  const gap = otherAvg - currentMarks;
+
+  if (gap < 20) return null;
+
+  const strongerSubject = others.reduce((a, b) => 
+    ((marksBySubject[a] || 0) > (marksBySubject[b] || 0) ? a : b)
+  );
+
+  return {
+    gap: Math.round(gap),
+    strongerLabel: SUBJECT_LABEL[strongerSubject] || strongerSubject,
+    weakerLabel: SUBJECT_LABEL[subject] || subject,
+  };
+}
+
+function getSubjectContent(subject, idx) {
+  const safeIdx = Math.min(3, Math.max(0, Number(idx) || 1));
+  return {
+    expert: SUBJECT_EXPERT_ESSENCE[subject] || "",
+    mirror: (SUBJECT_MIRROR_READING[subject] && SUBJECT_MIRROR_READING[subject][safeIdx]) || "",
+    remedy: (SUBJECT_TACTICAL_REMEDIES[subject] && SUBJECT_TACTICAL_REMEDIES[subject][safeIdx]) || {}
+  };
+}
+
 function buildSubjectPageHTML(subject, data, marksBySubject) {
   const qKey = SUBJECT_QUESTION_KEY[subject];
-  const idx = Number(data.answers?.[qKey]);
-  const marks = marksBySubject[subject];
-  const content = getSubjectContent(subject, idx);
-  const compensation = detectCompensation(subject, marksBySubject);
+  // Safe index parser (0, 1, 2, or 3)
+  const idx = Math.min(3, Math.max(0, Number(data?.answers?.[qKey]) || 1));
+  const marks = (marksBySubject && marksBySubject[subject]) ? marksBySubject[subject] : 45;
 
-  const compensationBlock = compensation ? `
-    <div style="margin-bottom: 14px; font-size: 16px; font-weight: 900; color: #9a3412; line-height: 1.45;">
-      ⚠️ Score Imbalance: Your ${compensation.strongerLabel} is outperforming your ${compensation.weakerLabel} by ~${compensation.gap} marks. Compensating across subjects does not work under JEE aggregate ranking.
-    </div>
-  ` : "";
-
-  const caseStudyBlock = content.isAffirmation ? `
-    <div class="subj-affirmation">${content.text}</div>
-  ` : `
-    <div class="subj-case-story">${content.story}</div>
-    <div class="subj-case-takeaway">${content.takeaway}</div>
-  `;
+  const expertText = SUBJECT_EXPERT_ESSENCE[subject] || "";
+  const mirrorText = (SUBJECT_MIRROR_READING[subject] && SUBJECT_MIRROR_READING[subject][idx]) 
+    || SUBJECT_MIRROR_READING[subject][1];
+  const remedyObj = (SUBJECT_TACTICAL_REMEDIES[subject] && SUBJECT_TACTICAL_REMEDIES[subject][idx]) 
+    || SUBJECT_TACTICAL_REMEDIES[subject][1];
+  const balanceDirective = typeof getCrossSubjectDirective === "function" 
+    ? getCrossSubjectDirective(subject, marksBySubject || {}) 
+    : "";
 
   return `
     <div class="subj-stand-wrap">
       ${buildCombinedStandGauge(marks, SUBJECT_LABEL[subject])}
     </div>
 
-    <div class="subj-box-1">
-      ${compensationBlock}
-      <div class="subj-tiebreak-text">${buildTieBreakInsight(subject)}</div>
+    <!-- 1. The Subject Master & Strategist -->
+    <div class="subj-box-expert">
+      <div class="subj-badge badge-expert">⚡ THE MASTER'S PERSPECTIVE & TACTICAL EDGE</div>
+      <div class="subj-expert-text">${expertText}</div>
     </div>
 
-    <div class="subj-box-2">
-      ${caseStudyBlock}
+    <!-- 2. The Diagnostic Mirror (Exam Reality) -->
+    <div class="subj-box-mirror">
+      <div class="subj-badge badge-mirror">🔍 THE DIAGNOSTIC MIRROR: YOUR EXAM REALITY</div>
+      <div class="subj-mirror-text">${mirrorText}</div>
+    </div>
+
+    <!-- 3. The Tactical Remedy & One Piece of Advice -->
+    <div class="subj-box-remedy">
+      <div class="subj-badge badge-remedy">🎯 THE STRATEGIC PRESCRIPTION</div>
+      <div class="subj-remedy-text">${remedyObj.action}</div>
+      ${balanceDirective ? `<div class="subj-balance-banner">${balanceDirective}</div>` : ""}
+      <div class="subj-advice-box">${remedyObj.lesson}</div>
+    </div>
+  `;
+}
+
+function buildSubjectPageHTML(subject, data, marksBySubject) {
+  const qKey = SUBJECT_QUESTION_KEY[subject];
+  // Safe index parser (0, 1, 2, or 3)
+  const idx = Math.min(3, Math.max(0, Number(data?.answers?.[qKey]) || 1));
+  const marks = (marksBySubject && marksBySubject[subject] !== undefined) 
+    ? marksBySubject[subject] 
+    : 45;
+
+  // 1. Subject Master / Expert Text
+  const expertText = (SUBJECT_EXPERT_ESSENCE && SUBJECT_EXPERT_ESSENCE[subject]) 
+    || "Mastering this subject requires strong fundamentals and tactical question selection.";
+
+  // 2. Diagnostic Mirror Text
+  const mirrorText = (SUBJECT_MIRROR_READING && SUBJECT_MIRROR_READING[subject] && SUBJECT_MIRROR_READING[subject][idx])
+    || (SUBJECT_MIRROR_READING && SUBJECT_MIRROR_READING[subject] && SUBJECT_MIRROR_READING[subject][1])
+    || "You are losing marks to avoidable translation errors under timed test pressure.";
+
+  // 3. Tactical Remedy & One Piece of Advice
+  const remedyObj = (SUBJECT_TACTICAL_REMEDIES && SUBJECT_TACTICAL_REMEDIES[subject] && SUBJECT_TACTICAL_REMEDIES[subject][idx])
+    || (SUBJECT_TACTICAL_REMEDIES && SUBJECT_TACTICAL_REMEDIES[subject] && SUBJECT_TACTICAL_REMEDIES[subject][1])
+    || { 
+      action: "Focus on high-yield chapters and solve 15 timed PYQs daily.", 
+      lesson: "One Piece of Advice: Standardize your baseline before chasing complex multi-concept questions." 
+    };
+
+  // Cross-Subject Balance Banner
+  const balanceDirective = typeof getCrossSubjectDirective === "function" 
+    ? getCrossSubjectDirective(subject, marksBySubject || {}) 
+    : "";
+
+  return `
+    <div class="subj-stand-wrap">
+      ${buildCombinedStandGauge(marks, SUBJECT_LABEL[subject])}
+    </div>
+
+    <!-- 1. THE SUBJECT MASTER & STRATEGIST -->
+    <div class="subj-box-expert">
+      <div class="subj-badge badge-expert">⚡ THE MASTER'S PERSPECTIVE & TACTICAL EDGE</div>
+      <div class="subj-expert-text">${expertText}</div>
+    </div>
+
+    <!-- 2. THE DIAGNOSTIC MIRROR (TEST-HALL REALITY) -->
+    <div class="subj-box-mirror">
+      <div class="subj-badge badge-mirror">🔍 THE DIAGNOSTIC MIRROR: YOUR EXAM REALITY</div>
+      <div class="subj-mirror-text">${mirrorText}</div>
+    </div>
+
+    <!-- 3. THE TACTICAL REMEDY & CROSS-SUBJECT BALANCE -->
+    <div class="subj-box-remedy">
+      <div class="subj-badge badge-remedy">🎯 THE STRATEGIC PRESCRIPTION</div>
+      <div class="subj-remedy-text">${remedyObj.action}</div>
+      ${balanceDirective ? `<div class="subj-balance-banner">${balanceDirective}</div>` : ""}
+      <div class="subj-advice-box">${remedyObj.lesson}</div>
     </div>
   `;
 }
@@ -254,7 +388,6 @@ async function generatePDF(data) {
     p8: getAsset("page8_exec.png"),
     p9: getAsset("page9_parents.png"),
     p11: getAsset("page11_conclusion.png"),
-    taskSubmission: getAsset("task_submission.png"),
     p12: getAsset("page12_habit.png"),
     p13: getAsset("page13_mock.png"),
     p14: getAsset("page14_mock_analysis_guide.png"),
@@ -315,39 +448,79 @@ async function generatePDF(data) {
     "Share this exact list with your mentor and ask them to check in on it in 7 days. Accountability from someone outside your own head changes follow-through more than willpower does."
   ];
   
-// --- PAGE 6 DYNAMIC TEXT & BIGGER FONT ENGINE ---
-  const refNotes = joinMentorNotes(["q7", "q8", "q10"], data);
+// --- PAGE 6 DYNAMIC TEXT & STRUCTURED R.E.F HEADINGS ENGINE ---
+  const q7Note = (typeof joinMentorNotes === "function" ? joinMentorNotes(["q7"], data) : "") || get("q7", data)?.mentor_note || "";
+  const q8Note = (typeof joinMentorNotes === "function" ? joinMentorNotes(["q8"], data) : "") || get("q8", data)?.mentor_note || "";
+  const q10Note = (typeof joinMentorNotes === "function" ? joinMentorNotes(["q10"], data) : "") || get("q10", data)?.mentor_note || "";
   const barrierNotes = get("q11", data)?.mentor_note || "Focus on eliminating your core barrier with dedicated daily practice.";
-  const totalP6Length = (refNotes + barrierNotes).length;
 
-  // Base tier: Large, bold, commanding font
-  let p6FontSize = "18px";
-  let p6LineHeight = "1.58";
-  let p6Padding = "24px 28px";
-  let p6TitleMargin = "20px 0 16px";
-  let p6TitleSize = "26px";
-
-  // Graceful scaling steps if multiple multi-select options are selected
-  if (totalP6Length > 2200) {
-    p6FontSize = "14px";
-    p6LineHeight = "1.40";
-    p6Padding = "16px 22px";
-    p6TitleMargin = "12px 0 10px";
-    p6TitleSize = "22px";
-  } else if (totalP6Length > 1650) {
-    p6FontSize = "15.5px";
-    p6LineHeight = "1.46";
-    p6Padding = "18px 24px";
-    p6TitleMargin = "15px 0 12px";
-    p6TitleSize = "23px";
-  } else if (totalP6Length > 1150) {
-    p6FontSize = "16.8px";
-    p6LineHeight = "1.52";
-    p6Padding = "20px 26px";
-    p6TitleMargin = "18px 0 14px";
-    p6TitleSize = "24.5px";
+  // Build structured blocks with clean heading badges
+  const refBlocks = [];
+  if (q7Note) {
+    refBlocks.push(`
+      <div style="margin-bottom: 12px;">
+        <div style="display: inline-block; font-size: 11px; font-weight: 900; letter-spacing: 0.8px; text-transform: uppercase; color: #7a1010; background: rgba(122, 16, 16, 0.08); border: 1px solid rgba(122, 16, 16, 0.22); padding: 2px 8px; border-radius: 5px; margin-bottom: 5px;">
+          RECALL & RETENTION
+        </div>
+        <div>${q7Note}</div>
+      </div>
+    `);
+  }
+  if (q8Note) {
+    refBlocks.push(`
+      <div style="margin-bottom: 12px;">
+        <div style="display: inline-block; font-size: 11px; font-weight: 900; letter-spacing: 0.8px; text-transform: uppercase; color: #7a1010; background: rgba(122, 16, 16, 0.08); border: 1px solid rgba(122, 16, 16, 0.22); padding: 2px 8px; border-radius: 5px; margin-bottom: 5px;">
+          FOCUS & SOLVING SPEED
+        </div>
+        <div>${q8Note}</div>
+      </div>
+    `);
+  }
+  if (q10Note) {
+    refBlocks.push(`
+      <div>
+        <div style="display: inline-block; font-size: 11px; font-weight: 900; letter-spacing: 0.8px; text-transform: uppercase; color: #7a1010; background: rgba(122, 16, 16, 0.08); border: 1px solid rgba(122, 16, 16, 0.22); padding: 2px 8px; border-radius: 5px; margin-bottom: 5px;">
+          ERROR CONTROL & EXAM TRAPS
+        </div>
+        <div>${q10Note}</div>
+      </div>
+    `);
   }
 
+  // Define BOTH variables so neither template call can fail
+  const refNotes = refBlocks.join("");
+  const refBlocksHTML = refNotes;
+
+  // Calculate raw character length (excluding HTML tags) to keep font scaling accurate
+  const totalP6Length = (q7Note + q8Note + q10Note + barrierNotes).length;
+
+  // Base tier: Large, bold, commanding font adjusted for heading badges
+  let p6FontSize = "17px";
+  let p6LineHeight = "1.52";
+  let p6Padding = "20px 26px";
+  let p6TitleMargin = "16px 0 12px";
+  let p6TitleSize = "24px";
+
+  // Graceful scaling steps if multi-selection makes the text longer
+  if (totalP6Length > 2200) {
+    p6FontSize = "13px";
+    p6LineHeight = "1.36";
+    p6Padding = "14px 20px";
+    p6TitleMargin = "10px 0 8px";
+    p6TitleSize = "20px";
+  } else if (totalP6Length > 1650) {
+    p6FontSize = "14.5px";
+    p6LineHeight = "1.42";
+    p6Padding = "16px 22px";
+    p6TitleMargin = "12px 0 10px";
+    p6TitleSize = "21.5px";
+  } else if (totalP6Length > 1150) {
+    p6FontSize = "15.8px";
+    p6LineHeight = "1.46";
+    p6Padding = "18px 24px";
+    p6TitleMargin = "14px 0 11px";
+    p6TitleSize = "23px";
+  }
   const html = `
 <!DOCTYPE html>
 <html>
@@ -430,74 +603,118 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 }
 
 /* ========================================================= */
-/* PAGES 3a/3b/3c: NATURAL-FIT, HIGH-LEGIBILITY SUBJECT CARDS*/
+/* PAGES 3a/3b/3c: 3-TIER PERSONA SUBJECT ARCHITECTURE       */
+/* (Expertise -> Diagnostic Mirror -> Remedy & Advice)       */
 /* ========================================================= */
 .subj-content {
   position: absolute;
-  top: 170px;
+  top: 165px;
   left: 50px;
   width: 693px;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Clean proportional gap between gauge and boxes */
+  gap: 12px; /* Tight, proportional spacing to fit all 3 sections cleanly */
   box-sizing: border-box;
 }
 
 .subj-stand-wrap {
   width: 100%;
+  flex-shrink: 0;
+  margin-bottom: 2px;
 }
 
-/* Box 1: Hugs text naturally with high-contrast text */
-.subj-box-1 {
-  background: #FFFAE5;
-  border: 2px solid #fed7aa;
-  border-radius: 22px;
-  padding: 22px 28px;
+/* --- SECTION BADGES --- */
+.subj-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 2.5px 9px;
+  border-radius: 6px;
+  margin-bottom: 7px;
+}
+.badge-expert {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+}
+.badge-mirror {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+.badge-remedy {
+  background: rgba(198, 40, 40, 0.08);
+  color: #991b1b;
+  border: 1px solid rgba(198, 40, 40, 0.22);
+}
+
+/* --- BOX 1: THE SUBJECT EXPERT & MASTER PERSPECTIVE --- */
+.subj-box-expert {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-left: 6px solid #1e293b;
+  border-radius: 18px;
+  padding: 14px 20px;
   box-sizing: border-box;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
 }
-
-.subj-tiebreak-text {
-  font-size: 19px;
-  line-height: 1.58;
+.subj-expert-text {
+  font-size: 14px;
+  line-height: 1.52;
   color: #1e293b;
-  font-weight: 800;
-}
-
-/* Box 2: Hugs story & takeaway with commanding bold font */
-.subj-box-2 {
-  background: #FFFAE5;
-  border: 2px solid #fed7aa;
-  border-radius: 22px;
-  padding: 26px 30px;
-  box-sizing: border-box;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
-}
-
-.subj-case-story {
-  font-size: 18px;
-  line-height: 1.62;
-  color: #334155;
-  margin-bottom: 16px;
   font-weight: 700;
 }
 
-.subj-case-takeaway {
-  font-size: 19px;
-  line-height: 1.52;
-  color: #7a1010;
-  font-weight: 900;
+.subj-box-mirror {
+  background: #FFFDF5;
+  border: 1.5px solid #fed7aa;
+  border-left: 6px solid #d97706;
+  border-radius: 18px;
+  padding: 15px 20px;
+  box-sizing: border-box;
+}
+.subj-mirror-text {
+  font-size: 14.5px;
+  line-height: 1.54;
+  color: #334155;
+  font-weight: 700;
 }
 
-/* Option A Affirmation Layout */
-.subj-affirmation {
-  font-size: 22px;
-  line-height: 1.6;
+.subj-box-remedy {
+  background: #FFFAE5;
+  border: 2px solid #fed7aa;
+  border-left: 6px solid #c62828;
+  border-radius: 20px;
+  padding: 16px 22px;
+  box-sizing: border-box;
+}
+.subj-remedy-text {
+  font-size: 14.5px;
+  line-height: 1.52;
   color: #1e293b;
-  font-weight: 900;
-  font-style: italic;
-  text-align: center;
-  padding: 12px 10px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.subj-balance-banner {
+  background: rgba(254, 215, 170, 0.55);
+  border-radius: 10px;
+  padding: 8px 13px;
+  margin-bottom: 10px;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #7a1010;
+  line-height: 1.45;
+}
+.subj-advice-box {
+  background: #ffffff;
+  border: 1.5px dashed #c62828;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: 800;
+  color: #7a1010;
+  line-height: 1.48;
 }
 
 /* PAGE 5: PEER COMPARISON */
@@ -566,6 +783,30 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   border-top: 1.5px dashed rgba(74, 4, 2, 0.22);
   font-weight: 800;
   color: #7a1010;
+}
+
+/* R.E.F Sub-Section Badges */
+.ref-section-block {
+  margin-bottom: 14px;
+}
+.ref-section-block:last-child {
+  margin-bottom: 0;
+}
+.ref-badge {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #7a1010;
+  background: rgba(122, 16, 16, 0.08);
+  border: 1px solid rgba(122, 16, 16, 0.22);
+  padding: 2px 9px;
+  border-radius: 6px;
+  margin-bottom: 5px;
+}
+.ref-para-text {
+  display: block;
 }
 
 /* ========================================================= */
@@ -709,10 +950,15 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
+<!-- ========================================================= -->
+<!-- PAGES 3a, 3b, 3c: 3-TIER SUBJECT DEEP DIVES               -->
+<!-- ========================================================= -->
+
 <!-- PAGE 3a: PHYSICS DEEP DIVE -->
 <div class="page">
   <img src="${images.p3a}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
+    <!-- Clickable overlay matching the Canva badge position (offset for left doodle) -->
     <a href="https://www.jeesociety.in" target="_blank" class="pill-link-subject"></a>
     <div class="subj-content">${buildSubjectPageHTML("physics", data, marksBySubject)}</div>
   </div>
@@ -736,19 +982,19 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-<!-- PAGE 6: R.E.F & BARRIER -->
+<!-- PAGE 6: R.E.F & BARRIER (WITH SECTION HEADINGS) -->
 <div class="page">
   <img src="${images.p6}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
     <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
     <div class="p6-flow-wrap">
       
-      <!-- 1. Top Card: R.E.F Analysis -->
+      <!-- 1. Top Card: Structured R.E.F Analysis -->
       <div 
         class="p6-card-ref" 
-        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height:${p6LineHeight};"
+        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height: ${p6LineHeight};"
       >
-        <div>${refNotes}</div>
+        <div>${refBlocksHTML}</div>
         <div class="p6-closing-note" style="font-size: ${p6FontSize};">
           This is a discipline issue, not a knowledge issue, and it's exactly the kind of pattern a mentor spots before you do, because you can't see your own blind spots from inside them.
         </div>
@@ -757,7 +1003,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
       <!-- 2. Section Heading -->
       <div 
         class="p6-section-title" 
-        style="margin: ${p6TitleMargin}; font-size:${p6TitleSize};"
+        style="margin: ${p6TitleMargin}; font-size: ${p6TitleSize};"
       >
         BIGGEST BARRIER & MINDSET
       </div>
@@ -765,9 +1011,12 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
       <!-- 3. Bottom Card: Barrier & Mindset -->
       <div 
         class="p6-card-barrier" 
-        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height:${p6LineHeight};"
+        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height: ${p6LineHeight};"
       >
-        <div>${barrierNotes}</div>
+        <div>
+          <div class="ref-badge" style="margin-bottom: 8px;">🛑 CORE BEHAVIORAL BLOCK</div>
+          <div>${barrierNotes}</div>
+        </div>
       </div>
 
     </div>
@@ -838,11 +1087,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-<!-- TASK SUBMISSION -->
-${images.taskSubmission ? `
-<div class="page">
-  <img src="${images.taskSubmission}" class="bg-img" onerror="this.style.display='none'"/>
-</div>` : ""}
 
 <!-- PRINTABLES -->
 <div class="page">
@@ -874,14 +1118,6 @@ ${images.taskSubmission ? `
   <img src="${images.sundayTracker}" class="bg-img" onerror="this.style.display='none'"/>
 </div>
 
-<!-- MINDSET SYSTEMS -->
-<div class="page">
-  <img src="${images.p6b}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
-  </div>
-</div>
-
 <!-- CHAPTER PREREQUISITES (END OF DOCUMENT) -->
 ${images.physics ? `
 <div class="page">
@@ -900,6 +1136,14 @@ ${images.maths ? `
   <img src="${images.maths}" class="bg-img"/>
   ${attemptType === "2027" ? `<div class="black-mask bm-physics">${attemptType}</div>` : ""}
 </div>` : ""}
+
+<!-- MINDSET SYSTEMS -->
+<div class="page">
+  <img src="${images.p6b}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
+  </div>
+</div>
 
 <!-- MENTORSHIP PROMO -->
 <div class="page">

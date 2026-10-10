@@ -2816,15 +2816,6 @@ const top1Score = 96; // Top 1% cutoff
     }}>
       To achieve your highest potential, <span style={{ color: "#10b981" }}>Download</span> your report.
     </h4>
-    <p style={{
-      margin: 0,
-      fontSize: "14.5px",
-      color: "#475569",
-      lineHeight: "1.55"
-    }}>
-      Your diagnostic identified your exact leaks in Physics, Chemistry, and exam mindset. 
-      Download your personalized 15-page strategy dossier now and turn your potential into an IIT rank.
-    </p>
   </div>
 
 </div>

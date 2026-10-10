@@ -2796,7 +2796,7 @@ const top1Score = 96; // Top 1% cutoff
       <strong style={{ color: "#92400e", display: "block", fontSize: "14.5px", marginBottom: "2px" }}>
         You're not the only one downloading this audit today.
       </strong>
-    Last year, <strong>340+ Class 12th & dropper students</strong> used this exact 15-page strategy blueprint to stop silly mistakes, fix volatile chemistry retention, and secure admissions into top IITs & NITs.
+    Last year, <strong>340+ Class 12th & dropper students</strong> used this exact 15-page strategy blueprint and secure admissions into top IITs & NITs.
     </div>
   </div>
 
@@ -2814,7 +2814,7 @@ const top1Score = 96; // Top 1% cutoff
       color: "#0f172a",
       letterSpacing: "-0.3px"
     }}>
-      To Bridge the Gap to <span style={{ color: "#10b981" }}>{potentialScore}% Potential</span>, You Need Execution, Not More Theory.
+      To achieve your highest potential, <span style={{ color: "#10b981" }}>Download</span> your report.
     </h4>
     <p style={{
       margin: 0,

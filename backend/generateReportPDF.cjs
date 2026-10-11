@@ -60,9 +60,13 @@ function joinMentorNotes(keys, data) {
 // =========================================================
 
 const MARKS_ESTIMATE = {
-  physics: [72, 52, 28, 65],
-  chemistry: [75, 45, 25, 50],
-  maths: [70, 40, 15, 35],
+  // Index 0 = Best Answer (Elite 90+ tier)
+  // Index 1 = Mid-tier / Concept execution gap
+  // Index 2 = Foundational gap / Low score
+  // Index 3 = Erratic / Unbalanced
+  physics: [94, 55, 28, 65],
+  chemistry: [95, 48, 25, 55],
+  maths: [92, 45, 18, 50],
 };
 const SUBJECT_QUESTION_KEY = { physics: "q4", chemistry: "q5", maths: "q6" };
 const SUBJECT_LABEL = { physics: "Physics", chemistry: "Chemistry", maths: "Maths" };
@@ -177,6 +181,12 @@ function getCrossSubjectDirective(subject, marksBySubject) {
   const otherKeys = Object.keys(marksBySubject).filter((k) => k !== subject);
   const otherAvg = otherKeys.reduce((sum, k) => sum + (marksBySubject[k] || 35), 0) / otherKeys.length;
   const gap = currentMarks - otherAvg;
+
+// Edge case: All subjects are scoring 88+
+  const isAllElite = Object.values(marksBySubject).every((m) => m >= 88);
+  if (isAllElite) {
+    return `🏆 Elite Tri-Subject Mastery: Your Physics, Chemistry, and Mathematics readiness are all performing in the top decile. Your focus should not be syllabus coverage, but full-length 6-hour JEE Advanced mock simulations to eliminate unforced errors.`;
+  }
 
   if (gap >= 18) {
     const weakerSubject = otherKeys.reduce((a, b) => (marksBySubject[a] < marksBySubject[b] ? a : b));

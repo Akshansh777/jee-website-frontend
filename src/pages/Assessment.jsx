@@ -1735,17 +1735,24 @@ const PercentileCard = ({ percentile, jss, color }) => {
     Where You Stand Across All JEE Aspirants
   </h4>
 </div>
-  <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-    <span style={{ fontSize: "18px", color: "#475569", fontWeight: "700" }}>
-      You're ahead of
-    </span>
-    <span style={{ fontSize: "42px", fontWeight: "900", color, lineHeight: "1" }}>
-      {Math.round(percentile)}%
-    </span>
-    <span style={{ fontSize: "18px", color: "#475569", fontWeight: "700" }}>
-      of aspirants right now...
-    </span>
-  </div>
+  {(() => {
+  const roundedPct = Math.min(99, Math.max(1, Math.round(percentile || 0)));
+  const isTopTier = roundedPct >= 99;
+
+  return (
+    <div style={{ display: "flex", alignItems: "baseline", gap: "8px", flexWrap: "wrap" }}>
+      <span style={{ fontSize: "18px", color: "#475569", fontWeight: "700" }}>
+        {isTopTier ? "You're in the" : "You're ahead of"}
+      </span>
+      <span style={{ fontSize: "42px", fontWeight: "900", color, lineHeight: "1" }}>
+        {isTopTier ? "Top 1%" : `${roundedPct}%`}
+      </span>
+      <span style={{ fontSize: "18px", color: "#475569", fontWeight: "700" }}>
+        {isTopTier ? "of all aspirants nationwide 🏆" : "of aspirants right now..."}
+      </span>
+    </div>
+  );
+})()}
       <PercentileMeter percentile={percentile} color={color} />
       <div
         style={{
@@ -2522,12 +2529,24 @@ const [showStickyCta, setShowStickyCta] = useState(false);
     const scores = computeScores(cleanAnswers);
     const { jee_society_score } = scores;
     
-// --- DYNAMIC SCORES & POTENTIAL CALCULATION ---
-const currentScore = parseFloat(jee_society_score) || 38;
-// Potential is always 35-42 points higher, anchored between 88% and 92%
-const potentialScore = Math.min(92, Math.max(Math.round(currentScore + 38), 88));
-const avgScore = 35; // All-India average baseline
-const top1Score = 96; // Top 1% cutoff
+// --- DYNAMIC SCORES & EDGE-CASE HANDLING ---
+const currentScore = Math.round(parseFloat(jee_society_score) || 38);
+const avgScore = 45;
+const top1Score = 95;
+
+// Dynamic Potential Calculation: Never drops below currentScore
+let potentialScore;
+if (currentScore >= 95) {
+  potentialScore = 99; // Elite tier aiming for top double-digit AIR
+} else if (currentScore >= 85) {
+  potentialScore = Math.min(98, currentScore + 8);
+} else {
+  // Normal/Developing tier: Boost by 35-40, capped between 88 and 93
+  potentialScore = Math.min(93, Math.max(Math.round(currentScore + 36), 88));
+}
+
+const isElite = currentScore >= top1Score;
+const isStrong = currentScore >= 80 && currentScore < top1Score;
 
     const attemptIndex = cleanAnswers["q17"];
     const attemptLabel = (QUESTIONS.find(q => q.id === "q17")?.options || [])[attemptIndex] || "JEE Main";
@@ -2814,7 +2833,11 @@ const top1Score = 96; // Top 1% cutoff
       color: "#0f172a",
       letterSpacing: "-0.3px"
     }}>
-      To achieve your highest potential, <span style={{ color: "#10b981" }}>Download</span> your report.
+      {isElite ? (
+    <>To Lock In Your <span style={{ color: "#10b981" }}>Top-500 Advanced AIR</span>, Download Your Report.</>
+  ) : (
+    <>To achieve your highest potential, <span style={{ color: "#10b981" }}>Download</span> your report.</>
+    )}
     </h4>
   </div>
 

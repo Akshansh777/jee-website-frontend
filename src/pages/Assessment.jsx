@@ -3097,30 +3097,6 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
               </li>
             </ul>
 
-            {/* --- SAMPLE REPORT LINK --- */}
-            <div style={{ textAlign: "center", marginTop: "22px", paddingTop: "14px", borderTop: "1px solid #f1f5f9" }}>
-              <a
-                href="/sample-report.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: "#6a11cb",
-                  fontWeight: "700",
-                  fontSize: "14.5px",
-                  textDecoration: "underline",
-                  cursor: "pointer",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  transition: "color 0.2s ease"
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#4a0082")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#6a11cb")}
-              >
-                See what a finished report looks like →
-              </a>
-            </div>
-
           </div>
         </div>
 

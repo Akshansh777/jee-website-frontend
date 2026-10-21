@@ -52,24 +52,43 @@ function joinMentorNotes(keys, data) {
 }
 
 // =========================================================
-// SUBJECT DEEP-DIVE PAGES (Physics / Chemistry / Maths)
-// 3-Tier Persona Architecture:
-// 1. Subject Master (PhD reverence + tactical JEE leverage)
-// 2. Diagnostic Mirror (Uncanny pattern diagnosis of exam reality)
-// 3. Tactical Remedy (Actionable prescription + One Piece of Advice)
+// COMBINED 3-COLUMN SUBJECT DEEP-DIVE ENGINE (Page 3)
+// Concise (80% core content preserved), Personalized with Name
 // =========================================================
 
 const MARKS_ESTIMATE = {
-  // Index 0 = Best Answer (Elite 90+ tier)
-  // Index 1 = Mid-tier / Concept execution gap
-  // Index 2 = Foundational gap / Low score
-  // Index 3 = Erratic / Unbalanced
-  physics: [94, 55, 28, 65],
-  chemistry: [95, 48, 25, 55],
-  maths: [92, 45, 18, 50],
+  physics: [94, 55, 28, 76],
+  chemistry: [95, 48, 25, 52],
+  maths: [92, 48, 18, 38],
 };
 const SUBJECT_QUESTION_KEY = { physics: "q4", chemistry: "q5", maths: "q6" };
 const SUBJECT_LABEL = { physics: "Physics", chemistry: "Chemistry", maths: "Maths" };
+
+// --- SAFE ANSWER INDEX PARSER (Handles 0/1/2/3, "A"/"B", or "Q4_A") ---
+function parseAnswerIndex(val) {
+  if (typeof val === "number") return Math.min(3, Math.max(0, val));
+  if (typeof val === "string") {
+    const letter = val.replace(/.*_/, "").trim().toUpperCase();
+    const idx = ["A", "B", "C", "D"].indexOf(letter);
+    if (idx !== -1) return idx;
+    const num = Number(val);
+    if (!isNaN(num)) return Math.min(3, Math.max(0, num));
+  }
+  return 1;
+}
+
+function estimateMarks(subject, rawVal) {
+  let idx = 1;
+  if (typeof rawVal === "number" && !isNaN(rawVal)) {
+    idx = rawVal;
+  } else if (typeof rawVal === "string") {
+    const letter = rawVal.replace(/.*_/, "").trim().toUpperCase();
+    const letterIdx = ["A", "B", "C", "D"].indexOf(letter);
+    idx = letterIdx !== -1 ? letterIdx : (Number(rawVal) || 1);
+  }
+  const arr = MARKS_ESTIMATE[subject];
+  return arr && arr[idx] !== undefined ? arr[idx] : 45;
+}
 
 function estimateMarks(subject, idx) {
   const arr = MARKS_ESTIMATE[subject];
@@ -77,291 +96,412 @@ function estimateMarks(subject, idx) {
 }
 
 // ---------------------------------------------------------------------------
-// 1. PERSONA: THE SUBJECT MASTER & JEE STRATEGIST
-// Inspires reverence for the discipline and reveals its asymmetric JEE edge
+// 1. THE MENTOR'S PERSPECTIVE (Direct, Grounded, Human Tone)
 // ---------------------------------------------------------------------------
 const SUBJECT_EXPERT_ESSENCE = {
-  physics: `Physics is not a chore of memorizing 300 disjointed formulas; it is the mathematical language of physical reality. From the conservation of angular momentum in rotating galaxies to electron drift across semiconductor junctions, the universe runs on just a handful of unbreakable conservation laws. In JEE, Physics is your greatest tactical accelerator: the moment you realize almost every 'hard' problem is merely basic Newton's laws and energy conservation disguised in complex language, anxiety disappears and genuine solving intuition takes over.`,
+  physics: `Physics is not about cramming 300 formulas. Once you understand that almost every tough problem is just <b>Newton's laws or energy conservation</b> in a new setup, the fear disappears and solving becomes natural.`,
 
-  chemistry: `Chemistry is the highest-leverage asymmetric asset on the entire JEE paper. While Physics and Maths demand grueling multi-step calculations, Chemistry rewards spatial visualization, thermodynamic logic, and pattern recognition. It is the atomic architecture of matter. More importantly, an average mark in Chemistry takes one-third the time to secure compared to Maths: master your reaction mechanisms and periodic trends, and you will bank 70+ marks in 40 minutes, creating the exact time cushion needed to conquer the rest of the exam.`,
+  chemistry: `Chemistry gives you the <b>fastest marks in JEE</b>. While Maths and Physics demand long calculations, Chemistry rewards clear memory and basic logic. With steady revision, you can easily bank <b>70+ marks in 40 minutes</b>.`,
 
-  maths: `Mathematics in JEE is high-intensity intellectual warfare. It is the ultimate crucible of structural thinking, endurance, and analytical grit. NTA places Maths as the primary tie-breaker for an exact reason: when thousands of aspirants land on identical total marks, your Maths score alone decides your rank and branch. Winning in Maths does not require solving the entire paper; it requires possessing the sharp tactical vision to hunt down the 12 to 14 cleanest problems and executing them with ruthless arithmetic precision.`,
+  maths: `In JEE, Maths is where ties are settled. NTA checks your <b>Maths score first</b> during rank ties. You don't have to solve the whole paper—just hunt down the <b>10 to 12 doable questions</b> and solve them calmly without silly errors.`,
 };
 
 // ---------------------------------------------------------------------------
-// 2. PERSONA: THE DIAGNOSTIC MIRROR ("Astrologer" Persona)
-// Hyper-accurate diagnosis of their study habits, cognitive traps, and test-hall reality
+// 2. REALITY CHECK: WHAT'S HAPPENING IN YOUR MOCKS (Personalized with Name)
 // ---------------------------------------------------------------------------
-const SUBJECT_MIRROR_READING = {
-  physics: {
-    0: `You treat Physics as your emotional comfort zone. When a study session feels overwhelming, you naturally open Physics because solving it gives you a quick feeling of productivity. In mocks, you attack Physics first to build confidence, but your ego becomes a silent trap: you will burn 8 to 10 minutes wrestling with an intricate mechanics problem just to prove you can crack it. You believe Physics is carrying your preparation, but in reality, the excessive hours you pour into it are quietly starving your aggregate score.`,
-    1: `You understand classroom lectures effortlessly and nod along with every derivation on the board. You leave class convinced the chapter is mastered. But the second a fresh mock question scrambles two concepts—like rolling motion on an inclined plane threaded with a magnetic field—your pen freezes. You stare at the blank margin, second-guessing which formula applies while 5 minutes tick away. You don't have a knowledge gap; you have a translation gap between passive theory and active execution.`,
-    2: `You have convinced yourself that you simply lack the "innate brain" for Physics. When you open a test, the wall of variables and boundary conditions triggers immediate avoidance. Here is the unvarnished reality of what is happening: you aren't bad at Physics; your foundation in Vectors, Kinematics, and basic Calculus was left shaky in month one. Trying to solve Electrostatics or Rotational Dynamics without rock-solid vector resolution is like attempting to construct a skyscraper on wet mud.`,
-    3: `Your Physics score is an erratic rollercoaster that depends entirely on the question paper's mood. When the paper tests direct formula applications in Modern Physics or Current Electricity, you feel invincible; the moment multi-concept Mechanics or Wave Optics dominates, your score collapses. You cherry-pick the chapters you enjoy and quietly skim the rest, hoping the exam paper will miraculously favor your comfort zones.`,
-  },
-  chemistry: {
-    0: `Chemistry is currently scoring well for you, but you treat it with dangerous complacency. Because the reactions feel intuitive right now, you push revision to the end of the week. What you do not see is the silent, exponential decay of memory: inorganic exception tables, reagent nuances, and physical equilibrium constants vanish without warning unless anchored by structured recall cycles. Your high score is vulnerable to the first tough paper you encounter.`,
-    1: `Your relationship with Chemistry is a cycle of rapid learning followed by rapid evaporation. You read a chapter on Tuesday, recall every reaction on Wednesday, and by the following Sunday, four distinct reagents look completely identical. Your mock marks fluctuate wildly between 30 and 65 based purely on how recently you crammed your notes. You mistake the visual comfort of re-reading notes for actual active recall under negative-marking pressure.`,
-    2: `You have written Chemistry off as a mindless memorization chore that you refuse to respect. You open Organic Chemistry, see hundreds of named reactions, and shut down. You tell yourself that you will "cram Inorganic in the final two months," carrying a persistent cloud of guilt into every study block. In mock exams, you rush through Chemistry in 20 minutes, leave half the paper blank, and pray that Maths or Physics will somehow bridge the deficit.`,
-    3: `You suffer from a severe split personality inside this single subject. You can solve Physical Chemistry numericals comfortably all day while actively avoiding Organic mechanisms—or you understand General Organic Chemistry but completely blank out on Inorganic coordination compounds. You keep grinding the 30% of Chemistry you already like while leaving the remaining 70% completely unarmored.`,
-  },
-  maths: {
-    0: `You possess genuine mathematical talent, but your pride is your greatest liability in an exam hall. When a challenging question appears in Definite Integration or Complex Numbers, you take it as an insult to your intellect. You refuse to move on, spending 12 minutes grinding through brutal algebra to force an answer. You crack the problem, but in doing so, you sacrifice 3 clean, high-yield questions waiting untouched at the back of the paper.`,
-    1: `You have constructed an artificial ceiling around your mathematical ability. You stick strictly to your safe comfort zones—Matrices, Determinants, Vectors, and 3D Geometry. The moment a question touches Permutations, Probability, or Calculus, you immediately back away. You enter every mock expecting to score around 40, and that expectation becomes reality because you refuse to attempt the calculated risks needed to reach 65+.`,
-    2: `You look at the Maths section with genuine dread. During mocks, you attempt 5 or 6 problems with a racing pulse, make 3 careless arithmetic slips, and walk away with single-digit marks. You have started quietly rationalizing that Physics and Chemistry will compensate for Maths. But under NTA's primary tie-breaking protocol, an abandoned Maths section permanently caps your percentile ceiling and guarantees you lose every single tie.`,
-    3: `Your conceptual understanding is solid, but your execution bleeds marks on every page. You conceptualize the solution accurately, write down the right first three steps, and then drop a minus sign or bungle basic quadratic arithmetic at the very end. You walk out believing you scored 60, only to discover negative marking gutted your paper down to 35. You don't have a concept deficit; you have a calculation discipline deficit.`,
-  },
-};
+function getSubjectMirrorReading(subject, idx, firstName) {
+  const readings = {
+    physics: {
+      0: `Physics is your comfort subject, <b>${firstName}</b>. But in tests, your pride can hurt you: spending <b>8 minutes wrestling one stubborn question</b> leaves you with no time left for Maths.`,
+      1: `You understand concepts easily in class, <b>${firstName}</b>. But the moment a fresh question combines two topics, <b>your pen stops</b>. You know the theory; you just need to practice solving without checking hints.`,
+      2: `Be honest with yourself, <b>${firstName}</b>: you aren't bad at Physics. Your <b>Vectors and Kinematics basics</b> were left weak early on. Once you clear those fundamentals, the harder chapters will open up.`,
+      3: `You enjoy Physics, <b>${firstName}</b>, so you spend <b>half your study time watching videos</b> on it. It feels productive, but it starves your other subjects of the practice they actually need.`,
+    },
+    chemistry: {
+      0: `You have a good grip on Chemistry right now, <b>${firstName}</b>. Just remember that memory fades fast here. If you stop revising <b>reactions and exceptions</b> every week, marks drop without warning.`,
+      1: `You read a chapter today and remember it well, <b>${firstName}</b>, but by next week it slips away. Re-reading your notes gives a false sense of safety. You need <b>active recall on rough paper</b>.`,
+      2: `You've labeled Chemistry as boring memorization, <b>${firstName}</b>, so you avoid it. In mocks, you rush through it in 15 minutes and leave easy marks behind that could have lifted your total score.`,
+      3: `You only study the part of Chemistry you like, <b>${firstName}</b>, while ignoring the branch that troubles you. Leaving one-third of the syllabus untouched will keep costing you 20+ easy marks in every mock.`,
+    },
+    maths: {
+      0: `You have strong problem-solving skills, <b>${firstName}</b>. But don't take hard questions personally in the exam hall. Spending 10 minutes on one tricky integral means missing <b>two easy questions</b> later.`,
+      1: `You only attempt safe chapters like Vectors and 3D Geometry, <b>${firstName}</b>. The moment you see Calculus or P&C, you hesitate. Don't skip them entirely; many questions only test simple formulas.`,
+      2: `Maths creates immediate stress for you, <b>${firstName}</b>. You attempt very few questions and hope other subjects will save you. But building up just <b>30 solid marks</b> here will raise your rank significantly.`,
+      3: `Your concepts are good, <b>${firstName}</b>, but you lose marks on <b>sign mistakes and hasty calculations</b>. You walk out thinking you scored 50, but negative marking pulls you down to 30.`,
+    },
+  };
+
+  return (readings[subject] && readings[subject][idx]) || readings[subject][1];
+}
 
 // ---------------------------------------------------------------------------
-// 3. PERSONA: THE MENTOR REMEDY (Tactical Prescriptions & "One Piece of Advice")
+// 3. ACTION PLAN & ONE PIECE OF ADVICE (Clean, Actionable Steps)
 // ---------------------------------------------------------------------------
 const SUBJECT_TACTICAL_REMEDIES = {
   physics: {
     0: {
-      action: "Cap your Physics problem-solving to exactly 45 minutes of mixed PYQ revision every alternate day. Stop seeking comfort in your strongest subject; redirect those saved daily hours into your weakest paper.",
-      lesson: "One Piece of Advice: In JEE, having one 85-mark subject and two 35-mark subjects produces a lower percentile than a balanced 65-65-65. Never let your favorite subject cannibalize your preparation.",
+      action: "Set a strict <b>3-minute rule</b> per question in mocks. If an approach stalls, mark it and move ahead. Protect your time for Maths.",
+      lesson: "Top scores are lost to stubbornness and fatigue in the last hour, not a lack of theory.",
     },
     1: {
-      action: "Stop watching theory lectures and one-shots. You already know the theory. Pick your weakest 3 chapters and solve 15 unassisted PYQs daily with a stopwatch running. Struggle with the question for 4 minutes before checking any solution.",
-      lesson: "One Piece of Advice: Confidence in Physics is built by wrestling with problems in the rough notebook, not by watching someone else solve them on a screen.",
+      action: "Pause one-shot videos. Pick your weakest chapter and solve <b>15 PYQs every day</b> with a timer. Try for 4 minutes before checking any solution.",
+      lesson: "Solving ability develops on rough paper when you struggle, not by watching someone else solve on a screen.",
     },
     2: {
-      action: "Implement a strict 14-day foundation reset. Do not touch Modern Physics or Magnetism yet. Master Vectors, Differentiation/Integration basics, and Kinematics until resolving components is second nature. Then tackle Units & Dimensions.",
-      lesson: "One Piece of Advice: You are not bad at Physics; you are missing the mathematical alphabet it is written in. Fix the foundation and the advanced chapters will unlock naturally.",
+      action: "Take 10 days to rebuild your foundation: master <b>Vectors, Basic Calculus, and Kinematics</b> first. Then move to formula-heavy chapters like Modern Physics.",
+      lesson: "You don't lack aptitude for Physics; you are just missing the basic math it is built on. Fix that first.",
     },
     3: {
-      action: "Build a High-Yield Master List: Modern Physics, Current Electricity, Semiconductor Devices, and Gravitation. These 4 units alone account for 35-40% of JEE Main Physics marks with minimal conceptual twist.",
-      lesson: "One Piece of Advice: Standardize your baseline first. You do not need 100% syllabus mastery to score 70+; you need 100% command over the predictable 50%.",
+      action: "Cap your Physics study to <b>45 minutes of revision</b> every alternate day. Shift that saved hour directly into your weakest subject.",
+      lesson: "A balanced 60-60-60 score delivers a much higher percentile than an unbalanced 85-30-30.",
     },
   },
   chemistry: {
     0: {
-      action: "Implement a daily 20-minute morning active-recall ritual. Review Inorganic trend charts and Organic reaction roadmaps on a fixed Day 1, Day 3, Day 7 schedule. Maintain your speed so Chemistry continues buying you time for Maths.",
-      lesson: "One Piece of Advice: High Chemistry scorers lose marks through silent memory decay. Treat recall as a daily maintenance habit, not an exam-week sprint.",
+      action: "Spend <b>15 minutes every morning</b> writing down formulas, named reactions, and inorganic exceptions from memory onto a blank sheet.",
+      lesson: "Chemistry marks decay quietly. Treat quick daily recall like a routine habit, not an exam-week task.",
     },
     1: {
-      action: "Institute the strict 1-3-7 Spaced Retrieval Rule: whenever you finish an Organic or Inorganic chapter, test yourself on blank paper on Day 1, Day 3, and Day 7. Write out reagents from memory without glancing at your notes.",
-      lesson: "One Piece of Advice: Re-reading your notes creates the illusion of learning. Forcing your brain to retrieve a reaction from a blank page is what permanently locks it into long-term memory.",
+      action: "Use the <b>Day 1, Day 3, Day 7 recall rule</b>. When you complete a chapter, write out key reactions from memory without opening your notes.",
+      lesson: "Re-reading notes feels easy; testing your memory on blank paper is what actually holds up in tests.",
     },
     2: {
-      action: "Do not attempt the entire syllabus. Target Chemical Bonding, Coordination Compounds, and Periodic Table first. These three chapters unlock the conceptual logic for 60% of all Inorganic and Organic chemistry questions.",
-      lesson: "One Piece of Advice: You do not need to fall in love with Chemistry. You need one fast, reliable 25-mark win in a high-yield chapter to prove to yourself that this subject is conquerable.",
+      action: "Start with 3 high-yield chapters: <b>Chemical Bonding, Periodic Table, and Mole Concept</b>. These build the base for most of the subject.",
+      lesson: "You don't need to love Chemistry; you just need one 25-mark win in easy chapters to build your confidence.",
     },
     3: {
-      action: "Reframe Organic Chemistry from memory into logic: group all reactions into 6 core mechanistic families rather than 200 individual reactions. For Physical Chemistry, drill 20 formula-application questions under a 90-second timer.",
-      lesson: "One Piece of Advice: Stop treating Chemistry as one uniform subject. Attack your strong half for speed, and restructure your weak half through first-principles logic.",
+      action: "Give 45 minutes daily to your weakest branch. For Organic, focus on understanding reaction logic rather than memorizing individual lines.",
+      lesson: "Stop spending all your time on the parts you already like. Your fastest mark jump is in the branch you avoid.",
     },
   },
   maths: {
     0: {
-      action: "Enforce the 3-Minute Hard Ceiling during practice: if an approach does not show clear progress within 180 seconds, flag the question and drop it immediately. Train yourself to hunt for shortest methods and alternate substitutions.",
-      lesson: "One Piece of Advice: JEE awards the exact same +4 marks for a 45-second Statistics question as it does for an 8-minute Definite Integration marathon. Leave your ego outside the exam hall.",
+      action: "Always scan the paper in Round 1 and lock in the <b>8 to 10 easiest questions</b> first. Never let a single question trap you for over 3 minutes.",
+      lesson: "JEE gives the exact same +4 marks for a 1-minute question as an 8-minute marathon. Choose wisely.",
     },
     1: {
-      action: "Break your mathematical ceiling by mastering 2 new chapters this fortnight: Vector-3D and Straight Lines. These chapters reward formula memorization and structured steps rather than non-routine creative flashes.",
-      lesson: "One Piece of Advice: Your ceiling exists because you only attempt questions you already know how to solve. Progress begins the moment you sit with an unfamiliar topic and work through the discomfort.",
+      action: "Add 2 predictable chapters to your list this month: <b>Matrices & Determinants and Statistics</b>. They reward direct method practice over clever tricks.",
+      lesson: "Staying only in your comfort zone caps your score. Progress comes from picking up one new chapter at a time.",
     },
     2: {
-      action: "Abandon full-syllabus ambitions immediately. Focus 100% of your energy on mastering 4 formula-centric chapters: Quadratic Equations, Sets & Relations, Statistics, and Mathematical Reasoning/Vectors. That guarantees 25-35 marks with zero genius required.",
-      lesson: "One Piece of Advice: In JEE Maths, scoring 35 marks puts you ahead of 75% of all test-takers nationwide. Do not aim for 80; lock down 35 clean, unshakeable marks first.",
+      action: "Focus on 4 formula-based topics: <b>Quadratic Equations, Statistics, Vectors, and Matrices</b>. Aim for a clean 30–35 marks first.",
+      lesson: "In JEE Maths, getting 35 clean marks puts you ahead of 75% of candidates. Secure your base first.",
     },
     3: {
-      action: "Slow down your rough work by 10%. Divide your rough sheet into clean, numbered vertical columns. Write every calculation step legibly. Calculate twice before bubbling the final answer to eliminate the -1 mark unforced error drain.",
-      lesson: "One Piece of Advice: You do not need to learn more advanced mathematics to jump 20 marks; you simply need to stop donating marks to careless arithmetic slips.",
+      action: "Slow down your rough work by 10%. Write steps clearly in <b>neat vertical columns</b> and double-check signs before marking the bubble.",
+      lesson: "You don't need to learn new math to jump 15 marks; you just need to stop giving marks away to careless slips.",
     },
   },
 };
 
 // ---------------------------------------------------------------------------
-// DYNAMIC CROSS-SUBJECT BALANCE & COMPENSATION ENGINE
+// COMPACT COLUMN GAUGE ("Where You Stand" top bar for each subject)
 // ---------------------------------------------------------------------------
-function getCrossSubjectDirective(subject, marksBySubject) {
-  const currentMarks = marksBySubject[subject] || 35;
-  const otherKeys = Object.keys(marksBySubject).filter((k) => k !== subject);
-  const otherAvg = otherKeys.reduce((sum, k) => sum + (marksBySubject[k] || 35), 0) / otherKeys.length;
-  const gap = currentMarks - otherAvg;
-
-// Edge case: All subjects are scoring 88+
-  const isAllElite = Object.values(marksBySubject).every((m) => m >= 88);
-  if (isAllElite) {
-    return `🏆 Elite Tri-Subject Mastery: Your Physics, Chemistry, and Mathematics readiness are all performing in the top decile. Your focus should not be syllabus coverage, but full-length 6-hour JEE Advanced mock simulations to eliminate unforced errors.`;
-  }
-
-  if (gap >= 18) {
-    const weakerSubject = otherKeys.reduce((a, b) => (marksBySubject[a] < marksBySubject[b] ? a : b));
-    return `⚠️ Strategic Balance Warning: Your ${SUBJECT_LABEL[subject]} is outperforming your ${SUBJECT_LABEL[weakerSubject]} by ~${Math.round(gap)} marks. Capping practice hours here and transferring 60 daily minutes to ${SUBJECT_LABEL[weakerSubject]} will increase your aggregate JEE percentile far faster.`;
-  } else if (gap <= -18) {
-    const strongerSubject = otherKeys.reduce((a, b) => (marksBySubject[a] > marksBySubject[b] ? a : b));
-    return `🎯 Score Multiplier Opportunity: Your ${SUBJECT_LABEL[subject]} is lagging ~${Math.round(Math.abs(gap))} marks behind your ${SUBJECT_LABEL[strongerSubject]}. Raising this floor to a safe baseline is your fastest route to a 99+ percentile jump, as each additional mark here requires far less effort than squeezing extra marks out of your top subject.`;
-  } else {
-    return `⚖️ Tri-Subject Synergy: Your performance across Physics, Chemistry, and Maths is relatively balanced. Maintain this equilibrium: avoid spending more than 40% of your daily solving time on any single subject, and preserve your Chemistry speed to protect your Maths endurance.`;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// COMBINED "WHERE YOU STAND" + "PEER REFERENCE" GAUGE
-// ---------------------------------------------------------------------------
-function buildCombinedStandGauge(marks, subjectLabel) {
-  const pct = Math.max(6, Math.min(94, marks));
+function buildCompactColumnGauge(marks, subjectLabel) {
+  const pct = Math.max(8, Math.min(92, marks));
   const avgPct = 45;
-  const topPct = 90;
+  const topPct = 88;
 
   return `
-    <div style="margin-bottom: 8px;">
-      <div style="font-size: 16px; font-weight: 800; color: #111; margin-bottom: 8px; letter-spacing: -0.2px;">
+    <div style="margin-bottom: 2px; padding: 0 2px;">
+      <div style="text-align: center; font-size: 11px; font-weight: 800; color: #0f172a; margin-bottom: 18px;">
         Where You Stand: ${subjectLabel}
       </div>
       
-      <div style="position: relative; margin-top: 24px; margin-bottom: 10px;">
-        <div style="height: 12px; border-radius: 6px; background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 25%, #eab308 55%, #f97316 80%, #ef4444 100%); position: relative; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
-          <div style="position: absolute; left: ${avgPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
-          <div style="position: absolute; left: ${topPct}%; top: -3px; bottom: -3px; width: 2px; background: rgba(0,0,0,0.5); z-index: 2;"></div>
+      <div style="position: relative; margin-bottom: 4px;">
+        <!-- Gradient Bar -->
+        <div style="height: 8px; border-radius: 4px; background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 28%, #eab308 58%, #f97316 80%, #ef4444 100%); position: relative;">
+          <div style="position: absolute; left: ${avgPct}%; top: -3px; bottom: -3px; width: 1.5px; background: #1e293b; z-index: 2;"></div>
+          <div style="position: absolute; left: ${topPct}%; top: -3px; bottom: -3px; width: 1.5px; background: #1e293b; z-index: 2;"></div>
         </div>
 
-        <div style="position: absolute; top: -26px; left: ${pct}%; transform: translateX(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center;">
-          <div style="background: #c62828; color: white; font-size: 11px; font-weight: 900; padding: 2px 8px; border-radius: 4px; white-space: nowrap; box-shadow: 0 2px 6px rgba(198,40,40,0.35);">
+        <!-- Floating "You" Pin -->
+        <div style="position: absolute; top: -18px; left: ${pct}%; transform: translateX(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center;">
+          <div style="background: #c62828; color: #fff; font-size: 8.5px; font-weight: 900; padding: 1px 5px; border-radius: 3px; line-height: 1.2;">
             You
           </div>
-          <div style="width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #c62828;"></div>
+          <div style="width: 0; height: 0; border-left: 3px solid transparent; border-right: 3px solid transparent; border-top: 4px solid #c62828;"></div>
         </div>
 
-        <div style="position: relative; height: 16px; margin-top: 5px; font-size: 11.5px; font-weight: 700;">
-          <span style="position: absolute; left: 0; color: #94a3b8;">Baseline</span>
-          <span style="position: absolute; left: ${avgPct}%; transform: translateX(-50%); color: #475569;">Typical Aspirant</span>
-          <span style="position: absolute; left: ${topPct}%; transform: translateX(-50%); color: #b45309;">Top 1% IITians</span>
+        <!-- Labels -->
+        <div style="position: relative; height: 20px; margin-top: 3px; font-size: 8.5px; font-weight: 700; line-height: 1.05;">
+          <span style="position: absolute; left: 0; color: #475569;">Baseline</span>
+          <span style="position: absolute; left: ${avgPct}%; transform: translateX(-50%); color: #1e293b; white-space: nowrap;">Typical Aspirant</span>
+          <span style="position: absolute; right: 0; text-align: right; color: #b45309;">Top 1%<br/>IITians</span>
         </div>
       </div>
     </div>
   `;
 }
 
-// --- CROSS-SUBJECT SCORE IMBALANCE DETECTOR ---
-function detectCompensation(subject, marksBySubject = {}) {
-  const others = Object.keys(marksBySubject).filter((k) => k !== subject);
-  if (others.length === 0) return null;
+// ---------------------------------------------------------------------------
+// 4. CLEAN 3-COLUMN BUILDER (NO DOTTED BOXES, EQUAL HEIGHT CARDS)
+// ---------------------------------------------------------------------------
+function buildCombinedSubjectsPageHTML(data, marksBySubject) {
+  const rawName = (data?.name || data?.studentName || "Aspirant").trim();
+  const firstName = rawName.split(/\s+/)[0] || "Aspirant";
 
-  const currentMarks = marksBySubject[subject] !== undefined ? marksBySubject[subject] : 35;
-  const otherAvg = others.reduce((sum, k) => sum + (marksBySubject[k] || 35), 0) / others.length;
-  const gap = otherAvg - currentMarks;
+  const subjects = ["physics", "chemistry", "maths"];
+  const parsedIdx = {};
 
-  if (gap < 20) return null;
+  subjects.forEach((subj) => {
+    const qKey = SUBJECT_QUESTION_KEY[subj];
+    const rawAns = data?.answers?.[qKey];
+    let idx = 1;
+    if (typeof rawAns === "number") {
+      idx = Math.min(3, Math.max(0, rawAns));
+    } else if (typeof rawAns === "string") {
+      const letter = rawAns.replace(/.*_/, "").toUpperCase();
+      const letterIdx = ["A", "B", "C", "D"].indexOf(letter);
+      idx = letterIdx !== -1 ? letterIdx : Math.min(3, Math.max(0, Number(rawAns) || 1));
+    }
+    parsedIdx[subj] = idx;
+  });
 
-  const strongerSubject = others.reduce((a, b) => 
-    ((marksBySubject[a] || 0) > (marksBySubject[b] || 0) ? a : b)
-  );
+  const iconCap = `<svg width="13" height="13" viewBox="0 0 24 24" fill="#1d4ed8" style="flex-shrink:0;"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm0 13.5l-7-3.8v4.3L12 21l7-4v-4.3l-7 3.8z"/></svg>`;
+  const iconSearch = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2.6" stroke-linecap="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg>`;
+  const iconTarget = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="2.4" style="flex-shrink:0;"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="#b91c1c"/></svg>`;
 
-  return {
-    gap: Math.round(gap),
-    strongerLabel: SUBJECT_LABEL[strongerSubject] || strongerSubject,
-    weakerLabel: SUBJECT_LABEL[subject] || subject,
-  };
-}
+  const columnsHTML = subjects
+    .map((subj) => {
+      const idx = parsedIdx[subj];
+      const marks = MARKS_ESTIMATE[subj]?.[idx] ?? 45;
+      const expertText = SUBJECT_EXPERT_ESSENCE[subj];
+      const mirrorText = getSubjectMirrorReading(subj, idx, firstName);
+      const remedyObj = SUBJECT_TACTICAL_REMEDIES[subj][idx] || SUBJECT_TACTICAL_REMEDIES[subj][1];
 
-function getSubjectContent(subject, idx) {
-  const safeIdx = Math.min(3, Math.max(0, Number(idx) || 1));
-  return {
-    expert: SUBJECT_EXPERT_ESSENCE[subject] || "",
-    mirror: (SUBJECT_MIRROR_READING[subject] && SUBJECT_MIRROR_READING[subject][safeIdx]) || "",
-    remedy: (SUBJECT_TACTICAL_REMEDIES[subject] && SUBJECT_TACTICAL_REMEDIES[subject][safeIdx]) || {}
-  };
-}
+      return `
+        <div class="subj-col subj-col-${subj}">
+          <div>
+            ${buildCompactColumnGauge(marks, SUBJECT_LABEL[subj])}
+          </div>
 
-function buildSubjectPageHTML(subject, data, marksBySubject) {
-  const qKey = SUBJECT_QUESTION_KEY[subject];
-  // Safe index parser (0, 1, 2, or 3)
-  const idx = Math.min(3, Math.max(0, Number(data?.answers?.[qKey]) || 1));
-  const marks = (marksBySubject && marksBySubject[subject]) ? marksBySubject[subject] : 45;
+          <!-- Box 1: Mentor's Perspective -->
+          <div class="s-card s-card-expert">
+            <div class="s-card-head">
+              ${iconCap}
+              <span class="s-pill s-pill-expert">MENTOR PERSPECTIVE</span>
+            </div>
+            <div class="s-card-body">${expertText}</div>
+          </div>
 
-  const expertText = SUBJECT_EXPERT_ESSENCE[subject] || "";
-  const mirrorText = (SUBJECT_MIRROR_READING[subject] && SUBJECT_MIRROR_READING[subject][idx]) 
-    || SUBJECT_MIRROR_READING[subject][1];
-  const remedyObj = (SUBJECT_TACTICAL_REMEDIES[subject] && SUBJECT_TACTICAL_REMEDIES[subject][idx]) 
-    || SUBJECT_TACTICAL_REMEDIES[subject][1];
-  const balanceDirective = typeof getCrossSubjectDirective === "function" 
-    ? getCrossSubjectDirective(subject, marksBySubject || {}) 
-    : "";
+          <!-- Box 2: Your Mock Reality (With Student Name) -->
+          <div class="s-card s-card-mirror">
+            <div class="s-card-head">
+              ${iconSearch}
+              <span class="s-pill s-pill-mirror">YOUR MOCK REALITY</span>
+            </div>
+            <div class="s-card-body">${mirrorText}</div>
+          </div>
+
+          <!-- Box 3: Strategic Action Step (No extra dotted boxes) -->
+          <div class="s-card s-card-remedy">
+            <div class="s-card-head">
+              ${iconTarget}
+              <span class="s-pill s-pill-remedy">YOUR ACTION STEP</span>
+            </div>
+            <div class="s-card-body">${remedyObj.action}</div>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  const appleSvg = `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="1.8"><path d="M12 7c-3 0-6 2-6 6 0 4 3 8 6 8s6-4 6-8c0-4-3-6-6-6z"/><path d="M12 7c0-2 1.5-3.5 3-3.5M8 2v3M12 1v3M16 2v3"/></svg>`;
+  const chemSvg = `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="1.8"><polygon points="12 4 19 8 19 16 12 20 5 16 5 8 12 4"/><line x1="12" y1="1" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="23"/><line x1="19" y1="8" x2="22" y2="6"/></svg>`;
+  const mathSvg = `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="2"><path d="M3 12h18M6 6v12"/><path d="M6 12c2.5-7 5-7 7.5 0s5 7 7.5 0"/></svg>`;
+
+  const physAdvice = (SUBJECT_TACTICAL_REMEDIES.physics[parsedIdx.physics] || SUBJECT_TACTICAL_REMEDIES.physics[1]).lesson;
+  const chemAdvice = (SUBJECT_TACTICAL_REMEDIES.chemistry[parsedIdx.chemistry] || SUBJECT_TACTICAL_REMEDIES.chemistry[1]).lesson;
+  const mathAdvice = (SUBJECT_TACTICAL_REMEDIES.maths[parsedIdx.maths] || SUBJECT_TACTICAL_REMEDIES.maths[1]).lesson;
 
   return `
-    <div class="subj-stand-wrap">
-      ${buildCombinedStandGauge(marks, SUBJECT_LABEL[subject])}
+    <div class="subj-combined-subtitle">
+      Your subject-wise performance diagnosis & action plan
     </div>
 
-    <!-- 1. The Subject Master & Strategist -->
-    <div class="subj-box-expert">
-      <div class="subj-badge badge-expert">⚡ THE MASTER'S PERSPECTIVE & TACTICAL EDGE</div>
-      <div class="subj-expert-text">${expertText}</div>
+    <!-- 3-Column Subject Matrix -->
+    <div class="subj-three-col-grid">
+      ${columnsHTML}
     </div>
 
-    <!-- 2. The Diagnostic Mirror (Exam Reality) -->
-    <div class="subj-box-mirror">
-      <div class="subj-badge badge-mirror">🔍 THE DIAGNOSTIC MIRROR: YOUR EXAM REALITY</div>
-      <div class="subj-mirror-text">${mirrorText}</div>
-    </div>
+    <!-- Bottom Full-Width "ONE PIECE OF ADVICE" Section -->
+    <div class="subj-bottom-advice-wrap">
+      <div class="advice-header-row">
+        <div class="advice-navy-pill">
+          <span>💡</span>
+          <span>ONE PIECE OF ADVICE</span>
+        </div>
+        <div class="advice-header-line" style="margin-left: 12px;"></div>
+      </div>
 
-    <!-- 3. The Tactical Remedy & One Piece of Advice -->
-    <div class="subj-box-remedy">
-      <div class="subj-badge badge-remedy">🎯 THE STRATEGIC PRESCRIPTION</div>
-      <div class="subj-remedy-text">${remedyObj.action}</div>
-      ${balanceDirective ? `<div class="subj-balance-banner">${balanceDirective}</div>` : ""}
-      <div class="subj-advice-box">${remedyObj.lesson}</div>
+      <div class="advice-three-cols">
+        <!-- Physics Advice -->
+        <div class="advice-col-item">
+          <div class="advice-icon-circle" style="background: #dbeafe;">${appleSvg}</div>
+          <div>
+            <div class="advice-subj-title" style="color: #1d4ed8;">PHYSICS</div>
+            <div class="advice-subj-text">${physAdvice}</div>
+          </div>
+        </div>
+
+        <!-- Chemistry Advice -->
+        <div class="advice-col-item">
+          <div class="advice-icon-circle" style="background: #fef3c7;">${chemSvg}</div>
+          <div>
+            <div class="advice-subj-title" style="color: #d97706;">CHEMISTRY</div>
+            <div class="advice-subj-text">${chemAdvice}</div>
+          </div>
+        </div>
+
+        <!-- Maths Advice -->
+        <div class="advice-col-item">
+          <div class="advice-icon-circle" style="background: #fee2e2;">${mathSvg}</div>
+          <div>
+            <div class="advice-subj-title" style="color: #dc2626;">MATHS</div>
+            <div class="advice-subj-text">${mathAdvice}</div>
+          </div>
+        </div>
+      </div>
     </div>
   `;
 }
 
-function buildSubjectPageHTML(subject, data, marksBySubject) {
-  const qKey = SUBJECT_QUESTION_KEY[subject];
-  // Safe index parser (0, 1, 2, or 3)
-  const idx = Math.min(3, Math.max(0, Number(data?.answers?.[qKey]) || 1));
-  const marks = (marksBySubject && marksBySubject[subject] !== undefined) 
-    ? marksBySubject[subject] 
-    : 45;
+// ---------------------------------------------------------------------------
+// CROSS-SUBJECT BALANCE BOX FOR CHEMISTRY & MATHS COLUMNS
+// ---------------------------------------------------------------------------
 
-  // 1. Subject Master / Expert Text
-  const expertText = (SUBJECT_EXPERT_ESSENCE && SUBJECT_EXPERT_ESSENCE[subject]) 
-    || "Mastering this subject requires strong fundamentals and tactical question selection.";
 
-  // 2. Diagnostic Mirror Text
-  const mirrorText = (SUBJECT_MIRROR_READING && SUBJECT_MIRROR_READING[subject] && SUBJECT_MIRROR_READING[subject][idx])
-    || (SUBJECT_MIRROR_READING && SUBJECT_MIRROR_READING[subject] && SUBJECT_MIRROR_READING[subject][1])
-    || "You are losing marks to avoidable translation errors under timed test pressure.";
+// ---------------------------------------------------------------------------
+// SINGLE COMBINED PAGE BUILDER (ALL 3 COLUMNS + BOTTOM ONE PIECE OF ADVICE)
+// ---------------------------------------------------------------------------
+function buildCombinedSubjectsPageHTML(data, marksBySubject) {
+  const rawName = (data?.name || data?.studentName || "Aspirant").trim();
+  const firstName = rawName.split(/\s+/)[0] || "Aspirant";
 
-  // 3. Tactical Remedy & One Piece of Advice
-  const remedyObj = (SUBJECT_TACTICAL_REMEDIES && SUBJECT_TACTICAL_REMEDIES[subject] && SUBJECT_TACTICAL_REMEDIES[subject][idx])
-    || (SUBJECT_TACTICAL_REMEDIES && SUBJECT_TACTICAL_REMEDIES[subject] && SUBJECT_TACTICAL_REMEDIES[subject][1])
-    || { 
-      action: "Focus on high-yield chapters and solve 15 timed PYQs daily.", 
-      lesson: "One Piece of Advice: Standardize your baseline before chasing complex multi-concept questions." 
-    };
+  const subjects = ["physics", "chemistry", "maths"];
+  const parsedIdx = {};
 
-  // Cross-Subject Balance Banner
-  const balanceDirective = typeof getCrossSubjectDirective === "function" 
-    ? getCrossSubjectDirective(subject, marksBySubject || {}) 
-    : "";
+  subjects.forEach((subj) => {
+    const qKey = SUBJECT_QUESTION_KEY[subj];
+    const rawAns = data?.answers?.[qKey];
+    let idx = 1;
+    if (typeof rawAns === "number") {
+      idx = Math.min(3, Math.max(0, rawAns));
+    } else if (typeof rawAns === "string") {
+      const letter = rawAns.replace(/.*_/, "").toUpperCase();
+      const letterIdx = ["A", "B", "C", "D"].indexOf(letter);
+      idx = letterIdx !== -1 ? letterIdx : Math.min(3, Math.max(0, Number(rawAns) || 1));
+    }
+    parsedIdx[subj] = idx;
+  });
+
+  // Inline SVG Icons for Card Headers
+  const iconCap = `<svg width="14" height="14" viewBox="0 0 24 24" fill="#1e3a8a" style="flex-shrink:0;"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zm0 13.5l-7-3.8v4.3L12 21l7-4v-4.3l-7 3.8z"/></svg>`;
+  const iconSearch = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2.8" stroke-linecap="round" style="flex-shrink:0;"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.2" y2="16.2"/></svg>`;
+  const iconTarget = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.4" style="flex-shrink:0;"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5" fill="#dc2626"/></svg>`;
+
+  // Build the 3 vertical columns
+  const columnsHTML = subjects
+    .map((subj) => {
+      const idx = parsedIdx[subj];
+      const marks = marksBySubject?.[subj] !== undefined ? marksBySubject[subj] : 45;
+      const expertText = SUBJECT_EXPERT_ESSENCE[subj];
+      const mirrorText = getSubjectMirrorReading(subj, idx, firstName);
+      const remedyObj = SUBJECT_TACTICAL_REMEDIES[subj][idx] || SUBJECT_TACTICAL_REMEDIES[subj][1];
+
+      return `
+        <div class="subj-col subj-col-${subj}">
+          ${buildCompactColumnGauge(marks, SUBJECT_LABEL[subj])}
+
+          <!-- Box 1: Master's Perspective -->
+          <div class="s-card s-card-expert">
+            <div class="s-card-head">
+              ${iconCap}
+              <span class="s-pill s-pill-expert">THE MASTER'S PERSPECTIVE & TACTICAL EDGE</span>
+            </div>
+            <div class="s-card-body">${expertText}</div>
+          </div>
+
+          <!-- Box 2: Diagnostic Mirror (With Student Name) -->
+          <div class="s-card s-card-mirror">
+            <div class="s-card-head">
+              ${iconSearch}
+              <span class="s-pill s-pill-mirror">YOUR EXAM REALITY</span>
+            </div>
+            <div class="s-card-body">${mirrorText}</div>
+          </div>
+
+          <!-- Box 3: Strategic Prescription -->
+          <div class="s-card s-card-remedy">
+            <div class="s-card-head">
+              ${iconTarget}
+              <span class="s-pill s-pill-remedy">THE STRATEGIC PRESCRIPTION</span>
+            </div>
+            <div class="s-card-body">${remedyObj.action}</div>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  // Subject Icons for Bottom "ONE PIECE OF ADVICE" Bar
+  const appleSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="1.8"><path d="M12 7c-3 0-6 2-6 6 0 4 3 8 6 8s6-4 6-8c0-4-3-6-6-6z"/><path d="M12 7c0-2 1.5-3.5 3-3.5M8 2v3M12 1v3M16 2v3"/></svg>`;
+  const chemSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="1.8"><polygon points="12 4 19 8 19 16 12 20 5 16 5 8 12 4"/><line x1="12" y1="1" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="23"/><line x1="19" y1="8" x2="22" y2="6"/></svg>`;
+  const mathSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e293b" stroke-width="2"><path d="M3 12h18M6 6v12"/><path d="M6 12c2.5-7 5-7 7.5 0s5 7 7.5 0"/></svg>`;
+
+  const physAdvice = (SUBJECT_TACTICAL_REMEDIES.physics[parsedIdx.physics] || SUBJECT_TACTICAL_REMEDIES.physics[1]).lesson;
+  const chemAdvice = (SUBJECT_TACTICAL_REMEDIES.chemistry[parsedIdx.chemistry] || SUBJECT_TACTICAL_REMEDIES.chemistry[1]).lesson;
+  const mathAdvice = (SUBJECT_TACTICAL_REMEDIES.maths[parsedIdx.maths] || SUBJECT_TACTICAL_REMEDIES.maths[1]).lesson;
 
   return `
-    <div class="subj-stand-wrap">
-      ${buildCombinedStandGauge(marks, SUBJECT_LABEL[subject])}
+    <div class="subj-combined-subtitle">
+      Your subject-wise performance diagnosis & action plan
     </div>
 
-    <!-- 1. THE SUBJECT MASTER & STRATEGIST -->
-    <div class="subj-box-expert">
-      <div class="subj-badge badge-expert">⚡ THE MASTER'S PERSPECTIVE & TACTICAL EDGE</div>
-      <div class="subj-expert-text">${expertText}</div>
+    <!-- 3-Column Subject Matrix -->
+    <div class="subj-three-col-grid">
+      ${columnsHTML}
     </div>
 
-    <!-- 2. THE DIAGNOSTIC MIRROR (TEST-HALL REALITY) -->
-    <div class="subj-box-mirror">
-      <div class="subj-badge badge-mirror">🔍 THE DIAGNOSTIC MIRROR: YOUR EXAM REALITY</div>
-      <div class="subj-mirror-text">${mirrorText}</div>
-    </div>
+    <!-- Bottom Full-Width "ONE PIECE OF ADVICE" Section -->
+    <div class="subj-bottom-advice-wrap">
+      <div class="advice-header-row">
+        <div class="advice-navy-pill">
+          <span>💡</span>
+          <span>ONE PIECE OF ADVICE</span>
+        </div>
+        <div class="advice-header-line" style="margin-left: 12px;"></div>
+      </div>
 
-    <!-- 3. THE TACTICAL REMEDY & CROSS-SUBJECT BALANCE -->
-    <div class="subj-box-remedy">
-      <div class="subj-badge badge-remedy">🎯 THE STRATEGIC PRESCRIPTION</div>
-      <div class="subj-remedy-text">${remedyObj.action}</div>
-      ${balanceDirective ? `<div class="subj-balance-banner">${balanceDirective}</div>` : ""}
-      <div class="subj-advice-box">${remedyObj.lesson}</div>
+      <div class="advice-three-cols">
+        <!-- Physics Advice -->
+        <div class="advice-col-item">
+          <div class="advice-icon-circle" style="background: #dbeafe;">${appleSvg}</div>
+          <div>
+            <div class="advice-subj-title" style="color: #1d4ed8;">PHYSICS</div>
+            <div class="advice-subj-text">${physAdvice}</div>
+          </div>
+        </div>
+
+        <!-- Chemistry Advice -->
+        <div class="advice-col-item">
+          <div class="advice-icon-circle" style="background: #fef3c7;">${chemSvg}</div>
+          <div>
+            <div class="advice-subj-title" style="color: #d97706;">CHEMISTRY</div>
+            <div class="advice-subj-text">${chemAdvice}</div>
+          </div>
+        </div>
+
+        <!-- Maths Advice -->
+        <div class="advice-col-item">
+          <div class="advice-icon-circle" style="background: #fee2e2;">${mathSvg}</div>
+          <div>
+            <div class="advice-subj-title" style="color: #dc2626;">MATHS</div>
+            <div class="advice-subj-text">${mathAdvice}</div>
+          </div>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -375,10 +515,10 @@ async function generatePDF(data) {
   const readinessGap = 100 - score;
   const studentName = data.name || "Student";
 
-  const marksBySubject = {
-    physics: estimateMarks("physics", Number(data.answers?.q4)),
-    chemistry: estimateMarks("chemistry", Number(data.answers?.q5)),
-    maths: estimateMarks("maths", Number(data.answers?.q6)),
+ const marksBySubject = {
+    physics: estimateMarks("physics", data.answers?.q4 ?? data.manifestKeys?.q4),
+    chemistry: estimateMarks("chemistry", data.answers?.q5 ?? data.manifestKeys?.q5),
+    maths: estimateMarks("maths", data.answers?.q6 ?? data.manifestKeys?.q6),
   };
 
   function getAsset(name) {
@@ -388,24 +528,16 @@ async function generatePDF(data) {
   const images = {
     p1: getAsset("page1_cover.png"),
     p2: getAsset("page2_diagnostics.png"),
-    p3a: getAsset("page3a_physics.png"),
-    p3b: getAsset("page3b_chemistry.png"),
-    p3c: getAsset("page3c_maths.png"),
-    p5: getAsset("page5_peer.png"),
+    p3_combined: getAsset("subject_deep_dive.png"),
     p6: getAsset("page6_ref.png"),
     p6b: getAsset("page6b_mindset_systems.png"),
-    p7: getAsset("page7_health.png"),
     p8: getAsset("page8_exec.png"),
     p9: getAsset("page9_parents.png"),
-    p11: getAsset("page11_conclusion.png"),
     p12: getAsset("page12_habit.png"),
     p13: getAsset("page13_mock.png"),
     p14: getAsset("page14_mock_analysis_guide.png"),
-    sundayTracker: getAsset("sunday_tracker.png"),
+    pcm_prerequisites: getAsset(`pcm_${attemptType}.png`) || getAsset(`pcm_prerequisites_${attemptType}.png`),
     mentorshipPromo: getAsset("mentorship_promo.png"),
-    physics: getAsset(`physics_${prevYearChapters}.png`),
-    chemistry: getAsset(`chemistry_${prevYearChapters}.png`),
-    maths: getAsset(`maths_${prevYearChapters}.png`)
   };
 
   const browser = await puppeteer.launch({
@@ -613,118 +745,242 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 }
 
 /* ========================================================= */
-/* PAGES 3a/3b/3c: 3-TIER PERSONA SUBJECT ARCHITECTURE       */
-/* (Expertise -> Diagnostic Mirror -> Remedy & Advice)       */
+/* COMBINED PAGE 3: 3-COLUMN SUBJECT DEEP DIVE (BALANCED)    */
 /* ========================================================= */
-.subj-content {
+/* Subtitle shifted lower to cover the gap */
+.subj-combined-subtitle {
   position: absolute;
-  top: 165px;
-  left: 50px;
-  width: 693px;
+  top: 145px; /* Moved down from 112px */
+  left: 0;
+  width: 794px;
+  text-align: center;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #334155;
+  letter-spacing: -0.1px;
+  z-index: 4;
+}
+
+/* 3-Column Grid */
+.subj-three-col-grid {
+  position: absolute;
+  top: 195px; /* Starts cleanly below subtitle */
+  left: 14px;
+  width: 766px;
+  height: 720px; /* Locked height fills the outline down to advice bar */
+  display: grid;
+  grid-template-columns: repeat(3, 249px);
+  justify-content: space-between;
+  z-index: 3;
+  box-sizing: border-box;
+}
+
+/* Fully closed boxes with complete 4-sided borders */
+.subj-col {
+  background: #ffffff;
+  padding: 10px 10px 14px 10px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Tight, proportional spacing to fit all 3 sections cleanly */
+  justify-content: space-between;
   box-sizing: border-box;
+  border-radius: 16px; /* Fully rounded corners on all 4 sides */
 }
 
-.subj-stand-wrap {
-  width: 100%;
-  flex-shrink: 0;
-  margin-bottom: 2px;
+/* 4-sided closed borders */
+.subj-col-physics {
+  border: 1.5px solid #93c5fd;
+}
+.subj-col-chemistry {
+  border: 1.5px solid #fde047;
+}
+.subj-col-maths {
+  border: 1.5px solid #fda4af;
 }
 
-/* --- SECTION BADGES --- */
-.subj-badge {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.8px;
+.subj-col-physics {
+  border-left: 1.5px solid #93c5fd;
+  border-right: 1.5px solid #93c5fd;
+  border-bottom: 1.5px solid #93c5fd;
+}
+.subj-col-chemistry {
+  border-left: 1.5px solid #fde047;
+  border-right: 1.5px solid #fde047;
+  border-bottom: 1.5px solid #fde047;
+}
+.subj-col-maths {
+  border-left: 1.5px solid #fda4af;
+  border-right: 1.5px solid #fda4af;
+  border-bottom: 1.5px solid #fda4af;
+}
+
+/* Individual Card Styling with Comfortable Breathing Room */
+.s-card {
+  border-radius: 14px;
+  padding: 13px 13px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1; /* All 3 cards share height proportionally */
+  margin-top: 8px;
+  justify-content: flex-start;
+}
+
+.s-card-expert {
+  background: #ffffff;
+  border: 1.5px solid #bfdbfe;
+}
+
+.s-card-mirror {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+}
+
+.s-card-remedy {
+  background: #fffafa;
+  border: 1.5px solid #fecaca;
+}
+
+/* Card Header Row */
+.s-card-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Anti-Overflow Badges: wrapped & sized so text never spills out */
+.s-pill {
+  font-size: 8.2px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
   text-transform: uppercase;
-  padding: 2.5px 9px;
-  border-radius: 6px;
-  margin-bottom: 7px;
+  padding: 3px 6px;
+  border-radius: 5px;
+  line-height: 1.2;
+  white-space: normal; /* Prevents overflow clipping */
+  max-width: calc(100% - 20px);
+  box-sizing: border-box;
 }
-.badge-expert {
-  background: #f1f5f9;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+
+.s-pill-expert {
+  background: #eff6ff;
+  color: #1d4ed8;
 }
-.badge-mirror {
+.s-pill-mirror {
   background: #fef3c7;
-  color: #92400e;
-  border: 1px solid #fde68a;
+  color: #b45309;
 }
-.badge-remedy {
-  background: rgba(198, 40, 40, 0.08);
-  color: #991b1b;
-  border: 1px solid rgba(198, 40, 40, 0.22);
+.s-pill-remedy {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
-/* --- BOX 1: THE SUBJECT EXPERT & MASTER PERSPECTIVE --- */
-.subj-box-expert {
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  border-left: 6px solid #1e293b;
-  border-radius: 18px;
-  padding: 14px 20px;
-  box-sizing: border-box;
-}
-.subj-expert-text {
-  font-size: 14px;
-  line-height: 1.52;
-  color: #1e293b;
-  font-weight: 700;
-}
-
-.subj-box-mirror {
-  background: #FFFDF5;
-  border: 1.5px solid #fed7aa;
-  border-left: 6px solid #d97706;
-  border-radius: 18px;
-  padding: 15px 20px;
-  box-sizing: border-box;
-}
-.subj-mirror-text {
-  font-size: 14.5px;
-  line-height: 1.54;
+/* Natural, comfortable reading font */
+.s-card-body {
+  font-size: 11.6px;
+  line-height: 1.5;
   color: #334155;
-  font-weight: 700;
+  font-weight: 500;
 }
 
-.subj-box-remedy {
-  background: #FFFAE5;
-  border: 2px solid #fed7aa;
-  border-left: 6px solid #c62828;
-  border-radius: 20px;
-  padding: 16px 22px;
-  box-sizing: border-box;
-}
-.subj-remedy-text {
-  font-size: 14.5px;
-  line-height: 1.52;
-  color: #1e293b;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-.subj-balance-banner {
-  background: rgba(254, 215, 170, 0.55);
-  border-radius: 10px;
-  padding: 8px 13px;
-  margin-bottom: 10px;
-  font-size: 13.5px;
+.s-card-body b {
   font-weight: 800;
-  color: #7a1010;
-  line-height: 1.45;
+  color: #0f172a;
 }
-.subj-advice-box {
+
+/* Bottom Full-Width "ONE PIECE OF ADVICE" Section */
+.subj-bottom-advice-wrap {
+  position: absolute;
+  top: 922px;
+  left: 10px;
+  width: 774px;
+  height: 132px;
   background: #ffffff;
-  border: 1.5px dashed #c62828;
-  border-radius: 12px;
-  padding: 10px 15px;
-  font-size: 14px;
-  font-weight: 800;
-  color: #7a1010;
-  line-height: 1.48;
+  padding-top: 6px;
+  box-sizing: border-box;
+  z-index: 5;
+}
+
+.advice-header-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.advice-header-line {
+  flex: 1;
+  height: 1px;
+  background: #cbd5e1;
+}
+
+.advice-navy-pill {
+  background: #0f172a;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+.advice-three-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  padding: 0 6px;
+}
+
+.advice-col-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 2px 12px;
+  border-right: 1px solid #cbd5e1;
+}
+.advice-col-item:last-child {
+  border-right: none;
+}
+
+.advice-icon-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.advice-subj-title {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  margin-bottom: 3px;
+  text-transform: uppercase;
+}
+
+.advice-subj-text {
+  font-size: 10.5px;
+  line-height: 1.42;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.pill-link-bottom-center {
+  position: absolute;
+  top: 1056px;
+  left: 322px;
+  width: 150px;
+  height: 32px;
+  z-index: 20;
+  display: block;
 }
 
 /* PAGE 5: PEER COMPARISON */
@@ -820,69 +1076,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 }
 
 /* ========================================================= */
-/* PAGE 7: AUTO-DISTRIBUTED HEALTH TREE (BOTTOM ANCHORED)   */
-/* ========================================================= */
-.health-tree-wrap {
-  position: absolute;
-  top: 140px;
-  left: 24px;
-  width: 742px;
-  /* Fixed vertical span reaching near the bottom (140px + 885px = 1025px) */
-  height: 885px;
-  display: flex;
-  flex-direction: column;
-}
-
-.health-row {
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex: 1; /* Automatically sets equal vertical spacing across all boxes */
-}
-
-/* Seamless Continuous Trunk Line */
-.health-row::before {
-  content: "";
-  position: absolute;
-  left: 10px;
-  top: 0;
-  bottom: 0;
-  width: 2.5px;
-  background: #1e1e1e;
-}
-
-/* Line starts at Row 1 branch and terminates at Row 4 branch */
-.health-row:first-child::before {
-  top: 50%;
-}
-.health-row:last-child::before {
-  bottom: 50%;
-}
-
-/* Horizontal Prong Connecting Trunk to Card */
-.health-branch {
-  width: 28px;
-  height: 2.5px;
-  background: #1e1e1e;
-  margin-left: 10px;
-  flex-shrink: 0;
-}
-
-/* Bigger, Bolder Dynamic Box */
-.health-box {
-  flex: 1;
-  background: #FFFAE5;
-  border: 2px solid #1e1e1e;
-  border-radius: 28px;
-  padding: 18px 26px;
-  box-sizing: border-box;
-  font-size: 18px;
-  font-weight: 800;
-  line-height: 1.48;
-  color: #4a0402;
-}
-
-/* ========================================================= */
 /* PAGE 8: DYNAMIC EXECUTION PLAN (SERIAL NUMBERS + TEXT)   */
 /* ========================================================= */
 .exec-list {
@@ -920,16 +1113,6 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   flex: 1;
 }
 
-/* PAGE 11: CONCLUSION */
-.p11-conc { top: 390px; left: 140px; width: 520px; font-size: 20px; line-height: 1.8; color: #5c1a1a; }
-
-/* MASKING ENGINE */
-.black-mask { 
-  position: absolute; background: #000; color: #ffd700; font-weight: 900; 
-  text-align: center; font-size: 32px; z-index: 20; top: 57px; left: 141px; 
-  width: 130px; height: 45px; line-height: 45px; border-radius: 8px;
-}
-
 /* PRINTABLES HEADER */
 .printable-header { position: absolute; font-size: 15px; font-weight: 700; color: #222; }
 .p12-header { top: 108px; left: 60px; }
@@ -953,46 +1136,22 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
 <div class="page">
   <img src="${images.p2}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
-    <!-- Clickable overlay on top-right Canva badge -->
     <a href="https://www.jeesociety.in" target="_blank" class="pill-link-top-right"></a>
     <div class="dynamic-text p2-score">${score}</div>
     <div class="dynamic-text p2-gap">${readinessGap}</div>
   </div>
 </div>
 
-<!-- ========================================================= -->
-<!-- PAGES 3a, 3b, 3c: 3-TIER SUBJECT DEEP DIVES               -->
-<!-- ========================================================= -->
-
-<!-- PAGE 3a: PHYSICS DEEP DIVE -->
+<!-- PAGE 3: COMBINED 3-COLUMN JEE SUBJECT DEEP DIVE -->
 <div class="page">
-  <img src="${images.p3a}" class="bg-img" onerror="this.style.display='none'"/>
+  <img src="${images.p3_combined}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
-    <!-- Clickable overlay matching the Canva badge position (offset for left doodle) -->
-    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-subject"></a>
-    <div class="subj-content">${buildSubjectPageHTML("physics", data, marksBySubject)}</div>
+    ${buildCombinedSubjectsPageHTML(data, marksBySubject)}
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-bottom-center"></a>
   </div>
 </div>
 
-<!-- PAGE 3b: CHEMISTRY DEEP DIVE -->
-<div class="page">
-  <img src="${images.p3b}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-subject"></a>
-    <div class="subj-content">${buildSubjectPageHTML("chemistry", data, marksBySubject)}</div>
-  </div>
-</div>
-
-<!-- PAGE 3c: MATHS DEEP DIVE -->
-<div class="page">
-  <img src="${images.p3c}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-subject"></a>
-    <div class="subj-content">${buildSubjectPageHTML("maths", data, marksBySubject)}</div>
-  </div>
-</div>
-
-<!-- PAGE 6: R.E.F & BARRIER (WITH SECTION HEADINGS) -->
+<!-- PAGE 4: R.E.F & BARRIER -->
 <div class="page">
   <img src="${images.p6}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -1002,7 +1161,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
       <!-- 1. Top Card: Structured R.E.F Analysis -->
       <div 
         class="p6-card-ref" 
-        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height: ${p6LineHeight};"
+        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height:${p6LineHeight};"
       >
         <div>${refBlocksHTML}</div>
         <div class="p6-closing-note" style="font-size: ${p6FontSize};">
@@ -1013,7 +1172,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
       <!-- 2. Section Heading -->
       <div 
         class="p6-section-title" 
-        style="margin: ${p6TitleMargin}; font-size: ${p6TitleSize};"
+        style="margin: ${p6TitleMargin}; font-size:${p6TitleSize};"
       >
         BIGGEST BARRIER & MINDSET
       </div>
@@ -1021,7 +1180,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
       <!-- 3. Bottom Card: Barrier & Mindset -->
       <div 
         class="p6-card-barrier" 
-        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height: ${p6LineHeight};"
+        style="padding: ${p6Padding}; font-size: ${p6FontSize}; line-height:${p6LineHeight};"
       >
         <div>
           <div class="ref-badge" style="margin-bottom: 8px;">🛑 CORE BEHAVIORAL BLOCK</div>
@@ -1033,33 +1192,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-<!-- PAGE 7: HEALTH, ENERGY & ENVIRONMENT -->
-<div class="page">
-  <img src="${images.p7}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
-    <div class="health-tree-wrap">
-      <div class="health-row">
-        <div class="health-branch"></div>
-        <div class="health-box">${get("q13", data)?.mentor_note || ""}</div>
-      </div>
-      <div class="health-row">
-        <div class="health-branch"></div>
-        <div class="health-box">${get("q14", data)?.mentor_note || ""}</div>
-      </div>
-      <div class="health-row">
-        <div class="health-branch"></div>
-        <div class="health-box">${get("q15", data)?.mentor_note || ""}</div>
-      </div>
-      <div class="health-row">
-        <div class="health-branch"></div>
-        <div class="health-box">${get("q16", data)?.mentor_note || ""}</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- PAGE 8: EXECUTION PLAN -->
+<!-- PAGE 5: EXECUTION PLAN -->
 <div class="page">
   <img src="${images.p8}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -1075,7 +1208,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-<!-- PAGE 9: NOTE TO PARENTS -->
+<!-- PAGE 6: NOTE TO PARENTS -->
 <div class="page">
   <img src="${images.p9}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -1083,22 +1216,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
-<!-- PAGE 11: CONCLUSION -->
-<div class="page">
-  <img src="${images.p11}" class="bg-img" onerror="this.style.display='none'"/>
-  <div class="content-layer">
-    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
-    <div class="dynamic-text p11-conc">
-      <span style="font-size: 22px; font-weight: 900; color: #a40000;">
-        ${get("q18", data)?.one_line || "Final Verdict"}
-      </span><br><br>
-      ${get("q18", data)?.mentor_note || "Focus on your barriers and execute the plan consistently."}
-    </div>
-  </div>
-</div>
-
-
-<!-- PRINTABLES -->
+<!-- PAGE 7: 90-DAY HABIT GRID -->
 <div class="page">
   <img src="${images.p12}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -1108,6 +1226,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
+<!-- PAGE 8: MOCK TEST TRACKER -->
 <div class="page">
   <img src="${images.p13}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -1117,6 +1236,7 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
+<!-- PAGE 9: MOCK ANALYSIS GUIDE -->
 <div class="page">
   <img src="${images.p14}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -1124,30 +1244,15 @@ body { margin:0; padding:0; background:white; font-family:'Nunito', sans-serif; 
   </div>
 </div>
 
+<!-- PAGE 10: PCM PREREQUISITES (Unified Single Page for 2027 or 2028) -->
 <div class="page">
-  <img src="${images.sundayTracker}" class="bg-img" onerror="this.style.display='none'"/>
+  <img src="${images.pcm_prerequisites}" class="bg-img" onerror="this.style.display='none'"/>
+  <div class="content-layer">
+    <a href="https://www.jeesociety.in" target="_blank" class="pill-link-standard"></a>
+  </div>
 </div>
 
-<!-- CHAPTER PREREQUISITES (END OF DOCUMENT) -->
-${images.physics ? `
-<div class="page">
-  <img src="${images.physics}" class="bg-img"/>
-  ${attemptType === "2027" ? `<div class="black-mask bm-physics">${attemptType}</div>` : ""}
-</div>` : ""}
-
-${images.chemistry ? `
-<div class="page">
-  <img src="${images.chemistry}" class="bg-img"/>
-  ${attemptType === "2027" ? `<div class="black-mask bm-physics">${attemptType}</div>` : ""}
-</div>` : ""}
-
-${images.maths ? `
-<div class="page">
-  <img src="${images.maths}" class="bg-img"/>
-  ${attemptType === "2027" ? `<div class="black-mask bm-physics">${attemptType}</div>` : ""}
-</div>` : ""}
-
-<!-- MINDSET SYSTEMS -->
+<!-- PAGE 11: MINDSET SYSTEMS -->
 <div class="page">
   <img src="${images.p6b}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">
@@ -1155,7 +1260,7 @@ ${images.maths ? `
   </div>
 </div>
 
-<!-- MENTORSHIP PROMO -->
+<!-- PAGE 12: MENTORSHIP PROMO (FINAL CLOSING PAGE) -->
 <div class="page">
   <img src="${images.mentorshipPromo}" class="bg-img" onerror="this.style.display='none'"/>
   <div class="content-layer">

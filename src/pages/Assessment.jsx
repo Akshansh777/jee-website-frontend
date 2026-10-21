@@ -11,14 +11,14 @@ import {
   ThreatResponses,
 } from "../ResponseBank";
 
-// -------------------- QUESTIONS DATA --------------------
+// -------------------- QUESTIONS DATA (16 HIGH-IMPACT QUESTIONS) --------------------
 const QUESTIONS = [
   {
     id: "name",
     type: "text",
     question: "What is your name?"
   },
-  // Q1 -> Strength (Primary)
+  // 1 -> q1 (Strength Primary)
   {
     id: "q1",
     swot: "S",
@@ -32,7 +32,7 @@ const QUESTIONS = [
     ],
     weights: [10, 6, 4, 0]
   },
-  // Q2 -> Strength (Secondary)
+  // 2 -> q2 (Strength Secondary)
   {
     id: "q2",
     swot: "S",
@@ -46,7 +46,7 @@ const QUESTIONS = [
     ],
     weights: [10, 7, 3, 0]
   },
-  // Q3 -> Weakness (Primary)
+  // 3 -> q3 (Weakness Primary)
   {
     id: "q3",
     swot: "W",
@@ -60,60 +60,60 @@ const QUESTIONS = [
     ],
     weights: [10, 6, 2, 2]
   },
-  // Q4 -> Weakness (Secondary)
+  // 4 -> q4 (Physics)
   {
     id: "q4",
     swot: "W",
     impact: "secondary",
     question: "Q4. How is your Physics (Honestly)?",
     options: [
-      "Strong: I can solve JEE Mains PYQs accurately under timed practice now. ",
-      "Average: I understand concepts but get stuck on tricky questions; I am giving it high priority. ",
-      "Weak: I struggle with basics; I am ignoring them to focus on Chemistry/Math. ",
-      "Comfort Trap: Physics is my strongest subject, yet I still spend 50%+ of my time watching videos on Physics because I like it. "
+      "Strong: I can solve JEE Mains PYQs accurately under timed practice now.",
+      "Average: I understand concepts but get stuck on tricky questions; I am giving it high priority.",
+      "Weak: I struggle with basics; I am ignoring them to focus on Chemistry/Math.",
+      "Comfort Trap: Physics is my strongest subject, yet I still spend 50%+ of my time watching videos on Physics because I like it."
     ],
     weights: [10, 7, 3, 0]
   },
-  // Q5 (Standard)
+  // 5 -> q5 (Chemistry)
   {
     id: "q5",
-    question: "Q5. How is your Chemistry(Honestly)?",
+    question: "Q5. How is your Chemistry (Honestly)?",
     options: [
-      "Strong: NCERT is on my tips; I score high consistently. ",
-      "Volatile: I memorize it, but forget it in 3 days; I spend time re-reading notes constantly. ",
-      "Weak: I hate Chemistry; I barely touch this subject. ",
-      "Average: I am good at any one part(OC/OC/P), and bad at one. "
+      "Strong: NCERT is on my tips; I score high consistently.",
+      "Volatile: I memorize it, but forget it in 3 days; I spend time re-reading notes constantly.",
+      "Weak: I hate Chemistry; I barely touch this subject.",
+      "Average: I am good at any one part (OC/IOC/PC), and bad at another."
     ],
     weights: [10, 6, 2, 4]
   },
-  // Q6 (Standard)
+  // 6 -> q6 (Maths)
   {
     id: "q6",
-    question: "Q6. How is your Mathematics(Honestly)?",
+    question: "Q6. How is your Mathematics (Honestly)?",
     options: [
-      "Killer: I love Math; I love solving complex problems in a given time. ",
-      "Survivor: I only target specific high-weightage chapters (Vector/3D) to clear cutoff. ",
-      "Phobia: I am terrified of Math; I haven't solved a question in weeks. ",
-      "The Ego Lifter: I am weak, but I waste hours trying to solve impossible problems just to prove I can. "
+      "Killer: I love Math; I love solving complex problems in a given time.",
+      "Survivor: I only target specific high-weightage chapters (Vector/3D) to clear cutoff.",
+      "Phobia: I am terrified of Math; I haven't solved a question in weeks.",
+      "The Ego Lifter: I am weak, but I waste hours trying to solve impossible problems just to prove I can."
     ],
     weights: [10, 7, 2, 3]
   },
-  // Q7 (Standard)
+  // 7 -> q7 (Recall)
   {
     id: "q7",
     question: "Q7. How is your Recall Strength in an exam setting?",
     options: [
-      "Crystal Clear: I recall every formula while solving questions. ",
-      "Blurry: I recognize the concept when I see the solution, but can't recall it during the question. ",
-      "Leaky Bucket: I study a chapter, but 1 week later it feels like I never studied it. ",
-      "Blank Out: I panic in tests and forget even the basics I knew well. "
+      "Crystal Clear: I recall every formula while solving questions.",
+      "Blurry: I recognize the concept when I see the solution, but can't recall it during the question.",
+      "Leaky Bucket: I study a chapter, but 1 week later it feels like I never studied it.",
+      "Blank Out: I panic in tests and forget even the basics I knew well."
     ],
     weights: [10, 7, 4, 0]
   },
-  // Q8 (Standard)
+  // 8 -> q8 (Solving Speed)
   {
     id: "q8",
-    question: "Q8. Go and solve JEE Mains PYQs of any chapter of Maths for an hour. Then choose an option that matches closely:",
+    question: "Q8. When you sit down to solve JEE Mains PYQs for 1 hour, what realistically happens?",
     options: [
       "I solve 20+ MCQs per hour with high accuracy.",
       "I solve 10-15 MCQs per hour.",
@@ -122,7 +122,7 @@ const QUESTIONS = [
     ],
     weights: [10, 7, 3, 0]
   },
-  // Q9 (Standard)
+  // 9 -> q9 (Attention Span - Kept so Mindset section has 3 solid questions)
   {
     id: "q9",
     question: "Q9. Tell us about your Attention span:",
@@ -134,7 +134,7 @@ const QUESTIONS = [
     ],
     weights: [10, 7, 3, 0]
   },
-  // Q10 (MULTI-SELECT: Mock Test Mistake Patterns)
+  // 10 -> q10 (Mock Test Mistake Patterns)
   {
     id: "q10",
     question: "Q10. When you analyze your mock test mistakes, where do most of your lost marks go?",
@@ -148,8 +148,7 @@ const QUESTIONS = [
     ],
     weights: [0, 0, 0, 0]
   },
-
-  // Q11 (MULTI-SELECT: Core Root Cause Barriers)
+  // 11 -> q11 (Core Root Cause Barriers)
   {
     id: "q11",
     question: "Q11. Reflect on your inner self. What are your biggest barriers right now?",
@@ -163,28 +162,12 @@ const QUESTIONS = [
     ],
     weights: [0, 0, 0, 0]
   },
-
-  // Q12
-  {
-    id: "q12",
-    question: "Q12. How is your mindset currently:",
-    multi: true,
-    maxSelect: 2,
-    options: [
-      "Warrior: \"I will crack JEE, no matter what. I just need the plan.\"",
-      "Hopeful: \"I think I can get a good IIT/NIT, but I am sometimes uncertain.\"",
-      "Doubter: \"I am trying, but deep down I feel I started too late and it’s close to impossible.\"",
-      "Lost: \"I have given up. I am just pretending to study for my parents.\""
-    ],
-    weights: [10, 7, 4, 0]
-  },
-
-  // Q13
+  // 12 -> q13 (Energy Levels - Displayed as Q12)
   {
     id: "q13",
     swot: "O",
     impact: "primary",
-    question: "Q13. Tell us about your Energy Levels:",
+    question: "Q12. Tell us about your Daily Energy Levels:",
     multi: true,
     maxSelect: 2,
     options: [
@@ -195,27 +178,12 @@ const QUESTIONS = [
     ],
     weights: [10, 6, 3, 4]
   },
-  // Q14 -> Opportunity Secondary (Single Select)
-  {
-    id: "q14",
-    swot: "O",
-    impact: "secondary",
-    question: "Q14. How is your health recently?",
-    options: [
-      "I am fit and take good care of my body",
-      "I fall ill frequently (cold, headaches)",
-      "I have major diseases and treatments going on currently",
-      "My body is physically not fit, but I have started taking care"
-    ],
-    weights: [10, 4, 0, 6]
-  },
-
-  // Q15
+  // 13 -> q15 (Study Environment - Displayed as Q13)
   {
     id: "q15",
     swot: "T",
     impact: "primary",
-    question: "Q15. How is your Study Environment?",
+    question: "Q13. How is your Study Environment?",
     multi: true,
     maxSelect: 2,
     options: [
@@ -226,76 +194,43 @@ const QUESTIONS = [
     ],
     weights: [10, 7, 4, 0]
   },
-  // Q16 -> Threat (Secondary)
-  {
-    id: "q16",
-    swot: "T",
-    impact: "secondary",
-    question: "Q16. How exactly are your parents involved in your JEE preparation?",
-    options: [
-      "The Rock: They are supportive, don't stress much about marks, and ensure I eat/sleep well. ",
-      "The Pressure Cooker: They compare me to Sharma ji ka beta and scold me for low marks. ",
-      "The Silent: They don't really know what I'm doing; I'm on my own. ",
-      "The Manager: They micromanage my schedule (\"Why aren't you studying?\"), which annoys me. "
-    ],
-    weights: [10, 4, 6, 3]
-  },
-  // Q17 UPDATED
+  // 14 -> q17 (Target Attempt - Displayed as Q14)
   {
     id: "q17",
-    question: "Q17. Which attempt are you targeting? (Time Horizon)",
+    question: "Q14. Which attempt are you targeting? (Time Horizon)",
     options: [
       "JEE 2027",
       "JEE 2028"
     ],
-    weights: [0, 0] 
+    weights: [0, 0]
   },
-  // Q18 UPDATED
+  // 15 -> q18 (Mock Score Baseline - Displayed as Q15)
   {
     id: "q18",
-    question: "Q18. In a recent full-length JEE Main–level test, where do you realistically stand?",
+    question: "Q15. In a recent full-length JEE Main–level test, where do you realistically stand?",
     options: [
       "I consistently score 180+ in mocks (or I am confident I can solve 60%+ of the paper today).",
       "I usually score between 120 - 180 (or I can solve roughly half the paper).",
       "I am stuck between 50 - 100 (or I struggle to solve even 20 questions correctly).",
       "I generally can’t score more than 50 marks in JEE Mains Mock Tests."
     ],
-    weights: [0, 0, 0, 0] 
+    weights: [0, 0, 0, 0]
   },
-  // Q19 NEW: active vs passive study ratio — feeds EI (Consistency & Execution)
+  // 16 -> q19 (Active vs Passive Split - Displayed as Q16)
   {
     id: "q19",
-    question: "Q19. Out of your daily study time, how is your hours distribution split between watching lectures/classes versus solving questions on your own?",
+    question: "Q16. Out of your daily study time, how is your hours distribution split between watching lectures versus solving questions on your own?",
     options: [
       "80% Lectures / 20% Solving",
       "60% Lectures / 40% Solving",
       "50% Lectures / 50% Solving",
       "20% Lectures / 80% Solving"
     ],
-    // These are used directly as multipliers in score.js (Q19_MULTIPLIER),
-    // not run through the generic 1.0/0.66/0.33/0 index mapping other
-    // questions use, since they were given as specific target values.
     weights: [0.3, 0.5, 0.8, 1.0]
-  },
-  // Q20 NEW: accountability/mentorship signal — display + report-context
-  // only, does NOT feed the JSS formula. See AccountabilityCallout on the
-  // results page for how this is used.
-  {
-    id: "q20",
-    question: "Q20. Who currently audits your weekly test performance and holds you accountable to your daily targets?",
-    options: [
-      "Nobody, I analyze them alone (or skip analysis entirely)",
-      "My coaching teachers (they care, but rarely have time for 1-on-1 audits)",
-      "My parents (they support me, but don't know technical JEE strategy)",
-      "A dedicated senior / IITian mentor"
-    ],
-    weights: [0, 0, 0, 0]
   }
 ];
 
-// -------------------- SECTION MAP --------------------
-// Grouped by ARRAY POSITION (step index), not question id — QUESTIONS has
-// q12 listed before q11, so id-based grouping would misorder this section.
+// -------------------- SECTION MAP (For 16 Questions) --------------------
 const SECTIONS = [
   {
     key: "habits",
@@ -304,7 +239,7 @@ const SECTIONS = [
     title: "Your Study Habits",
     subtitle: "Let's see how consistent you really are.",
     startStep: 1,
-    endStep: 2,
+    endStep: 2, // Q1 - Q2 (2 questions)
   },
   {
     key: "academics",
@@ -313,7 +248,7 @@ const SECTIONS = [
     title: "Academic Reality Check",
     subtitle: "Time to be brutally honest about where you stand.",
     startStep: 3,
-    endStep: 8,
+    endStep: 8, // Q3 - Q8 (6 questions)
   },
   {
     key: "mindset",
@@ -323,7 +258,7 @@ const SECTIONS = [
     subtitle: "The mental patterns behind your prep.",
     reflection: "Academics: mapped.",
     startStep: 9,
-    endStep: 12,
+    endStep: 11, // Q9 - Q11 (3 questions)
   },
   {
     key: "environment",
@@ -332,8 +267,8 @@ const SECTIONS = [
     title: "Your Environment & Edge",
     subtitle: "The external factors shaping your prep.",
     reflection: "Your mindset: captured.",
-    startStep: 13,
-    endStep: 20,
+    startStep: 12,
+    endStep: 16, // Q12 - Q16 (5 questions)
   },
 ];
 
@@ -1114,8 +1049,8 @@ const REPORT_BLOCKS = [
 // particle burst (ambient feedback) but resolve nothing — keeps things
 // feeling alive without running out of blocks halfway through.
 const STEP_BLOCK_MAP = {
-  1: 5, 2: 0, 4: 8, 5: 2, 7: 10, 8: 3,
-  9: 6, 11: 1, 12: 9, 14: 4, 15: 11, 17: 7,
+  1: 5, 2: 0, 3: 8, 4: 2, 5: 10, 6: 3,
+  7: 6, 8: 1, 9: 9, 11: 4, 13: 11, 15: 7,
 };
 const FINAL_BLOCK_INDEX = 12; // the quote block, reserved for submit
 
@@ -1986,27 +1921,189 @@ const LockIcon = ({ size = 16, color = "currentColor" }) => (
   </svg>
 );
 
-const DownloadCTAButton = ({ onClick, isGenerating, label, sublabel }) => (
-  <div style={{ textAlign: "center" }}>
+const DownloadCTAButton = ({ onClick, isGenerating, label, sublabel, hasDownloaded = false }) => (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+      width: "100%",
+    }}
+  >
+    <style>{`
+      @keyframes cta-sheen {
+        0% { transform: translateX(-150%) skewX(-20deg); }
+        35%, 100% { transform: translateX(250%) skewX(-20deg); }
+      }
+      @keyframes urgency-float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-3px); }
+      }
+      @keyframes radar-ping {
+        0% { transform: scale(1); opacity: 0.9; }
+        75%, 100% { transform: scale(2.4); opacity: 0; }
+      }
+      @keyframes border-glow-pulse {
+        0%, 100% { box-shadow: 0 12px 30px -4px rgba(124, 58, 237, 0.45), 0 0 0 1px rgba(255,255,255,0.18) inset; }
+        50% { box-shadow: 0 16px 38px -2px rgba(37, 99, 235, 0.65), 0 0 0 2px rgba(255,255,255,0.32) inset; }
+      }
+    `}</style>
+
+    {/* 1. CLEAN FLOATING "FREE FOR NOW" BADGE (No overlap with button border) */}
+    {!hasDownloaded && !isGenerating && (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginBottom: "8px",
+          animation: "urgency-float 2.6s ease-in-out infinite",
+        }}
+      >
+        <div
+          style={{
+            background: "linear-gradient(90deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
+            border: "1.5px solid #38bdf8",
+            borderRadius: "999px",
+            padding: "6px 14px",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            boxShadow: "0 6px 16px rgba(15, 23, 42, 0.3), 0 0 12px rgba(56, 189, 248, 0.35)",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {/* Live Pulsing Green Dot */}
+          <span style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center", width: "8px", height: "8px", flexShrink: 0 }}>
+            <span
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: "50%",
+                background: "#4ade80",
+                animation: "radar-ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite",
+              }}
+            />
+            <span
+              style={{
+                position: "relative",
+                display: "block",
+                borderRadius: "50%",
+                width: "8px",
+                height: "8px",
+                background: "#22c55e",
+                boxShadow: "0 0 6px #22c55e",
+              }}
+            />
+          </span>
+
+          {/* Optically Centered Text + Divider */}
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              fontSize: "11px",
+              fontWeight: "900",
+              letterSpacing: "0.7px",
+              textTransform: "uppercase",
+              color: "#ffffff",
+              lineHeight: 1,
+            }}
+          >
+            <span>FREE FOR NOW</span>
+            <span style={{ width: "4px", height: "4px", borderRadius: "50%", background: "#38bdf8", display: "inline-block" }} />
+            <span style={{ color: "#38bdf8" }}>INSTANT UNLOCK</span>
+          </span>
+
+          {/* Gold Lightning Bolt SVG */}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="#facc15" style={{ flexShrink: 0, display: "block" }}>
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+        </div>
+
+        {/* Tiny Pointer Caret Aiming at Button */}
+        <div
+          style={{
+            width: 0,
+            height: 0,
+            borderLeft: "5px solid transparent",
+            borderRight: "5px solid transparent",
+            borderTop: "5px solid #38bdf8",
+            marginTop: "-1px",
+          }}
+        />
+      </div>
+    )}
+
+    {/* 2. MAIN CTA BUTTON */}
     <button
       onClick={onClick}
       disabled={isGenerating}
       className="jee-lock-trigger"
       style={{
-        padding: "16px 40px", borderRadius: "14px",
-        background: isGenerating ? "#94a3b8" : "linear-gradient(135deg, #2563eb, #7c3aed)",
-        color: "white", fontSize: "17px", fontWeight: "800", border: "none",
-        cursor: isGenerating ? "not-allowed" : "pointer", transition: "all 0.25s ease",
-        boxShadow: isGenerating ? "none" : "0 10px 26px rgba(124, 58, 237, 0.35)",
-        display: "inline-flex", alignItems: "center", gap: "10px",
+        position: "relative",
+        overflow: "hidden",
+        padding: "17px 44px",
+        borderRadius: "16px",
+        background: isGenerating
+          ? "#94a3b8"
+          : "linear-gradient(135deg, #2563eb 0%, #6d28d9 55%, #7c3aed 100%)",
+        color: "white",
+        fontSize: "17.5px",
+        fontWeight: "800",
+        letterSpacing: "-0.2px",
+        lineHeight: 1,
+        border: "none",
+        cursor: isGenerating ? "not-allowed" : "pointer",
+        transition: "transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+        animation: isGenerating ? "none" : "border-glow-pulse 3s infinite ease-in-out",
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "10px",
       }}
-      onMouseEnter={(e) => { if (!isGenerating) e.currentTarget.style.transform = "translateY(-3px)"; }}
-      onMouseLeave={(e) => { if (!isGenerating) e.currentTarget.style.transform = "translateY(0)"; }}
+      onMouseEnter={(e) => {
+        if (!isGenerating) e.currentTarget.style.transform = "translateY(-3px) scale(1.015)";
+      }}
+      onMouseLeave={(e) => {
+        if (!isGenerating) e.currentTarget.style.transform = "translateY(0) scale(1)";
+      }}
     >
-      {!isGenerating && <LockIcon size={20} color="#fff" />}
-      {isGenerating ? "Generating PDF..." : label}
+      {/* Animated Glossy Light Sweep */}
+      {!isGenerating && (
+        <span
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: "45%",
+            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent)",
+            animation: "cta-sheen 3.8s infinite ease-in-out",
+            pointerEvents: "none",
+          }}
+        />
+      )}
+
+      {!isGenerating && (
+        <span style={{ display: "inline-flex", alignItems: "center", transform: "translateY(-1px)" }}>
+          <LockIcon size={19} color="#fff" />
+        </span>
+      )}
+      <span style={{ position: "relative", zIndex: 2, lineHeight: 1 }}>
+        {isGenerating ? "Generating PDF..." : label}
+      </span>
     </button>
-    {sublabel && <div style={{ fontSize: "14px", color: "#94a3b8", marginTop: "10px" }}>{sublabel}</div>}
+
+    {sublabel && (
+      <div style={{ fontSize: "13.5px", color: "#64748b", marginTop: "10px", fontWeight: "600" }}>
+        {sublabel}
+      </div>
+    )}
   </div>
 );
 
@@ -2020,8 +2117,30 @@ const sanitizeAnswersForScoring = (rawAnswers) => {
       clean[key] = !isNaN(Number(val)) ? Number(val) : val;
     }
   });
+
+  // Auto-fill removed questions so utils/score.js needs ZERO changes:
+  if (clean.q14 === undefined) clean.q14 = clean.q13 !== undefined ? clean.q13 : 1; // Mirrors Energy -> Health
+  if (clean.q16 === undefined) clean.q16 = clean.q15 !== undefined ? clean.q15 : 1; // Mirrors Environment -> Home
+  if (clean.q12 === undefined) clean.q12 = clean.q1 !== undefined ? clean.q1 : 1;
+  if (clean.q20 === undefined) clean.q20 = 0;
+
   return clean;
 };
+
+// --- 11 STUDENT-FOCUSED ROTATING MESSAGES (NO TECH JARGON) ---
+const REPORT_GENERATION_MESSAGES = [
+  "Analyzing your Physics, Chemistry & Maths balance...",
+  "Comparing your habits with Top 1% IITian benchmarks...",
+  "Identifying hidden negative-marking traps in your mocks...",
+  "Mapping your Preparation Smartness Score (PSS) trajectory...",
+  "Pinpointing your biggest daily focus & revision leaks...",
+  "Building your personalized R.E.F (Recall, Error, Focus) analysis...",
+  "Evaluating your NTA tie-breaker advantage across subjects...",
+  "Crafting subject-wise expert remedies & tactical advice...",
+  "Designing your step-by-step 24-hour & 7-day execution plan...",
+  "Attaching custom printable trackers & revision sheets...",
+  "Putting final touches on your personalized JEE strategy report..."
+];
 
 export default function StudentSwotForm() {
   const navigate = useNavigate();
@@ -2031,10 +2150,33 @@ export default function StudentSwotForm() {
   const [finalSWOT, setFinalSWOT] = useState({ S: "", W: "", O: "", T: "" });
 
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [isOfferFree, setIsOfferFree] = useState(true); // Toggle to false when making it paid
-  const REPORT_PRICE = isOfferFree ? 0 : 99;
+  const [isOfferFree, setIsOfferFree] = useState(false); // true = Free Flow | false = Paid Razorpay Flow
+  const REPORT_PRICE = isOfferFree ? 0 : 99; // Price in INR (₹99)
+  const RAZORPAY_KEY_ID = "rzp_live_YOUR_KEY_HERE"; // <-- Replace with your Razorpay Key ID
+
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
-  
+
+  // --- AFTER-DOWNLOAD & PAYMENT FLOW STATES ---
+  // "IDLE" | "PAYMENT_CONFIRMED" | "GENERATING" | "SUCCESS"
+  const [downloadPopupState, setDownloadPopupState] = useState("IDLE");
+  const [rotatingMsgIndex, setRotatingMsgIndex] = useState(0);
+  const [isPopupFadingOut, setIsPopupFadingOut] = useState(false);
+  const [hasDownloadedOnce, setHasDownloadedOnce] = useState(false);
+  const [cachedPdfUrl, setCachedPdfUrl] = useState(null);
+  const [hasPaid, setHasPaid] = useState(false);
+  const [paymentId, setPaymentId] = useState("");
+
+  // Rotate through the 11 messages every 1.6 seconds while generating
+  useEffect(() => {
+    if (downloadPopupState !== "GENERATING") return;
+
+    const interval = setInterval(() => {
+      setRotatingMsgIndex((prev) => (prev + 1) % REPORT_GENERATION_MESSAGES.length);
+    }, 1600);
+
+    return () => clearInterval(interval);
+  }, [downloadPopupState]);
+
   const handleStartNewAssessment = () => {
     setStep(0);
     setAnswers({});
@@ -2044,6 +2186,12 @@ export default function StudentSwotForm() {
     setShowSectionIntro(null);
     setMilestoneToast(null);
     setShowMobilePreview(false);
+    setDownloadPopupState("IDLE");
+    setHasDownloadedOnce(false);
+    setHasPaid(false);
+    setPaymentId("");
+    if (cachedPdfUrl) window.URL.revokeObjectURL(cachedPdfUrl);
+    setCachedPdfUrl(null);
     shownSectionIntros.current = new Set();
     shownMilestones.current = new Set();
   };
@@ -2121,17 +2269,14 @@ const [showStickyCta, setShowStickyCta] = useState(false);
       const lastRect = lastCtaRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
-      // Appears once CTA 1 scrolls out of view above the screen
       const isPastFirstCta = firstRect.bottom < 0;
-
-      // Hides and merges back as soon as CTA 3 enters the viewport
       const isReachingLastCta = lastRect.top <= viewportHeight - 30;
 
       setShowStickyCta(isPastFirstCta && !isReachingLastCta);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [showSWOT]);
@@ -2196,7 +2341,7 @@ const [showStickyCta, setShowStickyCta] = useState(false);
   };
 
   // Progress Calculations
-  const TOTAL_QUESTIONS = 20;
+  const TOTAL_QUESTIONS = 16;
   const BASE_PROGRESS = 8;
   const currentQuestionIndex = Math.max(step - 1, 0); 
   const progressPercent = Math.min(
@@ -2415,24 +2560,67 @@ const [showStickyCta, setShowStickyCta] = useState(false);
   };
 
   // --------------------------------------------------------
-  // HANDLE DIRECT PDF DOWNLOAD (Multi-Select Aware Payload)
+  // DIRECT FREE PDF DOWNLOAD HANDLER (With Memory Cache)
   // --------------------------------------------------------
+  const triggerBrowserDownload = (blobUrl, rawName) => {
+    const safeName = (rawName || "Student").trim().replace(/\s+/g, "_");
+    const filename = `JEEsociety_Report_${safeName}.pdf`;
+
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => {
+      if (link.parentNode) link.parentNode.removeChild(link);
+    }, 1000);
+  };
+
+  const showSuccessAndFadeOut = () => {
+    setDownloadPopupState("SUCCESS");
+    setHasDownloadedOnce(true);
+    setIsPopupFadingOut(false);
+
+    // Start smooth fade-out at 2.6s, fully close at 3.0s
+    setTimeout(() => {
+      setIsPopupFadingOut(true);
+    }, 2600);
+
+    setTimeout(() => {
+      setDownloadPopupState("IDLE");
+      setIsPopupFadingOut(false);
+    }, 3000);
+  };
+
   const handleDownloadReport = async () => {
+    if (isGenerating || downloadPopupState === "GENERATING") return;
+
+    // Instant re-download if already generated in this session
+    if (cachedPdfUrl) {
+      triggerBrowserDownload(cachedPdfUrl, answers["name"]);
+      showSuccessAndFadeOut();
+      return;
+    }
+
     setIsGenerating(true);
+    setRotatingMsgIndex(0);
+    setIsPopupFadingOut(false);
+    setDownloadPopupState("GENERATING");
 
     const cleanAnswers = sanitizeAnswersForScoring(answers);
     const result = computeScores(cleanAnswers);
 
-    const { 
-      jee_society_score, 
-      expected_percentile_range, 
+    const {
+      jee_society_score,
+      expected_percentile_range,
       potential_percentile_range,
       breakdown,
     } = result;
 
     const q17Obj = QUESTIONS.find((q) => q.id === "q17");
     const attemptIndex = answers["q17"];
-    const attemptLabel = (q17Obj && q17Obj.options[attemptIndex]) ? q17Obj.options[attemptIndex] : "2028"; 
+    const attemptLabel =
+      q17Obj && q17Obj.options[attemptIndex] ? q17Obj.options[attemptIndex] : "2028";
 
     const safeExpected = expected_percentile_range || [0, 0];
     const safePotential = potential_percentile_range || [0, 0];
@@ -2447,17 +2635,14 @@ const [showStickyCta, setShowStickyCta] = useState(false);
 
       if (Array.isArray(val)) {
         if (val.length === 1) {
-          // Unwraps single pick to plain string "Q10_A" for 100% legacy parity
           const idx = Number(val[0]);
           if (optionMap[idx]) generatedManifestKeys[key] = `${prefix}_${optionMap[idx]}`;
         } else if (val.length > 1) {
-          // Sends array ["Q10_A", "Q10_B"] only when multiple options are checked
           generatedManifestKeys[key] = val
             .map((idx) => (optionMap[Number(idx)] ? `${prefix}_${optionMap[Number(idx)]}` : null))
             .filter(Boolean);
         }
       } else {
-        // Standard single choice
         const idx = Number(val);
         if (!isNaN(idx) && optionMap[idx]) {
           generatedManifestKeys[key] = `${prefix}_${optionMap[idx]}`;
@@ -2476,7 +2661,7 @@ const [showStickyCta, setShowStickyCta] = useState(false);
         strengths: finalSWOT.S,
         weaknesses: finalSWOT.W,
         opportunities: finalSWOT.O,
-        threats: finalSWOT.T
+        threats: finalSWOT.T,
       },
       recommendations: "Focus on your flagged weaknesses. Use the Opportunity areas to gain extra marks.",
       manifestKeys: generatedManifestKeys,
@@ -2484,16 +2669,19 @@ const [showStickyCta, setShowStickyCta] = useState(false);
     };
 
     try {
-      const response = await fetch("https://backend-final-510329279046.asia-south1.run.app/send-dynamic-report", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Accept": "application/pdf, application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(reportPayload) 
-      });
-      
+      const response = await fetch(
+        "https://backend-final-510329279046.asia-south1.run.app/send-dynamic-report",
+        {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            Accept: "application/pdf, application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reportPayload),
+        }
+      );
+
       if (!response.ok) {
         throw new Error(`Server returned status ${response.status}`);
       }
@@ -2501,23 +2689,17 @@ const [showStickyCta, setShowStickyCta] = useState(false);
       const blob = await response.blob();
       const pdfBlob = new Blob([blob], { type: "application/pdf" });
       const url = window.URL.createObjectURL(pdfBlob);
-      const safeName = (answers["name"] || "Student").replace(/\s+/g, '_');
-      const filename = `JEEsociety_Report_${safeName}.pdf`;
+      setCachedPdfUrl(url);
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      
-      setTimeout(() => {
-        if (link.parentNode) link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      }, 20000);
+      // Save file to student's device
+      triggerBrowserDownload(url, answers["name"]);
 
+      // Show "Report Downloaded Successfully" & fade out in 3s
+      showSuccessAndFadeOut();
     } catch (err) {
       console.error("PDF generation failed:", err);
-      alert("Server is preparing your report. If on mobile data, please retry in 5 seconds.");
+      setDownloadPopupState("IDLE");
+      alert("Preparing your report took slightly longer than expected. Please tap the button once more.");
     } finally {
       setIsGenerating(false);
     }
@@ -2822,8 +3004,8 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
   {/* 2. THE TRANSITIONAL STORYLINE TO THE REPORT */}
   <div style={{
     textAlign: "center",
-    maxWidth: "580px",
-    margin: "0 auto 16px auto",
+    maxWidth: "100%",
+    margin: "0 auto 14px auto",
     padding: "0 10px"
   }}>
     <h4 style={{
@@ -2846,14 +3028,20 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
         {/* ========================================================= */}
         {/* 1. FIRST CTA (Triggers Sticky Bar When Scrolled Past)     */}
         {/* ========================================================= */}
-        <div ref={firstCtaRef} style={{ marginBottom: "36px" }}>
-          <DownloadCTAButton
-            onClick={handleDownloadReport}
-            isGenerating={isGenerating}
-            label="Unlock My Full Report"
-            sublabel="Get your full diagnosis, personalized SWOT & action blueprint"
-          />
-        </div>
+        {/* 1st CTA */}
+<div ref={firstCtaRef} style={{ marginBottom: "36px" }}>
+  <DownloadCTAButton
+    onClick={handleDownloadReport}
+    isGenerating={isGenerating}
+    hasDownloaded={hasDownloadedOnce}
+    label={hasDownloadedOnce ? "Download Report Again ↓" : "Unlock My Full Report"}
+    sublabel={
+      hasDownloadedOnce
+        ? "Saved to your device • Tap to download another copy"
+        : "Get your full diagnosis, personalized SWOT & action blueprint"
+    }
+  />
+</div>
 
 <TestimonialCards />
 
@@ -3011,11 +3199,13 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
           <div style={{ fontSize: "15px", color: "#94a3b8", marginBottom: "22px" }}>
             Your personalized report, built entirely from your own answers, is ready right now.
           </div>
-          <DownloadCTAButton
-            onClick={handleDownloadReport}
-            isGenerating={isGenerating}
-            label="Unlock My Full Report"
-          />
+          {/* Final CTA */}
+<DownloadCTAButton
+  onClick={handleDownloadReport}
+  isGenerating={isGenerating}
+  hasDownloaded={hasDownloadedOnce}
+  label={hasDownloadedOnce ? "Download Report Again ↓" : "Unlock My Full Report"}
+/>
         </div>
 
         {/* BOTTOM CHANNELS / ACTION BUTTONS */}
@@ -3140,7 +3330,7 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
       animation: showStickyCta ? "cta-dock-glow 3.5s infinite ease-in-out" : "none",
     }}
   >
-    {/* Left Side: Live Ready Status */}
+    {/* Left Side: Live Ready Status + Free For Now Pill */}
     <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0 }}>
       <div
         style={{
@@ -3153,22 +3343,46 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
         }}
       />
       <div style={{ display: "flex", flexDirection: "column", textAlign: "left" }}>
-        <span style={{
-          color: "#ffffff",
-          fontSize: "13px",
-          fontWeight: "800",
-          letterSpacing: "0.2px",
-          whiteSpace: "nowrap"
-        }}>
-          Report Ready
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <span style={{
+            color: "#ffffff",
+            fontSize: "13px",
+            fontWeight: "800",
+            letterSpacing: "0.2px",
+            whiteSpace: "nowrap"
+          }}>
+            Report Ready
+          </span>
+
+          {/* Urgent "FREE FOR NOW" Micro-Badge on Sticky Bar */}
+          {!hasDownloadedOnce && (
+            <span style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "3px",
+              background: "rgba(34, 197, 94, 0.18)",
+              border: "1px solid rgba(74, 222, 128, 0.45)",
+              color: "#4ade80",
+              fontSize: "9.5px",
+              fontWeight: "900",
+              padding: "1.5px 7px",
+              borderRadius: "999px",
+              letterSpacing: "0.5px",
+              textTransform: "uppercase",
+              whiteSpace: "nowrap"
+            }}>
+              ⚡ Free For Now
+            </span>
+          )}
+        </div>
+
         <span style={{
           color: "#94a3b8",
           fontSize: "11px",
           fontWeight: "500",
           whiteSpace: "nowrap"
         }}>
-          15+ Pages • Customized
+          15+ Pages • Personalized PDF
         </span>
       </div>
     </div>
@@ -3251,12 +3465,221 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
             <polygon points="11.3,14.5 12.7,14.5 12.9,17.2 11.1,17.2" fill="#5835e8" />
           </svg>
 
-          Unlock My Full Report
+          {hasDownloadedOnce ? "Download Report Again ↓" : "Unlock My Full Report"}
         </>
       )}
     </button>
   </div>
-</div>
+  </div>
+  {/* ========================================================= */}
+{/* MODERN RECTANGLE POP-UP MODAL (GENERATING & SUCCESS)      */}
+{/* ========================================================= */}
+{downloadPopupState !== "IDLE" && (
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 9999,
+      background: "rgba(15, 23, 42, 0.6)",
+      backdropFilter: "blur(6px)",
+      WebkitBackdropFilter: "blur(6px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "20px",
+      opacity: isPopupFadingOut ? 0 : 1,
+      transition: "opacity 0.4s ease-out",
+    }}
+  >
+    {/* Animation Keyframes */}
+    <style>
+      {`
+        @keyframes popupScaleIn {
+          0% { opacity: 0; transform: translateY(12px) scale(0.96); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes msgSlideFade {
+          0% { opacity: 0; transform: translateY(8px); }
+          15% { opacity: 1; transform: translateY(0); }
+          85% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(-6px); }
+        }
+        @keyframes spinRing {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes shimmerProgress {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        @keyframes checkPop {
+          0% { transform: scale(0.5); opacity: 0; }
+          70% { transform: scale(1.12); }
+          100% { transform: scale(1); opacity: 1; }
+        }
+      `}
+    </style>
+
+    {/* RECTANGULAR CARD */}
+    <div
+      style={{
+        background: "#ffffff",
+        width: "100%",
+        maxWidth: "460px",
+        borderRadius: "20px",
+        padding: "32px 28px",
+        boxShadow: "0 24px 60px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(226, 232, 240, 0.8)",
+        textAlign: "center",
+        animation: "popupScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      {downloadPopupState === "GENERATING" ? (
+        <>
+          {/* Modern Dual-Ring Spinner */}
+          <div
+            style={{
+              width: "52px",
+              height: "52px",
+              margin: "0 auto 20px auto",
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: "50%",
+                border: "4px solid #f1f5f9",
+                borderTopColor: "#6a11cb",
+                borderRightColor: "#8b5cf6",
+                animation: "spinRing 0.9s linear infinite",
+              }}
+            />
+            <span style={{ fontSize: "18px" }}>⚡</span>
+          </div>
+
+          {/* Main Title */}
+          <h3
+            style={{
+              margin: "0 0 12px 0",
+              fontSize: "20px",
+              fontWeight: "900",
+              color: "#0f172a",
+              letterSpacing: "-0.3px",
+            }}
+          >
+            Generating Your Report
+          </h3>
+
+          {/* Rotating 11 Messages Container (Fixed height prevents layout jump) */}
+          <div
+            style={{
+              minHeight: "48px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: "22px",
+              padding: "0 8px",
+            }}
+          >
+            <p
+              key={rotatingMsgIndex}
+              style={{
+                margin: 0,
+                fontSize: "14.5px",
+                fontWeight: "600",
+                color: "#475569",
+                lineHeight: "1.5",
+                animation: "msgSlideFade 1.6s ease-in-out forwards",
+              }}
+            >
+              {REPORT_GENERATION_MESSAGES[rotatingMsgIndex]}
+            </p>
+          </div>
+
+          {/* Smooth Animated Shimmer Progress Bar */}
+          <div
+            style={{
+              width: "100%",
+              height: "6px",
+              background: "#f1f5f9",
+              borderRadius: "999px",
+              overflow: "hidden",
+              marginBottom: "14px",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                background: "linear-gradient(90deg, #6a11cb 0%, #a855f7 50%, #6a11cb 100%)",
+                backgroundSize: "200% 100%",
+                animation: "shimmerProgress 1.8s infinite linear",
+                borderRadius: "999px",
+              }}
+            />
+          </div>
+
+          {/* Subtle Keep-Open Note */}
+          <div style={{ fontSize: "12px", color: "#94a3b8", fontWeight: "600" }}>
+            Please keep this tab open for a few seconds
+          </div>
+        </>
+      ) : (
+        /* --- SUCCESS CONFIRMATION RECTANGLE (FADES IN 3s) --- */
+        <div style={{ padding: "8px 0" }}>
+          <div
+            style={{
+              width: "56px",
+              height: "56px",
+              borderRadius: "50%",
+              background: "#ecfdf5",
+              border: "2px solid #a7f3d0",
+              color: "#10b981",
+              fontSize: "28px",
+              fontWeight: "900",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              margin: "0 auto 16px auto",
+              animation: "checkPop 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+          >
+            ✓
+          </div>
+
+          <h3
+            style={{
+              margin: "0 0 6px 0",
+              fontSize: "21px",
+              fontWeight: "900",
+              color: "#0f172a",
+              letterSpacing: "-0.3px",
+            }}
+          >
+            Report Downloaded Successfully
+          </h3>
+
+          <p
+            style={{
+              margin: 0,
+              fontSize: "14px",
+              color: "#64748b",
+              fontWeight: "600",
+            }}
+          >
+            Saved to your device's Downloads folder
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+)}
 
         <style>{`
   @keyframes cta-dock-glow {
@@ -3292,7 +3715,7 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
 >
       <Helmet>
         <title>Start Assessment | JEE Society</title>
-        <meta name="description" content="Answer 20 questions to analyze your JEE Main & Advanced consistency, focus, and syllabus coverage." />
+        <meta name="description" content="Answer 16 questions to analyze your JEE Main & Advanced consistency, focus, and syllabus coverage." />
         <link rel="canonical" href="https://report.jeesociety.in/assessment" />
         <meta name="robots" content="noindex" /> {/* Optional: Keep Google away from the quiz questions directly? Usually yes. */}
       </Helmet>
@@ -3456,7 +3879,7 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
   </div>
   <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "13.5px", color: "#475569", lineHeight: "1.65" }}>
     <li style={{ marginBottom: "8px" }}>
-      You'll be asked 20 questions about your JEE Preparation. Be 100% real with yourself.
+      You'll be asked 16 questions about your JEE Preparation. Be 100% real with yourself.
     </li>
     <li style={{ marginBottom: "8px" }}>
       At the end you will get a report, print it, and follow it like words of god.

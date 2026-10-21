@@ -1770,38 +1770,6 @@ const AccountabilityCallout = ({ answers }) => {
   );
 };
 
-// Founder video — placeholder until a real link is provided. Swap
-// FOUNDER_VIDEO_URL to a YouTube embed URL and this renders automatically.
-const FOUNDER_VIDEO_URL = null;
-
-const FounderVideoBlock = () => (
-  <div style={{ position: "relative", borderRadius: "20px", overflow: "hidden", aspectRatio: "16/9", background: "linear-gradient(135deg, #1e293b, #0b0f19)" }}>
-    <style>{`
-      @keyframes video-pulse {
-        0%, 100% { transform: scale(1); opacity: 0.9; }
-        50% { transform: scale(1.08); opacity: 1; }
-      }
-    `}</style>
-    {FOUNDER_VIDEO_URL ? (
-      <iframe
-        src={FOUNDER_VIDEO_URL}
-        style={{ width: "100%", height: "100%", border: "none" }}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        title="Founder walkthrough"
-      />
-    ) : (
-      <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px", color: "#fff", textAlign: "center", padding: "20px" }}>
-        <div style={{ width: "62px", height: "62px", borderRadius: "50%", background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", animation: "video-pulse 2.2s ease-in-out infinite" }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z" /></svg>
-        </div>
-        <div style={{ fontWeight: "800", fontSize: "16px" }}>Founder walkthrough coming soon</div>
-        <div style={{ fontSize: "14px", opacity: 0.75, maxWidth: "320px" }}>Watch Sreyash break down exactly what your JSS score and report mean.</div>
-      </div>
-    )}
-  </div>
-);
-
 // "What's inside your report" — product spec chart. Uses the existing
 // /sample-report.pdf as the concrete preview until the real per-student
 // sample is provided.
@@ -3154,23 +3122,6 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
             </div>
 
           </div>
-        </div>
-
-        {/* 4. FOUNDER VIDEO (Now positioned directly below the combined section) */}
-        <div style={{ marginTop: "10px", marginBottom: "40px" }}>
-          <h3 style={{ textAlign: "center", fontSize: "20px", fontWeight: "800", color: "#0f172a", marginBottom: "10px" }}>
-            Hear It Straight From The Founder
-          </h3>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", marginBottom: "18px" }}>
-            <img
-              src="/iit-bombay-logo.png"
-              alt="IIT Bombay"
-              style={{ height: "22px", width: "22px", objectFit: "contain" }}
-              onError={(e) => { e.currentTarget.style.display = "none"; }}
-            />
-            <span style={{ fontSize: "13.5px", fontWeight: "700", color: "#64748b" }}>IIT Bombay Alumnus</span>
-          </div>
-          <FounderVideoBlock />
         </div>
 
         

@@ -96,18 +96,20 @@ function estimateMarks(subject, idx) {
 }
 
 // ---------------------------------------------------------------------------
-// 1. THE MENTOR'S PERSPECTIVE (Direct, Grounded, Human Tone)
-// ---------------------------------------------------------------------------
+// 1. THE MENTOR'S PERSPECTIVE // ---------------------------------------------------------------------------
 const SUBJECT_EXPERT_ESSENCE = {
-  physics: `Stop trying to remember every single edge-case formula. Real JEE Physics rewards <b>free-body diagrams, energy balance, and clear mechanics basics</b>. Build the core foundation first, and multi-concept questions will naturally start clicking.`,
+  physics: `Physics is a subject where scoring 100/100 is easier than you think. The JEE Mains paper is majorly formula based. So solving PYQs for every chapter before the final exam keeps ahead of everyone. Be ready for multiconcept questions too :)`,
 
-  chemistry: `Chemistry produces the <b>highest return on investment</b> across the entire exam. A mark here counts the same as a mark in a brutal 8-minute Maths integration. Consistent, quick recall lets you sweep through the section and build early exam momentum.`,
 
-  maths: `JEE Maths is an exam of <b>ruthless question selection</b>. The test is designed with traps to eat your time. Your real job is filtering out the noise, securing the predictable chapters, and protecting yourself against careless arithmetic slips.`,
+  chemistry: `Chemistry produces the highest return on investment across the entire exam. A mark here counts the same as a mark in a brutal 8-minute Maths integration. Consistent, quick recall takes you ahead of the crowd. 2 things matter: A good teacher and good notes`,
+
+
+  maths: `Maths is all about ruthless question selection. The test is designed with traps to eat your time. Your real job is getting your foundation topics clear. Watching teachers approaching JEE questions live is the secret strategy you need today.`,
 };
 
+
 // ---------------------------------------------------------------------------
-// 2. THE DIAGNOSTIC MIRROR 
+// 2. THE DIAGNOSTIC MIRROR
 // ---------------------------------------------------------------------------
 function getSubjectMirrorReading(subject, idx, firstName) {
   const readings = {
@@ -119,9 +121,10 @@ function getSubjectMirrorReading(subject, idx, firstName) {
     physics: {
       0: `Physics is genuinely your stronghold. You have the conceptual speed and timed accuracy that most aspirants envy. Your only hidden trap now is over-solving: don't let your confidence turn into a time sink where Physics steals hours that Chemistry or Maths desperately need.`,
       1: `You understand the core theory well, but you freeze when questions twist two topics together. You're giving it high priority, which is great, but watching more video explanations won't fix this. You need to struggle through unassisted PYQs on blank paper to build real solving stamina.`,
-      2: `Let's be direct: ignoring Physics to take shelter in Chemistry and Maths is a dangerous gamble. You're struggling because early fundamentals—<b>Vectors, Kinematics, and basic Calculus</b>—were left shaky. Running away from them now guarantees you lose easy cutoff marks on exam day.`,
+      2: `Let's be direct: ignoring Physics to take shelter in Chemistry and Maths is a dangerous gamble. You're struggling because early fundamentals—<b>Vectors, Kinematics, and basic Calculus</b>—were left shaky. Running away from them now guarantees you lose easy marks on exam day.`,
       3: `You are caught in the classic <b>Comfort Trap</b>. Physics is already your strongest subject, yet you spend half your day watching Physics lectures because solving it gives you a quick dopamine hit. You are over-polishing what already works while your rank-deciding leaks go ignored.`,
     },
+
 
     // Q5. How is your Chemistry (Honestly)?
     // Option A (0): Strong: NCERT is on my tips; I score high consistently.
@@ -135,6 +138,7 @@ function getSubjectMirrorReading(subject, idx, firstName) {
       3: `You are running a <b>split preparation</b>. Excelling in one branch (like Physical) while abandoning another (like Organic or Inorganic) means you enter every mock test with one arm tied behind your back. You are throwing away 20+ low-hanging marks in the branch you avoid.`,
     },
 
+
     // Q6. How is your Mathematics (Honestly)?
     // Option A (0): Killer: I love Math; I love solving complex problems in a given time.
     // Option B (1): Survivor: I only target specific high-weightage chapters (Vector/3D) to clear cutoff.
@@ -142,14 +146,16 @@ function getSubjectMirrorReading(subject, idx, firstName) {
     // Option D (3): The Ego Lifter: I am weak, but I waste hours trying to solve impossible problems just to prove I can.
     maths: {
       0: `You have genuine mathematical talent, and solving complex problems under a timer gives you an unfair advantage. Your only priority in mocks is <b>tactical patience</b>: never let an interesting, difficult problem trap you for 10 minutes when easier +4 marks are sitting untouched.`,
-      1: `You are in <b>survival mode</b>, sticking strictly to high-yield cutoff chapters like Vectors and 3D. While practical, this puts a hard ceiling on your rank. Many questions in coordinate geometry, matrices, and statistics are direct formula applications that you are skipping purely out of caution.`,
+      1: `You are in <b>survival mode</b>, sticking strictly to high-yield cutoff chapters like Vector 3D and circle. While practical, this puts a hard ceiling on your rank. Your next steps depends on the time availability and your learning speed.`,
       2: `Let's address the math anxiety head-on: avoiding question-solving for weeks has created a mental wall. But you don't need to conquer the whole syllabus. In JEE Maths, scoring just <b>30 to 35 clean marks</b> puts you ahead of 75% of test-takers nationwide. You need to start small.`,
       3: `You are suffering from <b>The Ego Lifter trap</b>. You know your foundation is shaky, yet you spend hours wrestling with brutal, multi-concept problems just to prove your intellect. JEE doesn't reward bravado—it gives the exact same +4 marks for a 60-second question as a 15-minute marathon. You are burning time feeding your ego instead of building your rank.`,
     },
   };
 
+
   return (readings[subject] && readings[subject][idx]) || readings[subject][1];
 }
+
 
 // ---------------------------------------------------------------------------
 // 3. THE STRATEGIC PRESCRIPTION (Directly Solves the Option Selected)
@@ -178,6 +184,7 @@ const SUBJECT_TACTICAL_REMEDIES = {
     },
   },
 
+
   chemistry: {
     // Option A (Strong)
     0: {
@@ -200,6 +207,7 @@ const SUBJECT_TACTICAL_REMEDIES = {
       lesson: "Stop pouring all your energy into the part you already like. Your fastest mark jump is hiding in the branch you avoid.",
     },
   },
+
 
   maths: {
     // Option A (Killer)
@@ -224,6 +232,7 @@ const SUBJECT_TACTICAL_REMEDIES = {
     },
   },
 };
+
 
 // ---------------------------------------------------------------------------
 // COMPACT COLUMN GAUGE ("Where You Stand" top bar for each subject)

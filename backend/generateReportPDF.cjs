@@ -107,7 +107,7 @@ const SUBJECT_EXPERT_ESSENCE = {
 };
 
 // ---------------------------------------------------------------------------
-// 2. THE DIAGNOSTIC MIRROR (100% Aligned to Exact Quiz Options & Persona)
+// 2. THE DIAGNOSTIC MIRROR 
 // ---------------------------------------------------------------------------
 function getSubjectMirrorReading(subject, idx, firstName) {
   const readings = {
@@ -117,10 +117,10 @@ function getSubjectMirrorReading(subject, idx, firstName) {
     // Option C (2): Weak: I struggle with basics; I am ignoring them to focus on Chemistry/Math.
     // Option D (3): Comfort Trap: Physics is my strongest subject, yet I still spend 50%+ of my time watching videos on Physics because I like it.
     physics: {
-      0: `Physics is genuinely your stronghold, <b>${firstName}</b>. You have the conceptual speed and timed accuracy that most aspirants envy. Your only hidden trap now is over-solving: don't let your confidence turn into a time sink where Physics steals hours that Chemistry or Maths desperately need.`,
-      1: `You understand the core theory well, <b>${firstName}</b>, but you freeze when questions twist two topics together. You're giving it high priority, which is great, but watching more video explanations won't fix this. You need to struggle through unassisted PYQs on blank paper to build real solving stamina.`,
-      2: `Let's be direct, <b>${firstName}</b>: ignoring Physics to take shelter in Chemistry and Maths is a dangerous gamble. You're struggling because early fundamentals—<b>Vectors, Kinematics, and basic Calculus</b>—were left shaky. Running away from them now guarantees you lose easy cutoff marks on exam day.`,
-      3: `You are caught in the classic <b>Comfort Trap</b>, <b>${firstName}</b>. Physics is already your strongest subject, yet you spend half your day watching Physics lectures because solving it gives you a quick dopamine hit. You are over-polishing what already works while your rank-deciding leaks go ignored.`,
+      0: `Physics is genuinely your stronghold. You have the conceptual speed and timed accuracy that most aspirants envy. Your only hidden trap now is over-solving: don't let your confidence turn into a time sink where Physics steals hours that Chemistry or Maths desperately need.`,
+      1: `You understand the core theory well, but you freeze when questions twist two topics together. You're giving it high priority, which is great, but watching more video explanations won't fix this. You need to struggle through unassisted PYQs on blank paper to build real solving stamina.`,
+      2: `Let's be direct: ignoring Physics to take shelter in Chemistry and Maths is a dangerous gamble. You're struggling because early fundamentals—<b>Vectors, Kinematics, and basic Calculus</b>—were left shaky. Running away from them now guarantees you lose easy cutoff marks on exam day.`,
+      3: `You are caught in the classic <b>Comfort Trap</b>. Physics is already your strongest subject, yet you spend half your day watching Physics lectures because solving it gives you a quick dopamine hit. You are over-polishing what already works while your rank-deciding leaks go ignored.`,
     },
 
     // Q5. How is your Chemistry (Honestly)?
@@ -129,10 +129,10 @@ function getSubjectMirrorReading(subject, idx, firstName) {
     // Option C (2): Weak: I hate Chemistry; I barely touch this subject.
     // Option D (3): Average: I am good at any one part(OC/IOC/PC), and bad at another.
     chemistry: {
-      0: `Having NCERT at your fingertips is a rare advantage, <b>${firstName}</b>. You have locked down the highest-scoring section of the exam. Your primary focus now is pure retention maintenance: a quick weekly spaced recall so silent memory decay doesn't cost you easy marks near the exam.`,
-      1: `You are stuck in a <b>leaky-bucket memory loop</b>, <b>${firstName}</b>. You memorize reactions, forget them within 72 hours, and waste endless hours passively re-reading notes. Re-reading creates the illusion of learning. Without closed-book active recall, reactions will always look blurry under exam pressure.`,
-      2: `Let's confront the reality, <b>${firstName}</b>: avoiding Chemistry because you hate it is the single biggest threat to your JEE rank. Chemistry offers the <b>fastest, lowest-effort marks</b> in the entire paper. Abandoning it forces an unrealistic scoring burden onto Physics and Maths that almost no student survives.`,
-      3: `You are running a <b>split preparation</b>, <b>${firstName}</b>. Excelling in one branch (like Physical) while abandoning another (like Organic or Inorganic) means you enter every mock test with one arm tied behind your back. You are throwing away 20+ low-hanging marks in the branch you avoid.`,
+      0: `Having NCERT at your fingertips is a rare advantage. You have locked down the highest-scoring section of the exam. Your primary focus now is pure retention maintenance: a quick weekly spaced recall so silent memory decay doesn't cost you easy marks near the exam.`,
+      1: `You are stuck in a <b>leaky-bucket memory loop</b>. You memorize reactions, forget them within 72 hours, and waste endless hours passively re-reading notes. Re-reading creates the illusion of learning. Without closed-book active recall, reactions will always look blurry under exam pressure.`,
+      2: `Let's confront the reality: avoiding Chemistry because you hate it is the single biggest threat to your JEE rank. Chemistry offers the <b>fastest, lowest-effort marks</b> in the entire paper. Abandoning it forces an unrealistic scoring burden onto Physics and Maths that almost no student survives.`,
+      3: `You are running a <b>split preparation</b>. Excelling in one branch (like Physical) while abandoning another (like Organic or Inorganic) means you enter every mock test with one arm tied behind your back. You are throwing away 20+ low-hanging marks in the branch you avoid.`,
     },
 
     // Q6. How is your Mathematics (Honestly)?
@@ -141,10 +141,10 @@ function getSubjectMirrorReading(subject, idx, firstName) {
     // Option C (2): Phobia: I am terrified of Math; I haven't solved a question in weeks.
     // Option D (3): The Ego Lifter: I am weak, but I waste hours trying to solve impossible problems just to prove I can.
     maths: {
-      0: `You have genuine mathematical talent, <b>${firstName}</b>, and solving complex problems under a timer gives you an unfair advantage. Your only priority in mocks is <b>tactical patience</b>: never let an interesting, difficult problem trap you for 10 minutes when easier +4 marks are sitting untouched.`,
-      1: `You are in <b>survival mode</b>, <b>${firstName}</b>, sticking strictly to high-yield cutoff chapters like Vectors and 3D. While practical, this puts a hard ceiling on your rank. Many questions in coordinate geometry, matrices, and statistics are direct formula applications that you are skipping purely out of caution.`,
-      2: `Let's address the math anxiety head-on, <b>${firstName}</b>: avoiding question-solving for weeks has created a mental wall. But you don't need to conquer the whole syllabus. In JEE Maths, scoring just <b>30 to 35 clean marks</b> puts you ahead of 75% of test-takers nationwide. You need to start small.`,
-      3: `You are suffering from <b>The Ego Lifter trap</b>, <b>${firstName}</b>. You know your foundation is shaky, yet you spend hours wrestling with brutal, multi-concept problems just to prove your intellect. JEE doesn't reward bravado—it gives the exact same +4 marks for a 60-second question as a 15-minute marathon. You are burning time feeding your ego instead of building your rank.`,
+      0: `You have genuine mathematical talent, and solving complex problems under a timer gives you an unfair advantage. Your only priority in mocks is <b>tactical patience</b>: never let an interesting, difficult problem trap you for 10 minutes when easier +4 marks are sitting untouched.`,
+      1: `You are in <b>survival mode</b>, sticking strictly to high-yield cutoff chapters like Vectors and 3D. While practical, this puts a hard ceiling on your rank. Many questions in coordinate geometry, matrices, and statistics are direct formula applications that you are skipping purely out of caution.`,
+      2: `Let's address the math anxiety head-on: avoiding question-solving for weeks has created a mental wall. But you don't need to conquer the whole syllabus. In JEE Maths, scoring just <b>30 to 35 clean marks</b> puts you ahead of 75% of test-takers nationwide. You need to start small.`,
+      3: `You are suffering from <b>The Ego Lifter trap</b>. You know your foundation is shaky, yet you spend hours wrestling with brutal, multi-concept problems just to prove your intellect. JEE doesn't reward bravado—it gives the exact same +4 marks for a 60-second question as a 15-minute marathon. You are burning time feeding your ego instead of building your rank.`,
     },
   };
 

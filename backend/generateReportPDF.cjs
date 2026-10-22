@@ -99,35 +99,52 @@ function estimateMarks(subject, idx) {
 // 1. THE MENTOR'S PERSPECTIVE (Direct, Grounded, Human Tone)
 // ---------------------------------------------------------------------------
 const SUBJECT_EXPERT_ESSENCE = {
-  physics: `Physics is not about cramming 300 formulas. Once you understand that almost every tough problem is just <b>Newton's laws or energy conservation</b> in a new setup, the fear disappears and solving becomes natural.`,
+  physics: `Stop trying to remember every single edge-case formula. Real JEE Physics rewards <b>free-body diagrams, energy balance, and clear mechanics basics</b>. Build the core foundation first, and multi-concept questions will naturally start clicking.`,
 
-  chemistry: `Chemistry gives you the <b>fastest marks in JEE</b>. While Maths and Physics demand long calculations, Chemistry rewards clear memory and basic logic. With steady revision, you can easily bank <b>70+ marks in 40 minutes</b>.`,
+  chemistry: `Chemistry produces the <b>highest return on investment</b> across the entire exam. A mark here counts the same as a mark in a brutal 8-minute Maths integration. Consistent, quick recall lets you sweep through the section and build early exam momentum.`,
 
-  maths: `In JEE, Maths is where ties are settled. NTA checks your <b>Maths score first</b> during rank ties. You don't have to solve the whole paper—just hunt down the <b>10 to 12 doable questions</b> and solve them calmly without silly errors.`,
+  maths: `JEE Maths is an exam of <b>ruthless question selection</b>. The test is designed with traps to eat your time. Your real job is filtering out the noise, securing the predictable chapters, and protecting yourself against careless arithmetic slips.`,
 };
 
 // ---------------------------------------------------------------------------
-// 2. REALITY CHECK: WHAT'S HAPPENING IN YOUR MOCKS (Personalized with Name)
+// 2. THE DIAGNOSTIC MIRROR (100% Aligned to Exact Quiz Options & Persona)
 // ---------------------------------------------------------------------------
 function getSubjectMirrorReading(subject, idx, firstName) {
   const readings = {
+    // Q4. How is your Physics (Honestly)?
+    // Option A (0): Strong: I can solve JEE Mains PYQs accurately under timed practice now.
+    // Option B (1): Average: I understand concepts but get stuck on tricky questions; I am giving it high priority.
+    // Option C (2): Weak: I struggle with basics; I am ignoring them to focus on Chemistry/Math.
+    // Option D (3): Comfort Trap: Physics is my strongest subject, yet I still spend 50%+ of my time watching videos on Physics because I like it.
     physics: {
-      0: `Physics is your comfort subject, <b>${firstName}</b>. But in tests, your pride can hurt you: spending <b>8 minutes wrestling one stubborn question</b> leaves you with no time left for Maths.`,
-      1: `You understand concepts easily in class, <b>${firstName}</b>. But the moment a fresh question combines two topics, <b>your pen stops</b>. You know the theory; you just need to practice solving without checking hints.`,
-      2: `Be honest with yourself, <b>${firstName}</b>: you aren't bad at Physics. Your <b>Vectors and Kinematics basics</b> were left weak early on. Once you clear those fundamentals, the harder chapters will open up.`,
-      3: `You enjoy Physics, <b>${firstName}</b>, so you spend <b>half your study time watching videos</b> on it. It feels productive, but it starves your other subjects of the practice they actually need.`,
+      0: `Physics is genuinely your stronghold, <b>${firstName}</b>. You have the conceptual speed and timed accuracy that most aspirants envy. Your only hidden trap now is over-solving: don't let your confidence turn into a time sink where Physics steals hours that Chemistry or Maths desperately need.`,
+      1: `You understand the core theory well, <b>${firstName}</b>, but you freeze when questions twist two topics together. You're giving it high priority, which is great, but watching more video explanations won't fix this. You need to struggle through unassisted PYQs on blank paper to build real solving stamina.`,
+      2: `Let's be direct, <b>${firstName}</b>: ignoring Physics to take shelter in Chemistry and Maths is a dangerous gamble. You're struggling because early fundamentals—<b>Vectors, Kinematics, and basic Calculus</b>—were left shaky. Running away from them now guarantees you lose easy cutoff marks on exam day.`,
+      3: `You are caught in the classic <b>Comfort Trap</b>, <b>${firstName}</b>. Physics is already your strongest subject, yet you spend half your day watching Physics lectures because solving it gives you a quick dopamine hit. You are over-polishing what already works while your rank-deciding leaks go ignored.`,
     },
+
+    // Q5. How is your Chemistry (Honestly)?
+    // Option A (0): Strong: NCERT is on my tips; I score high consistently.
+    // Option B (1): Volatile: I memorize it, but forget it in 3 days; I spend time re-reading notes constantly.
+    // Option C (2): Weak: I hate Chemistry; I barely touch this subject.
+    // Option D (3): Average: I am good at any one part(OC/IOC/PC), and bad at another.
     chemistry: {
-      0: `You have a good grip on Chemistry right now, <b>${firstName}</b>. Just remember that memory fades fast here. If you stop revising <b>reactions and exceptions</b> every week, marks drop without warning.`,
-      1: `You read a chapter today and remember it well, <b>${firstName}</b>, but by next week it slips away. Re-reading your notes gives a false sense of safety. You need <b>active recall on rough paper</b>.`,
-      2: `You've labeled Chemistry as boring memorization, <b>${firstName}</b>, so you avoid it. In mocks, you rush through it in 15 minutes and leave easy marks behind that could have lifted your total score.`,
-      3: `You only study the part of Chemistry you like, <b>${firstName}</b>, while ignoring the branch that troubles you. Leaving one-third of the syllabus untouched will keep costing you 20+ easy marks in every mock.`,
+      0: `Having NCERT at your fingertips is a rare advantage, <b>${firstName}</b>. You have locked down the highest-scoring section of the exam. Your primary focus now is pure retention maintenance: a quick weekly spaced recall so silent memory decay doesn't cost you easy marks near the exam.`,
+      1: `You are stuck in a <b>leaky-bucket memory loop</b>, <b>${firstName}</b>. You memorize reactions, forget them within 72 hours, and waste endless hours passively re-reading notes. Re-reading creates the illusion of learning. Without closed-book active recall, reactions will always look blurry under exam pressure.`,
+      2: `Let's confront the reality, <b>${firstName}</b>: avoiding Chemistry because you hate it is the single biggest threat to your JEE rank. Chemistry offers the <b>fastest, lowest-effort marks</b> in the entire paper. Abandoning it forces an unrealistic scoring burden onto Physics and Maths that almost no student survives.`,
+      3: `You are running a <b>split preparation</b>, <b>${firstName}</b>. Excelling in one branch (like Physical) while abandoning another (like Organic or Inorganic) means you enter every mock test with one arm tied behind your back. You are throwing away 20+ low-hanging marks in the branch you avoid.`,
     },
+
+    // Q6. How is your Mathematics (Honestly)?
+    // Option A (0): Killer: I love Math; I love solving complex problems in a given time.
+    // Option B (1): Survivor: I only target specific high-weightage chapters (Vector/3D) to clear cutoff.
+    // Option C (2): Phobia: I am terrified of Math; I haven't solved a question in weeks.
+    // Option D (3): The Ego Lifter: I am weak, but I waste hours trying to solve impossible problems just to prove I can.
     maths: {
-      0: `You have strong problem-solving skills, <b>${firstName}</b>. But don't take hard questions personally in the exam hall. Spending 10 minutes on one tricky integral means missing <b>two easy questions</b> later.`,
-      1: `You only attempt safe chapters like Vectors and 3D Geometry, <b>${firstName}</b>. The moment you see Calculus or P&C, you hesitate. Don't skip them entirely; many questions only test simple formulas.`,
-      2: `Maths creates immediate stress for you, <b>${firstName}</b>. You attempt very few questions and hope other subjects will save you. But building up just <b>30 solid marks</b> here will raise your rank significantly.`,
-      3: `Your concepts are good, <b>${firstName}</b>, but you lose marks on <b>sign mistakes and hasty calculations</b>. You walk out thinking you scored 50, but negative marking pulls you down to 30.`,
+      0: `You have genuine mathematical talent, <b>${firstName}</b>, and solving complex problems under a timer gives you an unfair advantage. Your only priority in mocks is <b>tactical patience</b>: never let an interesting, difficult problem trap you for 10 minutes when easier +4 marks are sitting untouched.`,
+      1: `You are in <b>survival mode</b>, <b>${firstName}</b>, sticking strictly to high-yield cutoff chapters like Vectors and 3D. While practical, this puts a hard ceiling on your rank. Many questions in coordinate geometry, matrices, and statistics are direct formula applications that you are skipping purely out of caution.`,
+      2: `Let's address the math anxiety head-on, <b>${firstName}</b>: avoiding question-solving for weeks has created a mental wall. But you don't need to conquer the whole syllabus. In JEE Maths, scoring just <b>30 to 35 clean marks</b> puts you ahead of 75% of test-takers nationwide. You need to start small.`,
+      3: `You are suffering from <b>The Ego Lifter trap</b>, <b>${firstName}</b>. You know your foundation is shaky, yet you spend hours wrestling with brutal, multi-concept problems just to prove your intellect. JEE doesn't reward bravado—it gives the exact same +4 marks for a 60-second question as a 15-minute marathon. You are burning time feeding your ego instead of building your rank.`,
     },
   };
 
@@ -135,61 +152,75 @@ function getSubjectMirrorReading(subject, idx, firstName) {
 }
 
 // ---------------------------------------------------------------------------
-// 3. ACTION PLAN & ONE PIECE OF ADVICE (Clean, Actionable Steps)
+// 3. THE STRATEGIC PRESCRIPTION (Directly Solves the Option Selected)
 // ---------------------------------------------------------------------------
 const SUBJECT_TACTICAL_REMEDIES = {
   physics: {
+    // Option A (Strong)
     0: {
-      action: "Set a strict <b>3-minute rule</b> per question in mocks. If an approach stalls, mark it and move ahead. Protect your time for Maths.",
-      lesson: "Top scores are lost to stubbornness and fatigue in the last hour, not a lack of theory.",
+      action: "Set a strict <b>45-minute daily cap</b> on Physics. Spend that time on timed mock sprints, and redirect the rest of your study block to your weaker subjects.",
+      lesson: "When a subject is strong, your job is maintenance and speed, not endless video consumption.",
     },
+    // Option B (Average - Tricky Qs)
     1: {
-      action: "Pause one-shot videos. Pick your weakest chapter and solve <b>15 PYQs every day</b> with a timer. Try for 4 minutes before checking any solution.",
-      lesson: "Solving ability develops on rough paper when you struggle, not by watching someone else solve on a screen.",
+      action: "Stop watching concept lectures. Pick your weakest chapter, set a 4-minute timer per question, and <b>solve 15 PYQs alone on rough paper</b> before checking any hint.",
+      lesson: "Real problem-solving intuition only develops when your pen is stuck and you force your brain to find a way out.",
     },
+    // Option C (Weak - Avoiding)
     2: {
-      action: "Take 10 days to rebuild your foundation: master <b>Vectors, Basic Calculus, and Kinematics</b> first. Then move to formula-heavy chapters like Modern Physics.",
-      lesson: "You don't lack aptitude for Physics; you are just missing the basic math it is built on. Fix that first.",
+      action: "Take 10 days for a <b>Foundation Reset</b>: master Vectors, Differentiation, and Kinematics until resolving components is second nature. Don't touch 12th chapters yet.",
+      lesson: "You don't lack aptitude for Physics; you are simply missing the mathematical tools it is written in.",
     },
+    // Option D (Comfort Trap)
     3: {
-      action: "Cap your Physics study to <b>45 minutes of revision</b> every alternate day. Shift that saved hour directly into your weakest subject.",
-      lesson: "A balanced 60-60-60 score delivers a much higher percentile than an unbalanced 85-30-30.",
+      action: "<b>Cut your Physics video time by 60% starting today.</b> Cap Physics to 40 minutes of problem-solving, and transfer the remaining 90 minutes directly to Maths or Chemistry.",
+      lesson: "A balanced 65-65-65 score beats a lopsided 90-30-30 percentile every single time. Stop hiding in what feels easy.",
     },
   },
+
   chemistry: {
+    // Option A (Strong)
     0: {
-      action: "Spend <b>15 minutes every morning</b> writing down formulas, named reactions, and inorganic exceptions from memory onto a blank sheet.",
-      lesson: "Chemistry marks decay quietly. Treat quick daily recall like a routine habit, not an exam-week task.",
+      action: "Do a <b>15-minute morning active recall</b> every 3 days: write key reactions and Inorganic trend exceptions onto a blank sheet from memory to lock in your speed.",
+      lesson: "High Chemistry scores drop silently. Treat quick active recall like daily hygiene to keep your edge sharp.",
     },
+    // Option B (Volatile - Forgets in 3 days)
     1: {
-      action: "Use the <b>Day 1, Day 3, Day 7 recall rule</b>. When you complete a chapter, write out key reactions from memory without opening your notes.",
-      lesson: "Re-reading notes feels easy; testing your memory on blank paper is what actually holds up in tests.",
+      action: "Use the <b>Day 1, Day 3, Day 7 Recall Cycle</b>. Close your notes and test yourself on a blank sheet: if you cannot write the reagent from memory, you don't know it.",
+      lesson: "Re-reading notes gives a false sense of security; closed-book retrieval is the only thing that holds up under exam pressure.",
     },
+    // Option C (Weak - Hates Chem)
     2: {
-      action: "Start with 3 high-yield chapters: <b>Chemical Bonding, Periodic Table, and Mole Concept</b>. These build the base for most of the subject.",
-      lesson: "You don't need to love Chemistry; you just need one 25-mark win in easy chapters to build your confidence.",
+      action: "Don't try to master the whole subject. Target just 3 high-yield units: <b>Chemical Bonding, Periodic Table, and Mole Concept</b>. These build 60% of the logic you need.",
+      lesson: "You don't have to love Chemistry; you just need one 25-mark win in predictable chapters to break the mental block.",
     },
+    // Option D (Split Half)
     3: {
-      action: "Give 45 minutes daily to your weakest branch. For Organic, focus on understanding reaction logic rather than memorizing individual lines.",
-      lesson: "Stop spending all your time on the parts you already like. Your fastest mark jump is in the branch you avoid.",
+      action: "Give the first 45 minutes of every study day strictly to your <b>avoided Chemistry branch</b>. For Organic, master GOC mechanisms; for Inorganic, outline NCERT tables.",
+      lesson: "Stop pouring all your energy into the part you already like. Your fastest mark jump is hiding in the branch you avoid.",
     },
   },
+
   maths: {
+    // Option A (Killer)
     0: {
-      action: "Always scan the paper in Round 1 and lock in the <b>8 to 10 easiest questions</b> first. Never let a single question trap you for over 3 minutes.",
-      lesson: "JEE gives the exact same +4 marks for a 1-minute question as an 8-minute marathon. Choose wisely.",
+      action: "In mocks, scan the entire paper in Round 1 and lock in the <b>8 to 10 easiest problems</b> first. Enforce a hard 3-minute drop rule on complex questions.",
+      lesson: "JEE gives the exact same +4 marks for a 45-second question as an 8-minute marathon. Leave your ego outside the test hall.",
     },
+    // Option B (Survivor - Cutoff only)
     1: {
-      action: "Add 2 predictable chapters to your list this month: <b>Matrices & Determinants and Statistics</b>. They reward direct method practice over clever tricks.",
-      lesson: "Staying only in your comfort zone caps your score. Progress comes from picking up one new chapter at a time.",
+      action: "Add 2 predictable chapters to your list this month: <b>Matrices & Determinants and Statistics</b>. They reward direct method practice over clever mathematical tricks.",
+      lesson: "Your safe zone has a hard ceiling. Progress comes from expanding your chapter list one structured topic at a time.",
     },
+    // Option C (Phobia - Avoided for weeks)
     2: {
-      action: "Focus on 4 formula-based topics: <b>Quadratic Equations, Statistics, Vectors, and Matrices</b>. Aim for a clean 30–35 marks first.",
-      lesson: "In JEE Maths, getting 35 clean marks puts you ahead of 75% of candidates. Secure your base first.",
+      action: "Start with just <b>10 easy PYQs daily</b> from Quadratic Equations and Vectors. Solve them slowly without timing pressure to rebuild your confidence.",
+      lesson: "Scoring just 30 to 35 clean marks in JEE Maths puts you ahead of 75% of aspirants. You don't need genius; you need basic consistency.",
     },
+    // Option D (The Ego Lifter)
     3: {
-      action: "Slow down your rough work by 10%. Write steps clearly in <b>neat vertical columns</b> and double-check signs before marking the bubble.",
-      lesson: "You don't need to learn new math to jump 15 marks; you just need to stop giving marks away to careless slips.",
+      action: "<b>Ban yourself from attempting tough, Olympiad-level questions for 21 days.</b> Rebuild your base by solving 20 standard JEE Main PYQs daily with clean, step-by-step rough work.",
+      lesson: "Stop using hard problems to feed your pride. Clear the low-hanging +4 marks first before chasing questions designed to trip you up.",
     },
   },
 };
@@ -246,14 +277,23 @@ function buildCombinedSubjectsPageHTML(data, marksBySubject) {
 
   subjects.forEach((subj) => {
     const qKey = SUBJECT_QUESTION_KEY[subj];
-    const rawAns = data?.answers?.[qKey];
+    // Check both answers and manifestKeys as fallback
+    const rawAns = data?.answers?.[qKey] ?? data?.manifestKeys?.[qKey];
     let idx = 1;
-    if (typeof rawAns === "number") {
+
+    if (typeof rawAns === "number" && !isNaN(rawAns)) {
       idx = Math.min(3, Math.max(0, rawAns));
     } else if (typeof rawAns === "string") {
-      const letter = rawAns.replace(/.*_/, "").toUpperCase();
+      // Handles "Q6_D", "q6_d", "D", or "3"
+      const cleanStr = rawAns.trim();
+      const letter = cleanStr.replace(/.*_/, "").toUpperCase();
       const letterIdx = ["A", "B", "C", "D"].indexOf(letter);
-      idx = letterIdx !== -1 ? letterIdx : Math.min(3, Math.max(0, Number(rawAns) || 1));
+      if (letterIdx !== -1) {
+        idx = letterIdx;
+      } else {
+        const parsedNum = Number(cleanStr);
+        idx = !isNaN(parsedNum) ? Math.min(3, Math.max(0, parsedNum)) : 1;
+      }
     }
     parsedIdx[subj] = idx;
   });

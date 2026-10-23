@@ -2829,7 +2829,6 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
     </div>
     <div style={{ fontSize: "13.5px", color: "#78350f", lineHeight: "1.5" }}>
       <strong style={{ color: "#92400e", display: "block", fontSize: "14.5px", marginBottom: "2px" }}>
-        You're not the only one downloading this audit today.
       </strong>
     Last year, <strong>340+ Class 12th & dropper students</strong> used this exact 15-page strategy blueprint and secure admissions into top IITs & NITs.
     </div>
@@ -2872,7 +2871,7 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
     sublabel={
       hasDownloadedOnce
         ? "Saved to your device • Tap to download another copy"
-        : "Get your full diagnosis, personalized SWOT & action blueprint"
+        : ""
     }
   />
 </div>
@@ -2966,12 +2965,6 @@ const isStrong = currentScore >= 80 && currentScore < top1Score;
           </div>
         </div>
 
-        
-
-        {/* 5. TESTIMONIALS */}
-        <div style={{ marginBottom: "44px" }}>
-          <TestimonialsGrid />
-        </div>
 
         {/* ========================================================= */}
         {/* 6. FINAL CTA BANNER (Sticky Bar Merges Back In Here)       */}
@@ -4127,19 +4120,6 @@ const TestimonialCards = () => {
           border-color: #334155;
         }
       `}</style>
-
-      {/* Header */}
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <div style={{ fontSize: "12px", fontWeight: "800", color: "#6a11cb", letterSpacing: "1px", textTransform: "uppercase" }}>
-          Real Student Turnarounds
-        </div>
-        <h4 style={{ margin: "4px 0 0 0", fontSize: "20px", fontWeight: "900", color: "#0f172a" }}>
-          From Rock Bottom in October to Top IITs
-        </h4>
-        <div style={{ fontSize: "12.5px", color: "#64748b", marginTop: "4px" }}>
-          (Tap or hover on any card to flip and read their story)
-        </div>
-      </div>
 
       {/* 3D Cards Grid */}
       <div style={{
